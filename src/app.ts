@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express = require('express');
 import { composeMiddlewares } from './app/compose-middlewares';
 import { configureOas } from './app/configure-oas';
 import { connectMongo } from './app/connect-mongo';

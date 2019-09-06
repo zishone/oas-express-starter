@@ -1,4 +1,4 @@
-import * as debug from 'debug';
+import debug = require('debug');
 import { appConfig } from '../config';
 
 export class Logger {

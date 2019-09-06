@@ -1,32 +1,10 @@
-import * as oasTools from 'oas-tools';
-import { join } from 'path';
+import oasTools = require('oas-tools');
+import { oasConfig } from '../config';
 import { spec } from '../openapi';
 import { AppContext } from '../types';
 
 export const configureOas = async (context: AppContext): Promise<AppContext> => {
-  oasTools.configure({
-    controllers: join(__dirname, '..', 'controllers'),
-    checkControllers: true,
-    loglevel: 'info',
-    strict: false,
-    router: true,
-    validator: true,
-    docs: {
-      apiDocs: '/api-docs',
-      apiDocsPrefix: '',
-      swaggerUi: '/docs',
-      swaggerUiPrefix: '',
-    },
-    // oasSecurity: true,
-    // securityFile: {
-    //   // your security settings
-    // },
-    // oasAuth: true,
-    // grantsFile: {
-    //   // your authorization settings
-    // },
-    ignoreUnknownFormats: true,
-  });
+  oasTools.configure(oasConfig);
   await new Promise((resolve, reject) => {
     oasTools.initialize(spec, context.app, (error: Error) => {
       if (error) {
