@@ -1,25 +1,19 @@
 import {
-  AggregationCursor,
-  CollectionAggregationOptions,
-  CollectionInsertManyOptions,
-  CommonOptions,
-  Cursor,
   Db,
-  DeleteWriteOpResultObject,
-  FindOneOptions,
-  InsertWriteOpResult,
   MongoClient,
   MongoClientCommonOption,
   MongoClientOptions,
-  MongoCountPreferences,
-  UpdateManyOptions,
-  UpdateWriteOpResult,
 } from 'mongodb';
+import {
+  Model,
+  MongoCollection,
+} from '.';
+import { MongoConfig } from '../types';
 
 export class MongoManager {
-  public static async connect(mongoUri: string, dbName: string, mongoClientOptions?: MongoClientOptions, dbOptions?: MongoClientCommonOption): Promise<MongoManager> {
-    const mongo = new MongoManager(mongoUri, dbName, mongoClientOptions, dbOptions);
-    mongo.client = await MongoClient.connect(mongoUri, mongoClientOptions);
+  public static async connect({ mongoUri, dbName, clientOptions, dbOptions }: MongoConfig): Promise<MongoManager> {
+    const mongo = new MongoManager(mongoUri, dbName, clientOptions, dbOptions);
+    mongo.client = await MongoClient.connect(mongoUri, clientOptions);
     return mongo;
   }
 
@@ -37,5 +31,9 @@ export class MongoManager {
       this.client = await MongoClient.connect(this.mongoUri, this.mongoClientOptions);
     }
     return this.client.db(this.dbName, this.dbOptions);
+  }
+
+  public collection(collectionName: string, model?: Model): MongoCollection {
+    return new MongoCollection(this, collectionName, model);
   }
 }

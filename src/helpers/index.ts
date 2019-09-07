@@ -1,13 +1,9 @@
-import { BaseModel } from './base-model';
-import { JsendOasSchema } from './jsend-oas-schema';
-import { Logger } from './logger';
-import { ModelCrud } from './model-crud';
+import { Model } from './model';
+import { MongoCollection } from './mongo-collection';
 import { MongoManager } from './mongo-manager';
 
 export {
-  Logger,
+  Model,
+  MongoCollection,
   MongoManager,
-  BaseModel,
-  JsendOasSchema,
-  ModelCrud,
 };

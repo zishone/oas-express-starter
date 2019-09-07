@@ -1,4 +1,4 @@
-import { JsendOasSchema } from '../../helpers';
+import { createSuccessSchema } from '../../utils';
 
 export const login = {
   post: {
@@ -21,7 +21,7 @@ export const login = {
         description: 'Success',
         content: {
           'application/json': {
-            schema: new JsendOasSchema('#/components/schemas/User').getSuccessSchema(),
+            schema: createSuccessSchema('#/components/schemas/User'),
           },
         },
       },

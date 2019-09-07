@@ -1,7 +1,7 @@
-import { BaseModel } from '../helpers';
-import { joi } from '../utils';
+import joi = require('@hapi/joi');
+import { Model } from '../helpers';
 
-export class RegisterRequestModel extends BaseModel {
+export class RegisterRequestModel extends Model {
   constructor() {
     const schema = joi.object().keys({
       username: joi.string().required(),

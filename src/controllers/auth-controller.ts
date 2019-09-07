@@ -1,15 +1,12 @@
-import passport = require('passport');
-import { Logger } from '../helpers/Logger';
 import {
+  NextFunction,
   Request,
   Response,
-} from '../types';
+} from 'express';
+import passport = require('passport');
 
-const log = new Logger(__filename);
-
-export const loginController = async (req: Request, res: Response , next: any) => {
+export const loginController = async (req: Request, res: Response , next: NextFunction) => {
   try {
-    log.info('Logging in ...');
     const user: any = await new Promise((resolve, reject) => {
       passport.authenticate('jwt', (error: Error, user: any): void => {
         if (error) {
@@ -29,7 +26,6 @@ export const loginController = async (req: Request, res: Response , next: any) =
       });
     });
   } catch (error) {
-    log.error('Error while logging in user %O', error);
-    res.jsend.error(error);
+    next(error);
   }
 };

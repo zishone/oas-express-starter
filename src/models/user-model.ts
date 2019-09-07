@@ -1,14 +1,14 @@
-import { BaseModel } from '../helpers';
-import { joi } from '../utils';
+import joi = require('@hapi/joi');
+import { Model } from '../helpers';
 
-export class UserModel extends BaseModel {
+export class UserModel extends Model {
   constructor() {
     const schema = joi.object().keys({
-      _id: joi.soid(),
+      _id: joi.string(),
       username: joi.string(),
       password: joi.string(),
       createDate: joi.number(),
     });
-    super(schema, 'User');
+    super(schema);
   }
 }

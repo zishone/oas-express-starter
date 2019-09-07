@@ -12,62 +12,69 @@ import {
   UpdateWriteOpResult,
 } from 'mongodb';
 import {
-  BaseModel,
+  Model,
   MongoManager,
 } from '.';
 
-export class ModelCrud {
+export class MongoCollection {
   constructor(
     private mongo: MongoManager,
-    private model: BaseModel,
+    private collectionName: string,
+    private model?: Model,
   ) {}
 
   public async insert(data: any | any[], options?: CollectionInsertManyOptions): Promise<InsertWriteOpResult> {
     const db = await this.mongo.getDb();
+    if (!Array.isArray(data)) {
+      data = [ data ];
+    }
+    if (this.model) {
+      await this.model.validateMany(data);
+    }
     return await db
-      .collection(this.model.collectionName!)
+      .collection(this.collectionName!)
       .insertMany(data, options);
   }
 
   public async find(filter?: any, options?: FindOneOptions): Promise<Cursor> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.model.collectionName!)
+      .collection(this.collectionName!)
       .find(filter, options);
   }
 
   public async aggregate(pipeline: any[], options?: CollectionAggregationOptions): Promise<AggregationCursor> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.model.collectionName!)
+      .collection(this.collectionName!)
       .aggregate(pipeline, options);
   }
 
   public async distinct(filter: any, key: string, options?: any): Promise<any> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.model.collectionName!)
+      .collection(this.collectionName!)
       .distinct(key, filter, options);
   }
 
   public async count(filter?: any, options?: MongoCountPreferences): Promise<number> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.model.collectionName!)
+      .collection(this.collectionName!)
       .count(filter, options);
   }
 
   public async update(filter: any = {}, update: any, options?: UpdateManyOptions): Promise<UpdateWriteOpResult> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.model.collectionName!)
+      .collection(this.collectionName!)
       .updateMany(filter, update, options);
   }
 
   public async delete(filter?: any, options?: CommonOptions): Promise<DeleteWriteOpResultObject> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.model.collectionName!)
+      .collection(this.collectionName!)
       .deleteMany(filter, options);
   }
 }
