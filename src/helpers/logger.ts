@@ -12,12 +12,20 @@ export class Logger {
     this.filename = filename.split('.')[0].split('/').pop() || '';
   }
 
+  public info(formatter: any, ...args: any[]) {
+    debug(`${appConfig.name}:info:${new Date().toISOString()}`)(formatter, ...args);
+  }
+
+  public error(formatter: any, ...args: any[]) {
+    debug(`${appConfig.name}:error:${new Date().toISOString()}`)(formatter, ...args);
+  }
+
   public begun(functionName: string, ...args: any[]) {
-    debug(`${appConfig.name}:info:${new Date().toISOString()}`)(`${this.compnent}.${this.filename}.${functionName}.begun %O`, ...args);
+    this.info(`${this.compnent}.${this.filename}.${functionName}.begun %O`, ...args);
   }
 
   public failed(functionName: string, ...args: any[]) {
-    debug(`${appConfig.name}:info:${new Date().toISOString()}`)(`${this.compnent}.${this.filename}.${functionName}.failed %O`, ...args);
-    debug(`${appConfig.name}:error:${new Date().toISOString()}`)(`${this.compnent}.${this.filename}.${functionName}.failed %O`, ...args);
+    this.info(`${this.compnent}.${this.filename}.${functionName}.failed %O`, ...args);
+    this.error(`${this.compnent}.${this.filename}.${functionName}.failed %O`, ...args);
   }
 }

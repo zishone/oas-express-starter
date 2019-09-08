@@ -15,6 +15,7 @@ import {
 } from './config';
 import { COLLECTIONS } from './constants';
 import {
+  Logger,
   MongoManager,
 } from './helpers';
 import {
@@ -24,6 +25,8 @@ import {
 } from './middlewares';
 import { UserModel } from './models';
 import { spec } from './openapi';
+
+const logger = new Logger('root', __filename);
 
 export class App {
   private app: express.Application;
@@ -97,7 +100,7 @@ export class App {
     try {
       this.mongo = await MongoManager.connect(mongoConfig);
     } catch (error) {
-      // TODO: Add loggers and unit tests.
+      logger.error('Could not establish a connection with the database');
     }
   }
 }

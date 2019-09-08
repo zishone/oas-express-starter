@@ -18,10 +18,10 @@ npm start
 ```
 
 ## Project Structure
-| Name | Description |
+| Name                      | Description                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------- |
-| **.vscode**               | Contains VS Code specific settings                                                            |
 | **dist**                  | Contains the distributable (or output) from your TypeScript build. This is the code you ship  |
+| **test**                  | Contains your tests. Separate from source because there is a different build process.         |
 | **src**                   | Contains your source code that will be compiled to the dist dir                               |
 | **src/config**            | Contains your configuration files                                                             |
 | **src/constants**         | Contains your constants                                                                       |
@@ -35,12 +35,11 @@ npm start
 | **src/utils**             | Contains your reusable stateless utility functions.                                           |
 | **src**/app.ts            | Configurations for you express app                                                            |
 | **src**/server.ts         | Entry point to your express app                                                               |
-| **test**                  | Contains your tests. Separate from source because there is a different build process.         |
 
 ## Authors
 * **Zishran Julbert Garces**
 
-See also the list of [contributors](https://github.com/superzish/oas-express-starter/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/zishone/oas-express-starter/contributors) who participated in this project.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/superzish/oas-express-starter/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/zishone/oas-express-starter/blob/master/LICENSE) file for details.
