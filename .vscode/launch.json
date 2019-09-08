@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "oas-express-starter",
+      "program": "${workspaceFolder}/dist/server.js",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js"
+      ],
+      "env": {
+        "CONFIG_PORT": "4000",
+        "CONFIG_BEARER_SECRET": "bearer_secret",
+        "CONFIG_REFRESH_SECRET": "refresh_secret",
+        "CONFIG_BEARER_TTL": "300",
+        "CONFIG_REFRESH_TTL": "3600",
+        "CONFIG_LOG_LEVEL": "info",
+        "CONFIG_MONGO_URI": "mongodb://127.0.0.1:27017",
+        "CONFIG_DB_NAME": "test"
+      }
+    }
+  ]
+}
