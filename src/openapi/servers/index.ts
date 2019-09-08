@@ -1,5 +1,7 @@
+import { appConfig } from '../../config';
+
 export const servers: any[] = [
   {
-    url: 'http://localhost:3000',
+    url: `http://localhost:${appConfig.port}/api/v1`,
   },
 ];
