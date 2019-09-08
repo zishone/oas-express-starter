@@ -28,9 +28,7 @@ export const jsendMiddleware = (): any => {
           .status(statusCode || 500)
           .send({
             status: 'error',
-            data: error,
             message: error.message,
-            code: error.name,
           });
       },
     };

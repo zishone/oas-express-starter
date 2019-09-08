@@ -1,9 +1,11 @@
-import { login } from './login';
-import { users } from './users';
-import { usersUsername } from './users-username';
+import auth = require('./auth');
+import health = require('./health');
+import users = require('./users');
 
 export const paths = {
-  // '/users': users,
-  // '/users/{username}': usersUsername,
-  '/login': login,
+  '/health': health._,
+  '/auth/register': auth.register,
+  '/auth/login': auth.login,
+  '/auth/refresh': auth.refresh,
+  '/users/{username}': users.username,
 };

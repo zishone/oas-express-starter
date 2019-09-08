@@ -1,5 +1,6 @@
 import { paths } from './paths';
 import { schemas } from './schemas';
+import { securitySchemes } from './security-schemes';
 import { servers } from './servers';
 
 export const spec = {
@@ -12,5 +13,6 @@ export const spec = {
   servers,
   components: {
     schemas,
+    securitySchemes,
   },
 };

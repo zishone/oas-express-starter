@@ -5,11 +5,16 @@ import {
 } from 'express';
 
 export const errorHandlerMiddleware = (): any => {
-  return (error: Error, req: Request, res: Response, next: NextFunction): void => {
+  return (error: Error, _: Request, res: Response, next: NextFunction): void => {
     if (res.headersSent) {
       next(error);
     } else {
-      res.jsend.error(error);
+      res
+        .status(500)
+        .send({
+          status: 'error',
+          message: error.message,
+        });
     }
   };
 };

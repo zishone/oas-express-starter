@@ -1,11 +1,15 @@
+import { CredentialsModel } from './credentials-model';
 import { GenericModel } from './generic-model';
-import { LoginRequestModel } from './login-request-model';
-import { RegisterRequestModel } from './register-request-model';
+import { HealthModel } from './health-model';
+import { NewUserModel } from './new-user-model';
+import { TokensModel } from './tokens-model';
 import { UserModel } from './user-model';
 
 export {
-  RegisterRequestModel,
-  UserModel,
-  LoginRequestModel,
+  CredentialsModel,
   GenericModel,
+  HealthModel,
+  NewUserModel,
+  TokensModel,
+  UserModel,
 };

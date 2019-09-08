@@ -1,7 +1,9 @@
 import {
+  CredentialsModel,
   GenericModel,
-  LoginRequestModel,
-  RegisterRequestModel,
+  HealthModel,
+  NewUserModel,
+  TokensModel,
   UserModel,
 } from '../../models';
 import {
@@ -15,7 +17,9 @@ export const schemas = {
   GenericSuccessResponse: createSuccessSchema('#/components/schemas/Generic'),
   GenericFailResponse: createFailSchema('#/components/schemas/Generic'),
   GenericErrorResponse: createErrorSchema('#/components/schemas/Generic'),
-  NewUser: new RegisterRequestModel().getOasSchema(),
+  Health: new HealthModel().getOasSchema(),
+  NewUser: new NewUserModel().getOasSchema(),
   User: new UserModel().getOasSchema(),
-  LoginInput: new LoginRequestModel().getOasSchema(),
+  Credentials: new CredentialsModel().getOasSchema(),
+  Tokens: new TokensModel().getOasSchema(),
 };

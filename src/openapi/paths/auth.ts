@@ -1,80 +1,15 @@
 import { createSuccessSchema } from '../../utils';
 
-export const username = {
-  get: {
+export const register = {
+  post: {
     ['x-router-controller']: 'index',
-    description: 'Gets a user.',
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
-    operationId: 'getUserController',
-    parameters: [
-      {
-        in: 'path',
-        name: 'username',
-        required: true,
-        schema: {
-          type: 'string',
-        },
-      },
-    ],
-    responses: {
-      200: {
-        description: 'Success',
-        content: {
-          'application/json': {
-            schema: createSuccessSchema('#/components/schemas/User'),
-          },
-        },
-      },
-      400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
-      },
-      default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
-      },
-    },
-  },
-  put: {
-    ['x-router-controller']: 'index',
-    description: 'Updates a user.',
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
-    operationId: 'updateUserController',
-    parameters: [
-      {
-        in: 'path',
-        name: 'username',
-        required: true,
-        schema: {
-          type: 'string',
-        },
-      },
-    ],
+    description: 'Registers a new user.',
+    operationId: 'registerController',
     requestBody: {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/User',
+            $ref: '#/components/schemas/NewUser',
           },
         },
       },
@@ -112,31 +47,79 @@ export const username = {
       },
     },
   },
-  delete: {
+};
+
+export const login = {
+  post: {
     ['x-router-controller']: 'index',
-    description: 'Deletes a user.',
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
-    operationId: 'deleteUserController',
-    parameters: [
-      {
-        in: 'path',
-        name: 'username',
-        required: true,
-        schema: {
-          type: 'string',
+    description: 'Authenticates a user.',
+    operationId: 'loginController',
+    requestBody: {
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/schemas/Credentials',
+          },
         },
       },
-    ],
+      required: true,
+      ['x-name']: 'body',
+    },
     responses: {
       200: {
         description: 'Success',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/User'),
+            schema: createSuccessSchema('#/components/schemas/Tokens'),
+          },
+        },
+      },
+      400: {
+        description: 'Fail',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/GenericFailResponse',
+            },
+          },
+        },
+      },
+      default: {
+        description: 'Error',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/GenericErrorResponse',
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const refresh = {
+  post: {
+    ['x-router-controller']: 'index',
+    description: 'Refreshes access tokens.',
+    operationId: 'refreshController',
+    requestBody: {
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/schemas/Tokens',
+          },
+        },
+      },
+      required: true,
+      ['x-name']: 'body',
+    },
+    responses: {
+      200: {
+        description: 'Success',
+        content: {
+          'application/json': {
+            schema: createSuccessSchema('#/components/schemas/Tokens'),
           },
         },
       },

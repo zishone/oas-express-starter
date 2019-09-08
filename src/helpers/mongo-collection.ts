@@ -43,6 +43,13 @@ export class MongoCollection {
       .find(filter, options);
   }
 
+  public async findOne(filter?: any, options?: FindOneOptions): Promise<any> {
+    const db = await this.mongo.getDb();
+    return await db
+      .collection(this.collectionName!)
+      .findOne(filter, options);
+  }
+
   public async aggregate(pipeline: any[], options?: CollectionAggregationOptions): Promise<AggregationCursor> {
     const db = await this.mongo.getDb();
     return await db

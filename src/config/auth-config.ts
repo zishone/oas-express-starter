@@ -1,5 +1,6 @@
 export const authConfig = {
-  secret: process.env.CONFIG_JWT_SECRET                             || 'secret',
-  accessTokenTtl: parseFloat(process.env.CONFIG_ACCESS_TOKEN_TTL    || '300'),
-  refreshTokenTtl: parseFloat(process.env.CONFIG_REFRESH_TOKEN_TTL  || '3600'),
+  bearerSecret: process.env.CONFIG_BEARER_SECRET         || 'bearer_secret',
+  refreshSecret: process.env.CONFIG_REFRESH_SECRET       || 'refresh_secret',
+  bearerTtl: parseFloat(process.env.CONFIG_BEARER_TTL    || '300'),
+  refreshTtl: parseFloat(process.env.CONFIG_REFRESH_TTL  || '3600'),
 };
