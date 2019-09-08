@@ -1,4 +1,5 @@
 import { MongoManager } from '../../helpers';
+import { NextFunction } from 'express';
 
 declare module 'express' {
   interface Request {

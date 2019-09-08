@@ -1,5 +1,1 @@
-import { COLLECTIONS } from './collections-constant';
-
-export {
-  COLLECTIONS,
-};
+export { COLLECTIONS } from './collections-constant';

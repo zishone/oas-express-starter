@@ -98,7 +98,7 @@ export class App {
 
   private async connectMongo(): Promise<void> {
     try {
-      this.mongo = await MongoManager.connect(mongoConfig);
+      this.mongo = new MongoManager(mongoConfig);
     } catch (error) {
       logger.error('Could not establish a connection with the database');
     }

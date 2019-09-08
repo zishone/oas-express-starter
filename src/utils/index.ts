@@ -1,9 +1,3 @@
-import { createErrorSchema } from './create-error-schema';
-import { createFailSchema } from './create-fail-schema';
-import { createSuccessSchema } from './create-succes-schema';
-
-export {
-  createFailSchema,
-  createErrorSchema,
-  createSuccessSchema,
-};
+export { createErrorSchema } from './create-error-schema';
+export { createFailSchema } from './create-fail-schema';
+export { createSuccessSchema } from './create-succes-schema';

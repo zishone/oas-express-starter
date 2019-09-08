@@ -1,15 +1,6 @@
-import { CredentialsModel } from './credentials-model';
-import { GenericModel } from './generic-model';
-import { HealthModel } from './health-model';
-import { NewUserModel } from './new-user-model';
-import { TokensModel } from './tokens-model';
-import { UserModel } from './user-model';
-
-export {
-  CredentialsModel,
-  GenericModel,
-  HealthModel,
-  NewUserModel,
-  TokensModel,
-  UserModel,
-};
+export { CredentialsModel } from './credentials-model';
+export { GenericModel } from './generic-model';
+export { HealthModel } from './health-model';
+export { NewUserModel } from './new-user-model';
+export { TokensModel } from './tokens-model';
+export { UserModel } from './user-model';
