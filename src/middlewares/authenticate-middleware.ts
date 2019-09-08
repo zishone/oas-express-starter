@@ -11,7 +11,6 @@ export const authenticateMiddleware = (): any => {
       if (error) {
         next(error);
       } else if (!user) {
-        console.log('no user');
         res.jsend.fail({
           Authorization: 'Authentication failed.',
         });

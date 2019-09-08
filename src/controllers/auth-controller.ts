@@ -7,10 +7,14 @@ import {
 import jwt = require('jsonwebtoken');
 import { authConfig } from '../config';
 import { COLLECTIONS } from '../constants';
+import { Logger } from '../helpers';
 import { UserModel } from '../models';
+
+const logger = new Logger('controller', __filename);
 
 export const registerController = async (req: Request, res: Response , _: NextFunction) => {
   try {
+    logger.begun('registerController');
     const newUser = req.swagger.params.body.value;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const filter = {
@@ -33,12 +37,15 @@ export const registerController = async (req: Request, res: Response , _: NextFu
     const user = await userCollection.findOne(filter, { projection });
     res.jsend.success(user);
   } catch (error) {
+    logger.failed('registerController', error);
     res.jsend.error(error);
   }
 };
 
 export const loginController = async (req: Request, res: Response , _: NextFunction) => {
   try {
+    logger.begun('loginController');
+    throw new Error('hehe');
     const credentials = req.swagger.params.body.value;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const filter = {
@@ -72,12 +79,14 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
       refreshToken: `Refresh ${refreshToken}`,
     });
   } catch (error) {
+    logger.failed('loginController', error);
     res.jsend.error(error);
   }
 };
 
 export const refreshController = async (req: Request, res: Response , _: NextFunction) => {
   try {
+    logger.begun('refreshController');
     const tokens = req.swagger.params.body.value;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const refreshRegex = /^Refresh\s/;
@@ -106,6 +115,7 @@ export const refreshController = async (req: Request, res: Response , _: NextFun
       refreshToken: `Refresh ${refreshToken}`,
     });
   } catch (error) {
+    logger.failed('refreshController', error);
     res.jsend.error(error);
   }
 };

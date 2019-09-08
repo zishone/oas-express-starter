@@ -5,7 +5,7 @@ import {
   refreshController,
   registerController,
 } from './auth-controller';
-import { healthController } from './health-contoller';
+import { healthController } from './health-controller';
 import {
   deleteUserController,
   getUserController,

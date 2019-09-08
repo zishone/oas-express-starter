@@ -1,10 +1,9 @@
 import { join } from 'path';
-import { appConfig } from '.';
 
 export const oasConfig = {
   controllers: join(__dirname, '..', 'controllers'),
   checkControllers: true,
-  loglevel: appConfig.logLevel,
+  loglevel: process.env.CONFIG_LOG_LEVEL || 'info',
   strict: false,
   router: true,
   validator: true,
