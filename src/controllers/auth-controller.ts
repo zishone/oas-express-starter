@@ -45,7 +45,6 @@ export const registerController = async (req: Request, res: Response , _: NextFu
 export const loginController = async (req: Request, res: Response , _: NextFunction) => {
   try {
     logger.begun('loginController');
-    throw new Error('hehe');
     const credentials = req.swagger.params.body.value;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const filter = {

@@ -1,5 +1,5 @@
 # oas-express-starter
-A starter template for an OpenAPI 3.0 compliant Express.js server with TypeScript.
+A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript.
 
 ## Getting started
 - Clone the repository
@@ -20,21 +20,21 @@ npm start
 ## Project Structure
 | Name                      | Description                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------- |
-| **dist**                  | Contains the distributable (or output) from your TypeScript build. This is the code you ship  |
+| **dist**                  | Contains the distributable (or output) from your TypeScript build. This is the code you ship. |
 | **test**                  | Contains your tests. Separate from source because there is a different build process.         |
-| **src**                   | Contains your source code that will be compiled to the dist dir                               |
-| **src/config**            | Contains your configuration files                                                             |
-| **src/constants**         | Contains your constants                                                                       |
-| **src/controllers**       | Contains your controllers to handle various http requests                                     |
-| **src/helpers**           | Contains your resuable helper classes                                                         |
-| **src/middlewares**       | Contains your custom middlewares                                                              |
-| **src/models**            | Contains your schema definitions using @hapi/joi                                              |
-| **src/openapi**           | Contains your OpenAPI 3.0 specification                                                       |
-| **src/services**          | Contains your services, this is where you will put you business logic                         |
-| **src/types**             | Contains .d.ts files not found on DefinitelyTyped. Covered more in this section               |
+| **src**                   | Contains your source code that will be compiled to the dist dir.                              |
+| **src/config**            | Contains your configuration files.                                                            |
+| **src/constants**         | Contains your constants.                                                                      |
+| **src/controllers**       | Contains your controllers to handle various http requests.                                    |
+| **src/helpers**           | Contains your resuable helper classes.                                                        |
+| **src/middlewares**       | Contains your custom middlewares.                                                             |
+| **src/models**            | Contains your schema definitions using [@hapi/joi](https://www.npmjs.com/package/@hapi/joi).  |
+| **src/openapi**           | Contains your OpenAPI 3.0 specification.                                                      |
+| **src/services**          | Contains your services, this is where you will put your business logic.                       |
+| **src/types**             | Contains .d.ts files not found on DefinitelyTyped. Covered more in this section.              |
 | **src/utils**             | Contains your reusable stateless utility functions.                                           |
-| **src**/app.ts            | Configurations for you express app                                                            |
-| **src**/server.ts         | Entry point to your express app                                                               |
+| **src**/app.ts            | Configurations for you express app.                                                           |
+| **src**/server.ts         | Entry point to your express app.                                                              |
 
 ## Authors
 * **Zishran Julbert Garces**

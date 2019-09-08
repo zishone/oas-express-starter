@@ -1,5 +1,5 @@
+import { MiddlewareChain } from '../helpers';
 import { authenticateMiddleware } from '../middlewares';
-import { composeMiddlewares } from '../utils/compose-middlewares';
 import {
   loginController,
   refreshController,
@@ -12,12 +12,12 @@ import {
   updateUserController,
 } from './users-controller';
 
-module.exports = {
-  healthController: composeMiddlewares(healthController),
-  loginController: composeMiddlewares(loginController),
-  refreshController: composeMiddlewares(refreshController),
-  registerController: composeMiddlewares(registerController),
-  deleteUserController: composeMiddlewares(authenticateMiddleware(), deleteUserController),
-  getUserController: composeMiddlewares(authenticateMiddleware(), getUserController),
-  updateUserController: composeMiddlewares(authenticateMiddleware(), updateUserController),
+export = {
+  healthController: new MiddlewareChain(healthController).getHandler(),
+  loginController: new MiddlewareChain(loginController).getHandler(),
+  refreshController: new MiddlewareChain(refreshController).getHandler(),
+  registerController: new MiddlewareChain(registerController).getHandler(),
+  deleteUserController: new MiddlewareChain(authenticateMiddleware(), deleteUserController).getHandler(),
+  getUserController: new MiddlewareChain(authenticateMiddleware(), getUserController).getHandler(),
+  updateUserController: new MiddlewareChain(authenticateMiddleware(), updateUserController).getHandler(),
 };

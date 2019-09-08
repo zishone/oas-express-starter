@@ -75,5 +75,8 @@
     "starter",
     "template",
     "boilerplate"
-  ]
+  ],
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript"
+  }
 }

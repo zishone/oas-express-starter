@@ -1,11 +1,5 @@
-import { Logger } from './logger';
-import { Model } from './model';
-import { MongoCollection } from './mongo-collection';
-import { MongoManager } from './mongo-manager';
-
-export {
-  Logger,
-  Model,
-  MongoCollection,
-  MongoManager,
-};
+export { Logger } from './logger';
+export { MiddlewareChain } from './middleware-chain';
+export { Model } from './model';
+export { MongoCollection } from './mongo-collection';
+export { MongoManager } from './mongo-manager';

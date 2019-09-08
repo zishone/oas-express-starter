@@ -1,5 +1,9 @@
 import cors = require('cors');
-import express = require('express');
+import {
+  Application,
+  json,
+  urlencoded,
+} from 'express';
 import oasTools = require('oas-tools');
 import passport = require('passport');
 import {
@@ -29,25 +33,22 @@ import { spec } from './openapi';
 const logger = new Logger('root', __filename);
 
 export class App {
-  private app: express.Application;
   private mongo!: MongoManager;
 
-  constructor() {
-    this.app = express();
-  }
+  constructor(private app: Application) {}
 
-  public async initialize() {
+  public async configure() {
     await this.connectMongo();
     await this.composeMiddlewares();
     await this.configureOas();
     await this.configurePassport();
-    return this.app;
+    this.app.emit('ready');
   }
 
   private async composeMiddlewares(): Promise<void> {
     this.app.use(mongoMiddleware(this.mongo));
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(json());
+    this.app.use(urlencoded({ extended: true }));
     this.app.use(cors(corsConfig));
     this.app.use(passport.initialize());
     this.app.use(jsendMiddleware());
@@ -98,7 +99,7 @@ export class App {
 
   private async connectMongo(): Promise<void> {
     try {
-      this.mongo = await MongoManager.connect(mongoConfig);
+      this.mongo = new MongoManager(mongoConfig);
     } catch (error) {
       logger.error('Could not establish a connection with the database');
     }
