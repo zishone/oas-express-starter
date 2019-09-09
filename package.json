@@ -1,6 +1,6 @@
 {
   "name": "oas-express-starter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A starter template for an OpenAPI 3.0 compliant Express.js server.",
   "main": "dist/server.js",
   "types": "dist/types/index.d.ts",
@@ -44,8 +44,10 @@
     "@types/node": "^12.7.3",
     "@types/passport": "^1.0.1",
     "@types/passport-jwt": "^3.0.1",
+    "@types/sinon": "^7.0.13",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "felicity": "^5.0.1",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "rimraf": "^3.0.0",

@@ -12,6 +12,10 @@ import { UserModel } from '../models';
 
 const logger = new Logger('controller', __filename);
 
+/**
+ * POST /api/v1/auth/register
+ * Register
+ */
 export const registerController = async (req: Request, res: Response , _: NextFunction) => {
   try {
     logger.begun('registerController');
@@ -30,7 +34,7 @@ export const registerController = async (req: Request, res: Response , _: NextFu
       });
       return;
     }
-    const salt = bcrypt.genSaltSync(12);
+    const salt = bcrypt.genSaltSync(authConfig.saltRounds);
     newUser.password = bcrypt.hashSync(newUser.password, salt);
     newUser.createDate = + new Date();
     await userCollection.insert(newUser);
@@ -42,6 +46,10 @@ export const registerController = async (req: Request, res: Response , _: NextFu
   }
 };
 
+/**
+ * POST /api/v1/auth/login
+ * Login
+ */
 export const loginController = async (req: Request, res: Response , _: NextFunction) => {
   try {
     logger.begun('loginController');
@@ -83,6 +91,10 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
   }
 };
 
+/**
+ * POST /api/v1/auth/refresh
+ * Refresh
+ */
 export const refreshController = async (req: Request, res: Response , _: NextFunction) => {
   try {
     logger.begun('refreshController');

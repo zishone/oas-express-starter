@@ -1,7 +1,7 @@
 import joi = require('@hapi/joi');
-import { Model } from '../helpers';
+import { BaseModel } from '../helpers';
 
-export class NewUserModel extends Model {
+export class CredentialsModel extends BaseModel {
   constructor() {
     const schema = joi.object().keys({
       username: joi.string().required(),

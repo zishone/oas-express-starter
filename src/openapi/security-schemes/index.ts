@@ -1,5 +1,5 @@
 export const securitySchemes = {
-  bearerAuth: {
+  Bearer: {
     type: 'http',
     scheme: 'bearer',
     bearerFormat: 'JWT',

@@ -1,7 +1,7 @@
 import joi = require('@hapi/joi');
-import { Model } from '../helpers';
+import { BaseModel } from '../helpers';
 
-export class TokensModel extends Model {
+export class TokensModel extends BaseModel {
   constructor() {
     const schema = joi.object().keys({
       bearerToken: joi.string().required(),

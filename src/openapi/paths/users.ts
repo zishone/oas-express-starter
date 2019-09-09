@@ -6,7 +6,7 @@ export const username = {
     description: 'Gets a user.',
     security: [
       {
-        bearerAuth: [],
+        Bearer: [],
       },
     ],
     operationId: 'getUserController',
@@ -56,7 +56,7 @@ export const username = {
     description: 'Updates a user.',
     security: [
       {
-        bearerAuth: [],
+        Bearer: [],
       },
     ],
     operationId: 'updateUserController',
@@ -117,7 +117,7 @@ export const username = {
     description: 'Deletes a user.',
     security: [
       {
-        bearerAuth: [],
+        Bearer: [],
       },
     ],
     operationId: 'deleteUserController',

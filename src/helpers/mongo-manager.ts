@@ -3,7 +3,7 @@ import {
   MongoClient,
 } from 'mongodb';
 import {
-  Model,
+  BaseModel,
   MongoCollection,
 } from '.';
 
@@ -28,7 +28,7 @@ export class MongoManager {
     return this.client.db(this.dbName, this.dbOptions);
   }
 
-  public collection(collectionName: string, model?: Model): MongoCollection {
+  public collection(collectionName: string, model?: BaseModel): MongoCollection {
     return new MongoCollection(this, collectionName, model);
   }
 }

@@ -1,5 +1,5 @@
 import joi = require('@hapi/joi');
-import { Model } from '../helpers';
+import { BaseModel } from '../helpers';
 
 export function createFailSchema(dataRef: string) {
   const schema = joi.object().keys({
@@ -8,5 +8,5 @@ export function createFailSchema(dataRef: string) {
       $ref: dataRef,
     }),
   });
-  return new Model(schema).getOasSchema();
+  return new BaseModel(schema).getOasSchema();
 }
