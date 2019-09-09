@@ -16,6 +16,7 @@ describe('health', () => {
   describe('GET /api/v1/health', () => {
     it('should return 200', async () => {
       const response = await request(app).get('/api/v1/health');
+
       expect(response.status).to.equals(200);
     });
   });

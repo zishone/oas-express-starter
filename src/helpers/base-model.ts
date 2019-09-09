@@ -1,11 +1,8 @@
-import {
-  AnySchema,
-  ValidationResult,
-} from '@hapi/joi';
+import { AnySchema } from '@hapi/joi';
 import joi = require('@hapi/joi');
 import { convert } from 'joi-openapi';
 
-export class Model {
+export class BaseModel {
   constructor(private schema: AnySchema) {}
 
   public getJoiSchema(): any {

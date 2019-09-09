@@ -4,12 +4,17 @@ import {
   Request,
   Response,
 } from 'express';
+import { authConfig } from '../config';
 import { COLLECTIONS } from '../constants';
 import { Logger } from '../helpers';
 import { UserModel } from '../models';
 
 const logger = new Logger('controller', __filename);
 
+/**
+ * GET /api/v1/auth/users/{username}
+ * Get User
+ */
 export const getUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
     logger.begun('getUserController');
@@ -26,6 +31,10 @@ export const getUserController = async (req: Request, res: Response, _: NextFunc
   }
 };
 
+/**
+ * PUT /api/v1/auth/users/{username}
+ * Update User
+ */
 export const updateUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
     logger.begun('updateUserController');
@@ -33,7 +42,7 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
     const update = req.swagger.params.body.value;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     if (update.password) {
-      const salt = bcrypt.genSaltSync(12);
+      const salt = bcrypt.genSaltSync(authConfig.saltRounds);
       update.password = bcrypt.hashSync(update.password, salt);
     }
     await userCollection.update({ username }, {
@@ -53,6 +62,10 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
   }
 };
 
+/**
+ * DELETE /api/v1/auth/users/{username}
+ * Delete User
+ */
 export const deleteUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
     logger.begun('deleteUserController');

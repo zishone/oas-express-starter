@@ -1,1 +1,1 @@
-export { COLLECTIONS } from './collections-constant';
+export { COLLECTIONS } from './collections.constant';

@@ -23,7 +23,6 @@ import {
   MongoManager,
 } from './helpers';
 import {
-  errorHandlerMiddleware,
   jsendMiddleware,
   mongoMiddleware,
 } from './middlewares';
@@ -52,7 +51,6 @@ export class App {
     this.app.use(cors(corsConfig));
     this.app.use(passport.initialize());
     this.app.use(jsendMiddleware());
-    this.app.use(errorHandlerMiddleware());
   }
 
   private async configureOas(): Promise<void> {
@@ -98,10 +96,6 @@ export class App {
   }
 
   private async connectMongo(): Promise<void> {
-    try {
-      this.mongo = new MongoManager(mongoConfig);
-    } catch (error) {
-      logger.error('Could not establish a connection with the database');
-    }
+    this.mongo = new MongoManager(mongoConfig);
   }
 }
