@@ -29,7 +29,7 @@ npm start
 | **src/helpers**           | Contains your resuable helper classes.                                                        |
 | **src/middlewares**       | Contains your custom middlewares.                                                             |
 | **src/models**            | Contains your schema definitions using [@hapi/joi](https://www.npmjs.com/package/@hapi/joi).  |
-| **src/openapi**           | Contains your OpenAPI 3.0 specification.                                                      |
+| **src/openapi**           | Contains your OpenAPI 3.0 specification written as JSON.                                      |
 | **src/services**          | Contains your services, this is where you will put your business logic.                       |
 | **src/types**             | Contains .d.ts files not found on DefinitelyTyped. Covered more in this section.              |
 | **src/utils**             | Contains your reusable stateless utility functions.                                           |
