@@ -1,5 +1,5 @@
 export const genericClientError = {
-  description: '4XX Server Error',
+  description: '4XX Client Error',
   content: {
     'application/json': {
       schema: {
