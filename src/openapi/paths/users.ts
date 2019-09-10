@@ -6,7 +6,7 @@ export const username = {
     description: 'Gets a user.',
     security: [
       {
-        Bearer: [],
+        bearerAuth: [],
       },
     ],
     operationId: 'getUserController',
@@ -21,33 +21,19 @@ export const username = {
       },
     ],
     responses: {
-      200: {
+      ['2XX']: {
         description: 'Success',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/User'),
+            schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
       },
-      400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },
@@ -56,7 +42,7 @@ export const username = {
     description: 'Updates a user.',
     security: [
       {
-        Bearer: [],
+        bearerAuth: [],
       },
     ],
     operationId: 'updateUserController',
@@ -74,7 +60,7 @@ export const username = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/User',
+            $ref: '#/components/schemas/user',
           },
         },
       },
@@ -82,33 +68,19 @@ export const username = {
       ['x-name']: 'body',
     },
     responses: {
-      200: {
+      ['2XX']: {
         description: 'Success',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/User'),
+            schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
       },
-      400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },
@@ -117,7 +89,7 @@ export const username = {
     description: 'Deletes a user.',
     security: [
       {
-        Bearer: [],
+        bearerAuth: [],
       },
     ],
     operationId: 'deleteUserController',
@@ -132,33 +104,19 @@ export const username = {
       },
     ],
     responses: {
-      200: {
+      ['2XX']: {
         description: 'Success',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/User'),
+            schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
       },
-      400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },

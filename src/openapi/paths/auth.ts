@@ -9,7 +9,7 @@ export const register = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/NewUser',
+            $ref: '#/components/schemas/newUser',
           },
         },
       },
@@ -17,33 +17,19 @@ export const register = {
       ['x-name']: 'body',
     },
     responses: {
-      200: {
+      ['2XX']: {
         description: 'Success',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/User'),
+            schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
       },
-      400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },
@@ -58,7 +44,7 @@ export const login = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/Credentials',
+            $ref: '#/components/schemas/credentials',
           },
         },
       },
@@ -66,33 +52,19 @@ export const login = {
       ['x-name']: 'body',
     },
     responses: {
-      200: {
+      ['2XX']: {
         description: 'Success',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/Tokens'),
+            schema: createSuccessSchema('#/components/schemas/tokens'),
           },
         },
       },
-      400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },
@@ -107,7 +79,7 @@ export const refresh = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/Tokens',
+            $ref: '#/components/schemas/tokens',
           },
         },
       },
@@ -115,33 +87,19 @@ export const refresh = {
       ['x-name']: 'body',
     },
     responses: {
-      200: {
+      ['2XX']: {
         description: 'Success',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/Tokens'),
+            schema: createSuccessSchema('#/components/schemas/tokens'),
           },
         },
       },
-      400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },

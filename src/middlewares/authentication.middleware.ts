@@ -14,7 +14,7 @@ export const authenticationMiddleware = (): any => {
         } else if (!user) {
           res.jsend.fail({
             Authorization: 'Authentication failed.',
-          });
+          }, 401);
         } else {
           req.logIn(user, (err) => {
             if (err) {

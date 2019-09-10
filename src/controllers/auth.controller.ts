@@ -30,7 +30,7 @@ export const registerController = async (req: Request, res: Response , _: NextFu
     const existingUser = await userCollection.findOne(filter, { projection });
     if (existingUser) {
       res.jsend.fail({
-        username: 'Username already exists.',
+        username: 'User already exists.',
       });
       return;
     }
@@ -61,8 +61,8 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
     const user = await userCollection.findOne(filter);
     if (!user) {
       res.jsend.fail({
-        username: 'Username not found.',
-      });
+        username: 'User not found.',
+      }, 404);
       return;
     }
     const isMatch = bcrypt.compareSync(credentials.password, user.password);
@@ -108,8 +108,8 @@ export const refreshController = async (req: Request, res: Response , _: NextFun
     const user = await userCollection.findOne(filter);
     if (!user) {
       res.jsend.fail({
-        refreshToken: 'Invalid refresh token.',
-      });
+        refreshToken: 'User not found.',
+      }, 404);
       return;
     }
     const payload = {
