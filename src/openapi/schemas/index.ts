@@ -13,13 +13,13 @@ import {
 } from '../../utils';
 
 export const schemas = {
-  Generic: new GenericModel().getOasSchema(),
-  GenericSuccessResponse: createSuccessSchema('#/components/schemas/Generic'),
-  GenericFailResponse: createFailSchema('#/components/schemas/Generic'),
-  GenericErrorResponse: createErrorSchema('#/components/schemas/Generic'),
-  Health: new HealthModel().getOasSchema(),
-  NewUser: new NewUserModel().getOasSchema(),
-  User: new UserModel().getOasSchema(),
-  Credentials: new CredentialsModel().getOasSchema(),
-  Tokens: new TokensModel().getOasSchema(),
+  generic: new GenericModel().getOasSchema(),
+  genericSuccessResponse: createSuccessSchema('#/components/schemas/generic'),
+  genericFailResponse: createFailSchema('#/components/schemas/generic'),
+  genericErrorResponse: createErrorSchema('#/components/schemas/generic'),
+  health: new HealthModel().getOasSchema(),
+  newUser: new NewUserModel().getOasSchema(),
+  user: new UserModel().getOasSchema(),
+  credentials: new CredentialsModel().getOasSchema(),
+  tokens: new TokensModel().getOasSchema(),
 };

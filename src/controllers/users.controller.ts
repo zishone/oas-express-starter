@@ -24,6 +24,12 @@ export const getUserController = async (req: Request, res: Response, _: NextFunc
       password: 0,
     };
     const user = await userCollection.findOne({ username }, { projection });
+    if (!user) {
+      res.jsend.fail({
+        username: 'User not found.',
+      }, 404);
+      return;
+    }
     res.jsend.success(user);
   } catch (error) {
     logger.failed('getUserController', error);
@@ -55,6 +61,12 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
       password: 0,
     };
     const user = await userCollection.findOne(filter, { projection });
+    if (!user) {
+      res.jsend.fail({
+        username: 'User not found.',
+      }, 404);
+      return;
+    }
     res.jsend.success(user);
   } catch (error) {
     logger.failed('updateUserController', error);
@@ -75,6 +87,12 @@ export const deleteUserController = async (req: Request, res: Response, _: NextF
       password: 0,
     };
     const user = await userCollection.findOne({ username }, { projection });
+    if (!user) {
+      res.jsend.fail({
+        username: 'User not found.',
+      }, 404);
+      return;
+    }
     await userCollection.delete({ username });
     res.jsend.success(user);
   } catch (error) {

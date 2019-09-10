@@ -9,7 +9,7 @@ export const register = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/NewUser',
+            $ref: '#/components/schemas/newUser',
           },
         },
       },
@@ -18,32 +18,24 @@ export const register = {
     },
     responses: {
       200: {
-        description: 'Success',
+        description: '200 OK',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/User'),
+            schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
       },
       400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericBadRequest',
+      },
+      401: {
+        $ref: '#components/responses/genericUnauthorized',
+      },
+      404: {
+        $ref: '#components/responses/genericNotFound',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },
@@ -58,7 +50,7 @@ export const login = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/Credentials',
+            $ref: '#/components/schemas/credentials',
           },
         },
       },
@@ -67,32 +59,24 @@ export const login = {
     },
     responses: {
       200: {
-        description: 'Success',
+        description: '200 OK',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/Tokens'),
+            schema: createSuccessSchema('#/components/schemas/tokens'),
           },
         },
       },
       400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericBadRequest',
+      },
+      401: {
+        $ref: '#components/responses/genericUnauthorized',
+      },
+      404: {
+        $ref: '#components/responses/genericNotFound',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },
@@ -107,7 +91,7 @@ export const refresh = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/Tokens',
+            $ref: '#/components/schemas/tokens',
           },
         },
       },
@@ -116,32 +100,24 @@ export const refresh = {
     },
     responses: {
       200: {
-        description: 'Success',
+        description: '200 OK',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/Tokens'),
+            schema: createSuccessSchema('#/components/schemas/tokens'),
           },
         },
       },
       400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericBadRequest',
+      },
+      401: {
+        $ref: '#components/responses/genericUnauthorized',
+      },
+      404: {
+        $ref: '#components/responses/genericNotFound',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },

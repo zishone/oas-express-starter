@@ -7,32 +7,24 @@ export const _ = {
     operationId: 'healthController',
     responses: {
       200: {
-        description: 'Success',
+        description: '200 OK',
         content: {
           'application/json': {
-            schema: createSuccessSchema('#/components/schemas/Health'),
+            schema: createSuccessSchema('#/components/schemas/health'),
           },
         },
       },
       400: {
-        description: 'Fail',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericFailResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericBadRequest',
+      },
+      401: {
+        $ref: '#components/responses/genericUnauthorized',
+      },
+      404: {
+        $ref: '#components/responses/genericNotFound',
       },
       default: {
-        description: 'Error',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/GenericErrorResponse',
-            },
-          },
-        },
+        $ref: '#components/responses/genericServerError',
       },
     },
   },
