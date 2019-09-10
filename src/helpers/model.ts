@@ -2,7 +2,7 @@ import { AnySchema } from '@hapi/joi';
 import joi = require('@hapi/joi');
 import { convert } from 'joi-openapi';
 
-export class BaseModel {
+export class Model {
   constructor(private schema: AnySchema) {}
 
   public getJoiSchema(): any {

@@ -18,18 +18,13 @@ import {
   oasConfig,
 } from './config';
 import { COLLECTIONS } from './constants';
-import {
-  Logger,
-  MongoManager,
-} from './helpers';
+import { MongoManager } from './helpers';
 import {
   jsendMiddleware,
   mongoMiddleware,
 } from './middlewares';
 import { UserModel } from './models';
 import { spec } from './openapi';
-
-const logger = new Logger('root', __filename);
 
 export class App {
   private mongo!: MongoManager;

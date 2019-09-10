@@ -1,7 +1,7 @@
 import joi = require('@hapi/joi');
-import { BaseModel } from '../helpers';
+import { Model } from '../helpers';
 
-export class GenericModel extends BaseModel {
+export class GenericModel extends Model {
   constructor() {
     const schema = joi.alternatives().try(
       joi.boolean(),

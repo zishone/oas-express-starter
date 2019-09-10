@@ -1,34 +1,34 @@
 import {
   Db,
   MongoClient,
+  MongoClientCommonOption,
+  MongoClientOptions,
 } from 'mongodb';
 import {
-  BaseModel,
+  Model,
   MongoCollection,
 } from '.';
 
+export interface MongoConfig {
+  mongoUri: string;
+  dbName: string;
+  clientOptions?: MongoClientOptions;
+  dbOptions?: MongoClientCommonOption;
+}
+
 export class MongoManager {
   private client!: MongoClient;
-  private mongoUri: string;
-  private dbName: string;
-  private clientOptions: object;
-  private dbOptions: object;
 
-  constructor(mongoConfig: any) {
-    this.mongoUri = mongoConfig.mongoUri,
-    this.dbName = mongoConfig.dbName,
-    this.clientOptions = mongoConfig.clientOptions;
-    this.dbOptions = mongoConfig.dbOptions;
-  }
+  constructor(private mongoConfig: MongoConfig) {}
 
   public async getDb(): Promise<Db> {
     if (!this.client || !this.client.isConnected()) {
-      this.client = await MongoClient.connect(this.mongoUri, this.clientOptions);
+      this.client = await MongoClient.connect(this.mongoConfig.mongoUri, this.mongoConfig.clientOptions);
     }
-    return this.client.db(this.dbName, this.dbOptions);
+    return this.client.db(this.mongoConfig.dbName, this.mongoConfig.dbOptions);
   }
 
-  public collection(collectionName: string, model?: BaseModel): MongoCollection {
+  public collection(collectionName: string, model?: Model): MongoCollection {
     return new MongoCollection(this, collectionName, model);
   }
 }

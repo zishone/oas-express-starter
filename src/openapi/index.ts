@@ -1,3 +1,4 @@
+import { appConfig } from '../config';
 import { paths } from './paths';
 import { responses } from './responses';
 import { schemas } from './schemas';
@@ -8,7 +9,7 @@ export const spec = {
   openapi: '3.0.0',
   info: {
     version: '0.0.1',
-    title: 'oas-express-starter',
+    title: appConfig.name,
   },
   paths,
   servers,
