@@ -1,5 +1,5 @@
-export const genericNotFound = {
-  description: '404 Not Found',
+export const genericClientError = {
+  description: '4XX Client Error',
   content: {
     'application/json': {
       schema: {

@@ -21,22 +21,16 @@ export const username = {
       },
     ],
     responses: {
-      200: {
-        description: '200 OK',
+      ['2XX']: {
+        description: 'Success',
         content: {
           'application/json': {
             schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
       },
-      400: {
-        $ref: '#components/responses/genericBadRequest',
-      },
-      401: {
-        $ref: '#components/responses/genericUnauthorized',
-      },
-      404: {
-        $ref: '#components/responses/genericNotFound',
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
         $ref: '#components/responses/genericServerError',
@@ -74,22 +68,16 @@ export const username = {
       ['x-name']: 'body',
     },
     responses: {
-      200: {
-        description: '200 OK',
+      ['2XX']: {
+        description: 'Success',
         content: {
           'application/json': {
             schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
       },
-      400: {
-        $ref: '#components/responses/genericBadRequest',
-      },
-      401: {
-        $ref: '#components/responses/genericUnauthorized',
-      },
-      404: {
-        $ref: '#components/responses/genericNotFound',
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
         $ref: '#components/responses/genericServerError',
@@ -116,22 +104,16 @@ export const username = {
       },
     ],
     responses: {
-      200: {
-        description: '200 OK',
+      ['2XX']: {
+        description: 'Success',
         content: {
           'application/json': {
             schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
       },
-      400: {
-        $ref: '#components/responses/genericBadRequest',
-      },
-      401: {
-        $ref: '#components/responses/genericUnauthorized',
-      },
-      404: {
-        $ref: '#components/responses/genericNotFound',
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
         $ref: '#components/responses/genericServerError',

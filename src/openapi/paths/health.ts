@@ -6,22 +6,16 @@ export const _ = {
     description: 'Gets health.',
     operationId: 'healthController',
     responses: {
-      200: {
-        description: '200 OK',
+      ['2XX']: {
+        description: 'Success',
         content: {
           'application/json': {
             schema: createSuccessSchema('#/components/schemas/health'),
           },
         },
       },
-      400: {
-        $ref: '#components/responses/genericBadRequest',
-      },
-      401: {
-        $ref: '#components/responses/genericUnauthorized',
-      },
-      404: {
-        $ref: '#components/responses/genericNotFound',
+      ['4XX']: {
+        $ref: '#components/responses/genericClientError',
       },
       default: {
         $ref: '#components/responses/genericServerError',
