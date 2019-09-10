@@ -12,7 +12,7 @@ import {
   UpdateWriteOpResult,
 } from 'mongodb';
 import {
-  BaseModel,
+  Model,
   MongoManager,
 } from '.';
 
@@ -20,7 +20,7 @@ export class MongoCollection {
   constructor(
     private mongo: MongoManager,
     private collectionName: string,
-    private model?: BaseModel,
+    private model?: Model,
   ) {}
 
   public async insert(data: any | any[], options?: CollectionInsertManyOptions): Promise<InsertWriteOpResult> {

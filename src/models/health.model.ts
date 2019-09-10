@@ -1,7 +1,7 @@
 import joi = require('@hapi/joi');
-import { BaseModel } from '../helpers';
+import { Model } from '../helpers';
 
-export class HealthModel extends BaseModel {
+export class HealthModel extends Model {
   constructor() {
     const schema = joi.object().keys({
       health: joi.string(),
