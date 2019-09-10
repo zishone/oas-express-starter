@@ -18,7 +18,7 @@ export const oasConfig = {
   ignoreUnknownFormats: true,
   oasSecurity: true,
   securityFile: {
-    Bearer: (req: Request) => {
+    bearerAuth: (req: Request) => {
       authenticationMiddleware()(req, req.res, req.next);
     },
   },
