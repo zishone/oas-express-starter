@@ -7,7 +7,7 @@ export const register = {
     operationId: 'registerController',
     requestBody: {
       content: {
-        'application/json': {
+        ['application/json']: {
           schema: {
             $ref: '#/components/schemas/newUser',
           },
@@ -20,7 +20,7 @@ export const register = {
       ['2XX']: {
         description: 'Success',
         content: {
-          'application/json': {
+          ['application/json']: {
             schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
@@ -42,7 +42,7 @@ export const login = {
     operationId: 'loginController',
     requestBody: {
       content: {
-        'application/json': {
+        ['application/json']: {
           schema: {
             $ref: '#/components/schemas/credentials',
           },
@@ -55,7 +55,7 @@ export const login = {
       ['2XX']: {
         description: 'Success',
         content: {
-          'application/json': {
+          ['application/json']: {
             schema: createSuccessSchema('#/components/schemas/tokens'),
           },
         },
@@ -77,7 +77,7 @@ export const refresh = {
     operationId: 'refreshController',
     requestBody: {
       content: {
-        'application/json': {
+        ['application/json']: {
           schema: {
             $ref: '#/components/schemas/tokens',
           },
@@ -90,7 +90,7 @@ export const refresh = {
       ['2XX']: {
         description: 'Success',
         content: {
-          'application/json': {
+          ['application/json']: {
             schema: createSuccessSchema('#/components/schemas/tokens'),
           },
         },

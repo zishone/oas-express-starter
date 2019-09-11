@@ -23,12 +23,20 @@ export const jsendMiddleware = (): any => {
             data,
           });
       },
-      error: (error: Error, statusCode?: number): void => {
+      error: (error: any, statusCode?: number): void => {
+        const {
+          name,
+          message,
+          code,
+          data,
+        } = error;
         res
           .status(statusCode || 500)
           .send({
             status: 'error',
-            message: error.message,
+            message: `${name}: ${message}`,
+            code,
+            data,
           });
       },
     };

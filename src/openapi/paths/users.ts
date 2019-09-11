@@ -24,7 +24,7 @@ export const username = {
       ['2XX']: {
         description: 'Success',
         content: {
-          'application/json': {
+          ['application/json']: {
             schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
@@ -58,7 +58,7 @@ export const username = {
     ],
     requestBody: {
       content: {
-        'application/json': {
+        ['application/json']: {
           schema: {
             $ref: '#/components/schemas/user',
           },
@@ -71,7 +71,7 @@ export const username = {
       ['2XX']: {
         description: 'Success',
         content: {
-          'application/json': {
+          ['application/json']: {
             schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
@@ -107,7 +107,7 @@ export const username = {
       ['2XX']: {
         description: 'Success',
         content: {
-          'application/json': {
+          ['application/json']: {
             schema: createSuccessSchema('#/components/schemas/user'),
           },
         },
