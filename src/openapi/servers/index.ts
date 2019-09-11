@@ -1,5 +1,5 @@
-import { localhost } from './localhost';
+import { apiV1 } from './api-v1';
 
 export const servers: any[] = [
-  localhost,
+  apiV1,
 ];
