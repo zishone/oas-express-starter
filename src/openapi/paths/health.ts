@@ -9,7 +9,7 @@ export const _ = {
       ['2XX']: {
         description: 'Success',
         content: {
-          'application/json': {
+          ['application/json']: {
             schema: createSuccessSchema('#/components/schemas/health'),
           },
         },
