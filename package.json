@@ -1,6 +1,6 @@
 {
   "name": "oas-express-starter",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A starter template for an OpenAPI 3.0 compliant Express.js server.",
   "main": "dist/server.js",
   "types": "dist/types/index.d.ts",
@@ -17,7 +17,6 @@
   "dependencies": {
     "@hapi/joi": "^15.1.1",
     "bcryptjs": "^2.4.3",
-    "bluebird": "^3.5.5",
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "express": "^4.17.1",
@@ -32,7 +31,6 @@
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^0.1.3",
     "@types/bcryptjs": "^2.4.2",
-    "@types/bluebird": "^3.5.27",
     "@types/chai": "^4.2.0",
     "@types/cors": "^2.8.6",
     "@types/debug": "^4.1.5",
