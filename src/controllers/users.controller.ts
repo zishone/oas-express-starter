@@ -25,12 +25,15 @@ export const getUserController = async (req: Request, res: Response, _: NextFunc
     };
     const user = await userCollection.findOne({ username }, { projection });
     if (!user) {
-      res.jsend.fail({
+      const data = {
         username: 'User not found.',
-      }, 404);
+      };
+      logger.failed('getUserController', data);
+      res.jsend.fail(data, 404);
       return;
     }
     res.jsend.success(user);
+    logger.succeeded('getUserController');
   } catch (error) {
     logger.failed('getUserController', error);
     res.jsend.error(error);
@@ -51,7 +54,7 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
       const salt = bcrypt.genSaltSync(authConfig.saltRounds);
       update.password = bcrypt.hashSync(update.password, salt);
     }
-    await userCollection.update({ username }, {
+    await userCollection.updateOne({ username }, {
       $set: update,
     });
     const filter = {
@@ -62,12 +65,15 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
     };
     const user = await userCollection.findOne(filter, { projection });
     if (!user) {
-      res.jsend.fail({
+      const data = {
         username: 'User not found.',
-      }, 404);
+      };
+      logger.failed('updateUserController', data);
+      res.jsend.fail(data, 404);
       return;
     }
     res.jsend.success(user);
+    logger.succeeded('updateUserController');
   } catch (error) {
     logger.failed('updateUserController', error);
     res.jsend.error(error);
@@ -88,13 +94,16 @@ export const deleteUserController = async (req: Request, res: Response, _: NextF
     };
     const user = await userCollection.findOne({ username }, { projection });
     if (!user) {
-      res.jsend.fail({
+      const data = {
         username: 'User not found.',
-      }, 404);
+      };
+      logger.failed('deleteUserController', data);
+      res.jsend.fail(data, 404);
       return;
     }
-    await userCollection.delete({ username });
+    await userCollection.deleteOne({ username });
     res.jsend.success(user);
+    logger.succeeded('deleteUserController');
   } catch (error) {
     logger.failed('deleteUserController', error);
     res.jsend.error(error);

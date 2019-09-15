@@ -1,5 +1,3 @@
-import { createSuccessSchema } from '../../utils';
-
 export const register = {
   post: {
     ['x-router-controller']: 'index',
@@ -21,7 +19,18 @@ export const register = {
         description: 'Success',
         content: {
           ['application/json']: {
-            schema: createSuccessSchema('#/components/schemas/user'),
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  type: 'string',
+                  enum: ['success'],
+                },
+                data: {
+                  $ref: '#/components/schemas/user',
+                }
+              },
+            },
           },
         },
       },
@@ -56,7 +65,18 @@ export const login = {
         description: 'Success',
         content: {
           ['application/json']: {
-            schema: createSuccessSchema('#/components/schemas/tokens'),
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  type: 'string',
+                  enum: ['success'],
+                },
+                data: {
+                  $ref: '#/components/schemas/tokens',
+                },
+              },
+            },
           },
         },
       },
@@ -91,7 +111,18 @@ export const refresh = {
         description: 'Success',
         content: {
           ['application/json']: {
-            schema: createSuccessSchema('#/components/schemas/tokens'),
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  type: 'string',
+                  enum: ['success'],
+                },
+                data: {
+                  $ref: '#/components/schemas/tokens',
+                },
+              },
+            },
           },
         },
       },

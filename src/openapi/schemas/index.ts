@@ -6,17 +6,58 @@ import {
   TokensModel,
   UserModel,
 } from '../../models';
-import {
-  createErrorSchema,
-  createFailSchema,
-  createSuccessSchema,
-} from '../../utils';
 
 export const schemas = {
   generic: new GenericModel().getOasSchema(),
-  genericSuccessResponse: createSuccessSchema('#/components/schemas/generic'),
-  genericFailResponse: createFailSchema('#/components/schemas/generic'),
-  genericErrorResponse: createErrorSchema('#/components/schemas/generic'),
+  genericSuccess: {
+    type: 'object',
+    properties: {
+      status: {
+        type: 'string',
+        enum: ['success'],
+      },
+      data: {
+        $ref: '#/components/schemas/generic',
+        nullable: true,
+      },
+    },
+  },
+  genericFail: {
+    type: 'object',
+    properties: {
+      status: {
+        type: 'string',
+        enum: ['fail'],
+      },
+      data: {
+        $ref: '#/components/schemas/generic',
+        nullable: true,
+      },
+    },
+  },
+  genericError: {
+    type: 'object',
+    properties: {
+      status: {
+        type: 'string',
+        enum: ['error'],
+      },
+      message: {
+        oneOf: [
+          {
+            type: 'number',
+          },
+          {
+            type: 'string',
+            nullable: true,
+          },
+        ],
+      },
+      data: {
+        $ref: '#/components/schemas/generic',
+      },
+    },
+  },
   health: new HealthModel().getOasSchema(),
   newUser: new NewUserModel().getOasSchema(),
   user: new UserModel().getOasSchema(),

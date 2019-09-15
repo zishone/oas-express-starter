@@ -3,7 +3,7 @@ export const genericServerError = {
   content: {
     ['application/json']: {
       schema: {
-        $ref: '#/components/schemas/genericErrorResponse',
+        $ref: '#/components/schemas/genericError',
       },
     },
   },

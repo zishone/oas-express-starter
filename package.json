@@ -1,6 +1,6 @@
 {
   "name": "oas-express-starter",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A starter template for an OpenAPI 3.0 compliant Express.js server.",
   "main": "dist/server.js",
   "types": "dist/types/index.d.ts",

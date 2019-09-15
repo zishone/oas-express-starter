@@ -28,6 +28,10 @@ export class Logger {
     this.info(`${this.component}.${this.filename}.${functionName}.begun %O`, ...args);
   }
 
+  public succeeded(functionName: string, ...args: any[]) {
+    this.info(`${this.component}.${this.filename}.${functionName}.succeeded %O`, ...args);
+  }
+
   public failed(functionName: string, ...args: any[]) {
     this.info(`${this.component}.${this.filename}.${functionName}.failed %O`, ...args);
     this.error(`${this.component}.${this.filename}.${functionName}.failed %O`, ...args);

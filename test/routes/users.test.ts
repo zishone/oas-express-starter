@@ -1,4 +1,3 @@
-import bcrypt = require('bcryptjs');
 import {
   expect,
   request,
@@ -6,21 +5,16 @@ import {
 } from 'chai';
 import chaiHttp = require('chai-http');
 import felicity = require('felicity');
-import jwt = require('jsonwebtoken');
 import {
   afterEach,
   describe,
   it,
 } from 'mocha';
+import passport = require('passport');
 import { createSandbox } from 'sinon';
-import { MongoCollection } from '../src/helpers';
-import {
-  CredentialsModel,
-  NewUserModel,
-  TokensModel,
-  UserModel,
-} from '../src/models';
-import { app } from '../src/server';
+import { MongoCollection } from '../../src/helpers';
+import { UserModel } from '../../src/models';
+import { app } from '../../src/server';
 
 use(chaiHttp);
 
@@ -31,65 +25,64 @@ describe('auth', () => {
     sandbox.restore();
   });
 
-  describe('GET /api/v1/auth/register', () => {
+  describe('GET /api/v1/users/{username}', () => {
     it('should return 200', async () => {
-      sandbox.stub(MongoCollection.prototype, 'insert');
       const user = felicity.example(new UserModel().getJoiSchema());
       sandbox
         .stub(MongoCollection.prototype, 'findOne')
-        .onCall(0)
-        .returns(Promise.resolve(null))
-        .onCall(1)
         .returns(Promise.resolve(user));
-      const newUser = felicity.example(new NewUserModel().getJoiSchema());
+      sandbox
+        .stub(passport, 'authenticate')
+        .callsFake((_: string, _1: any, callback: any): any => {
+          callback(null, user);
+          return () => null;
+        });
 
-      const response = await request(app)
-        .post('/api/v1/auth/register')
-        .send(newUser);
+      const response = await request(app).get(`/api/v1/users/${user.username}`);
 
       expect(response.status).to.equals(200);
     });
   });
 
-  describe('GET /api/v1/auth/login', () => {
+  describe('PUT /api/v1/users/{username}', () => {
     it('should return 200', async () => {
       const user = felicity.example(new UserModel().getJoiSchema());
+      sandbox.stub(MongoCollection.prototype, 'updateOne');
       sandbox
         .stub(MongoCollection.prototype, 'findOne')
         .returns(Promise.resolve(user));
       sandbox
-        .stub(bcrypt, 'compareSync')
-        .returns(true);
-      const credentials = felicity.example(new CredentialsModel().getJoiSchema());
+        .stub(passport, 'authenticate')
+        .callsFake((_: string, _1: any, callback: any): any => {
+          callback(null, user);
+          return () => null;
+        });
 
       const response = await request(app)
-        .post('/api/v1/auth/login')
-        .send(credentials);
+        .put(`/api/v1/users/${user.username}`)
+        .send(user);
 
       expect(response.status).to.equals(200);
     });
   });
 
-  describe('GET /api/v1/auth/refresh', () => {
+  describe('DELETE /api/v1/users/{username}', () => {
     it('should return 200', async () => {
       const user = felicity.example(new UserModel().getJoiSchema());
+      sandbox.stub(MongoCollection.prototype, 'deleteOne');
       sandbox
         .stub(MongoCollection.prototype, 'findOne')
         .returns(Promise.resolve(user));
       sandbox
-        .stub(jwt, 'verify')
-        .returns(user);
-      const tokens = felicity.example(new TokensModel().getJoiSchema());
-      sandbox
-        .stub(jwt, 'sign')
-        .onCall(0)
-        .returns(tokens.bearerToken)
-        .onCall(1)
-        .returns(tokens.refreshToken);
+        .stub(passport, 'authenticate')
+        .callsFake((_: string, _1: any, callback: any): any => {
+          callback(null, user);
+          return () => null;
+        });
 
       const response = await request(app)
-        .post('/api/v1/auth/refresh')
-        .send(tokens);
+        .delete(`/api/v1/users/${user.username}`)
+        .send(user);
 
       expect(response.status).to.equals(200);
     });

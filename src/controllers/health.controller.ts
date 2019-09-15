@@ -4,6 +4,7 @@ import {
   Response,
 } from 'express';
 import { Logger } from '../helpers';
+import { HealthCheckService } from '../services';
 
 const logger = new Logger('controller', __filename);
 
@@ -12,8 +13,13 @@ const logger = new Logger('controller', __filename);
  * Health
  */
 export const healthController = async (req: Request, res: Response , _: NextFunction) => {
-  logger.begun('healthController');
-  res.jsend.success({
-    health: 'Alive!',
-  });
+  try {
+    logger.begun('healthController');
+    const health = await new HealthCheckService(req.mongo).getHealth();
+    res.jsend.success(health);
+    logger.succeeded('healthController');
+  } catch (error) {
+    logger.failed('healthController', error);
+    res.jsend.error(error);
+  }
 };

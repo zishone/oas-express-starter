@@ -5,7 +5,7 @@ export class GenericModel extends Model {
   constructor() {
     const schema = joi.alternatives().try(
       joi.boolean(),
-      joi.object(),
+      joi.object().allow(null),
       joi.number(),
       joi.string(),
     );
