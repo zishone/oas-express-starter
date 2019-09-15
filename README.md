@@ -1,4 +1,6 @@
 # oas-express-starter
+[![Build Status](https://travis-ci.org/zishone/oas-express-starter.svg?branch=master)](https://travis-ci.org/zishone/oas-express-starter) [![License](https://img.shields.io/github/license/zishone/oas-express-starter)](https://github.com/zishone/oas-express-starter/blob/master/LICENSE)
+
 A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript.
 
 ## Getting started

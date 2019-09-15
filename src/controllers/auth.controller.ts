@@ -29,17 +29,20 @@ export const registerController = async (req: Request, res: Response , _: NextFu
     };
     const existingUser = await userCollection.findOne(filter, { projection });
     if (existingUser) {
-      res.jsend.fail({
+      const data = {
         username: 'User already exists.',
-      });
+      };
+      logger.failed('loginController', data);
+      res.jsend.fail(data);
       return;
     }
     const salt = bcrypt.genSaltSync(authConfig.saltRounds);
     newUser.password = bcrypt.hashSync(newUser.password, salt);
     newUser.createDate = + new Date();
-    await userCollection.insert(newUser);
+    await userCollection.insertOne(newUser);
     const user = await userCollection.findOne(filter, { projection });
     res.jsend.success(user);
+    logger.succeeded('registerController');
   } catch (error) {
     logger.failed('registerController', error);
     res.jsend.error(error);
@@ -60,16 +63,20 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
     };
     const user = await userCollection.findOne(filter);
     if (!user) {
-      res.jsend.fail({
+      const data = {
         username: 'User not found.',
-      }, 404);
+      };
+      logger.failed('loginController', data);
+      res.jsend.fail(data, 404);
       return;
     }
     const isMatch = bcrypt.compareSync(credentials.password, user.password);
     if (!isMatch) {
-      res.jsend.fail({
+      const data = {
         password: 'Password is incorrect.',
-      });
+      };
+      logger.failed('loginController', data);
+      res.jsend.fail(data);
       return;
     }
     const payload = {
@@ -85,6 +92,7 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
       bearerToken: `Bearer ${bearerToken}`,
       refreshToken: `Refresh ${refreshToken}`,
     });
+    logger.succeeded('loginController');
   } catch (error) {
     logger.failed('loginController', error);
     res.jsend.error(error);
@@ -107,9 +115,11 @@ export const refreshController = async (req: Request, res: Response , _: NextFun
     };
     const user = await userCollection.findOne(filter);
     if (!user) {
-      res.jsend.fail({
+      const data = {
         refreshToken: 'User not found.',
-      }, 404);
+      };
+      logger.failed('refreshController', data);
+      res.jsend.fail(data, 404);
       return;
     }
     const payload = {
@@ -125,6 +135,7 @@ export const refreshController = async (req: Request, res: Response , _: NextFun
       bearerToken: `Bearer ${bearerToken}`,
       refreshToken: `Refresh ${refreshToken}`,
     });
+    logger.succeeded('refreshController');
   } catch (error) {
     logger.failed('refreshController', error);
     res.jsend.error(error);

@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - stable
+install:  
+  - npm ci
+before_script:
+  - npm run cleanup
+script:
+  - npm run test
+  - npm run build

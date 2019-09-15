@@ -13,17 +13,25 @@ export class Model {
     return convert(this.schema)!;
   }
 
-  public async validate(value: any): Promise<void> {
-    const { error } = this.schema.validate(value);
+  public async validateOne(value: any): Promise<any> {
+    const {
+      error,
+      value: result,
+    } = this.schema.validate(value);
     if (error) {
       throw error;
     }
+    return result;
   }
 
-  public async validateMany(value: any[]): Promise<void> {
-    const { error } = joi.array().items(this.schema).validate(value);
+  public async validateMany(value: any[]): Promise<any[]> {
+    const {
+      error,
+      value: result,
+    } = joi.array().items(this.schema).validate(value);
     if (error) {
       throw error;
     }
+    return result;
   }
 }

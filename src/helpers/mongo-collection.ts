@@ -6,6 +6,7 @@ import {
   Cursor,
   DeleteWriteOpResultObject,
   FindOneOptions,
+  InsertOneWriteOpResult,
   InsertWriteOpResult,
   MongoCountPreferences,
   UpdateManyOptions,
@@ -23,65 +24,86 @@ export class MongoCollection {
     private model?: Model,
   ) {}
 
-  public async insert(data: any | any[], options?: CollectionInsertManyOptions): Promise<InsertWriteOpResult> {
+  public async insertOne(data: any, options?: CollectionInsertManyOptions): Promise<InsertOneWriteOpResult> {
     const db = await this.mongo.getDb();
-    if (!Array.isArray(data)) {
-      data = [ data ];
+    if (this.model) {
+      await this.model.validateOne(data);
     }
+    return await db
+      .collection(this.collectionName)
+      .insertOne(data, options);
+  }
+
+  public async insertMany(data: any[], options?: CollectionInsertManyOptions): Promise<InsertWriteOpResult> {
+    const db = await this.mongo.getDb();
     if (this.model) {
       await this.model.validateMany(data);
     }
     return await db
-      .collection(this.collectionName!)
+      .collection(this.collectionName)
       .insertMany(data, options);
-  }
-
-  public async find(filter?: any, options?: FindOneOptions): Promise<Cursor> {
-    const db = await this.mongo.getDb();
-    return await db
-      .collection(this.collectionName!)
-      .find(filter, options);
   }
 
   public async findOne(filter?: any, options?: FindOneOptions): Promise<any> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.collectionName!)
+      .collection(this.collectionName)
       .findOne(filter, options);
+  }
+
+  public async find(filter?: any, options?: FindOneOptions): Promise<Cursor> {
+    const db = await this.mongo.getDb();
+    return db
+      .collection(this.collectionName)
+      .find(filter, options);
   }
 
   public async aggregate(pipeline: any[], options?: CollectionAggregationOptions): Promise<AggregationCursor> {
     const db = await this.mongo.getDb();
-    return await db
-      .collection(this.collectionName!)
+    return db
+      .collection(this.collectionName)
       .aggregate(pipeline, options);
   }
 
-  public async distinct(filter: any, key: string, options?: any): Promise<any> {
+  public async distinct(key: string, filter?: any, options?: object): Promise<any> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.collectionName!)
+      .collection(this.collectionName)
       .distinct(key, filter, options);
   }
 
-  public async count(filter?: any, options?: MongoCountPreferences): Promise<number> {
+  public async countDocuments(filter?: any, options?: MongoCountPreferences): Promise<number> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.collectionName!)
-      .count(filter, options);
+      .collection(this.collectionName)
+      .countDocuments(filter, options);
   }
 
-  public async update(filter: any = {}, update: any, options?: UpdateManyOptions): Promise<UpdateWriteOpResult> {
+  public async updateOne(filter: any = {}, update: any, options?: UpdateManyOptions): Promise<UpdateWriteOpResult> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.collectionName!)
+      .collection(this.collectionName)
+      .updateOne(filter, update, options);
+  }
+
+  public async updateMany(filter: any = {}, update: any, options?: UpdateManyOptions): Promise<UpdateWriteOpResult> {
+    const db = await this.mongo.getDb();
+    return await db
+      .collection(this.collectionName)
       .updateMany(filter, update, options);
   }
 
-  public async delete(filter?: any, options?: CommonOptions): Promise<DeleteWriteOpResultObject> {
+  public async deleteOne(filter?: any, options?: CommonOptions): Promise<DeleteWriteOpResultObject> {
     const db = await this.mongo.getDb();
     return await db
-      .collection(this.collectionName!)
+      .collection(this.collectionName)
+      .deleteOne(filter, options);
+  }
+
+  public async deleteMany(filter?: any, options?: CommonOptions): Promise<DeleteWriteOpResultObject> {
+    const db = await this.mongo.getDb();
+    return await db
+      .collection(this.collectionName)
       .deleteMany(filter, options);
   }
 }

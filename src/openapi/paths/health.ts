@@ -1,5 +1,3 @@
-import { createSuccessSchema } from '../../utils';
-
 export const _ = {
   get: {
     ['x-router-controller']: 'index',
@@ -10,7 +8,18 @@ export const _ = {
         description: 'Success',
         content: {
           ['application/json']: {
-            schema: createSuccessSchema('#/components/schemas/health'),
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  type: 'string',
+                  enum: ['success'],
+                },
+                data: {
+                  $ref: '#/components/schemas/health',
+                },
+              },
+            },
           },
         },
       },
