@@ -19,7 +19,7 @@ const logger = new Logger('controller', __filename);
 export const registerController = async (req: Request, res: Response , _: NextFunction) => {
   try {
     logger.begun('registerController');
-    const newUser = req.swagger.params.body.value;
+    const newUser = req.body;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const filter = {
       username: newUser.username,
@@ -56,7 +56,7 @@ export const registerController = async (req: Request, res: Response , _: NextFu
 export const loginController = async (req: Request, res: Response , _: NextFunction) => {
   try {
     logger.begun('loginController');
-    const credentials = req.swagger.params.body.value;
+    const credentials = req.body;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const filter = {
       username: credentials.username,
@@ -106,7 +106,7 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
 export const refreshController = async (req: Request, res: Response , _: NextFunction) => {
   try {
     logger.begun('refreshController');
-    const tokens = req.swagger.params.body.value;
+    const tokens = req.body;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const refreshRegex = /^Refresh\s/;
     const refreshPayload: any = jwt.verify(tokens.refreshToken.replace(refreshRegex, ''), authConfig.refreshSecret);

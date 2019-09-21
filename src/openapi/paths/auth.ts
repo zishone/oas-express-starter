@@ -1,6 +1,7 @@
-export const register = {
+import { OpenAPIV3 } from 'openapi-types';
+
+export const register: OpenAPIV3.PathItemObject = {
   post: {
-    ['x-router-controller']: 'index',
     description: 'Registers a new user.',
     operationId: 'registerController',
     requestBody: {
@@ -12,7 +13,6 @@ export const register = {
         },
       },
       required: true,
-      ['x-name']: 'body',
     },
     responses: {
       ['2XX']: {
@@ -35,18 +35,17 @@ export const register = {
         },
       },
       ['4XX']: {
-        $ref: '#components/responses/genericClientError',
+        $ref: '#/components/responses/genericClientError',
       },
       default: {
-        $ref: '#components/responses/genericServerError',
+        $ref: '#/components/responses/genericServerError',
       },
     },
   },
 };
 
-export const login = {
+export const login: OpenAPIV3.PathItemObject = {
   post: {
-    ['x-router-controller']: 'index',
     description: 'Authenticates a user.',
     operationId: 'loginController',
     requestBody: {
@@ -58,7 +57,6 @@ export const login = {
         },
       },
       required: true,
-      ['x-name']: 'body',
     },
     responses: {
       ['2XX']: {
@@ -81,18 +79,17 @@ export const login = {
         },
       },
       ['4XX']: {
-        $ref: '#components/responses/genericClientError',
+        $ref: '#/components/responses/genericClientError',
       },
       default: {
-        $ref: '#components/responses/genericServerError',
+        $ref: '#/components/responses/genericServerError',
       },
     },
   },
 };
 
-export const refresh = {
+export const refresh: OpenAPIV3.PathItemObject = {
   post: {
-    ['x-router-controller']: 'index',
     description: 'Refreshes access tokens.',
     operationId: 'refreshController',
     requestBody: {
@@ -104,7 +101,6 @@ export const refresh = {
         },
       },
       required: true,
-      ['x-name']: 'body',
     },
     responses: {
       ['2XX']: {
@@ -127,10 +123,10 @@ export const refresh = {
         },
       },
       ['4XX']: {
-        $ref: '#components/responses/genericClientError',
+        $ref: '#/components/responses/genericClientError',
       },
       default: {
-        $ref: '#components/responses/genericServerError',
+        $ref: '#/components/responses/genericServerError',
       },
     },
   },

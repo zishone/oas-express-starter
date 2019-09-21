@@ -1,6 +1,7 @@
-export const username = {
+import { OpenAPIV3 } from 'openapi-types';
+
+export const username: OpenAPIV3.PathItemObject = {
   get: {
-    ['x-router-controller']: 'index',
     description: 'Gets a user.',
     security: [
       {
@@ -39,15 +40,14 @@ export const username = {
         },
       },
       ['4XX']: {
-        $ref: '#components/responses/genericClientError',
+        $ref: '#/components/responses/genericClientError',
       },
       default: {
-        $ref: '#components/responses/genericServerError',
+        $ref: '#/components/responses/genericServerError',
       },
     },
   },
   put: {
-    ['x-router-controller']: 'index',
     description: 'Updates a user.',
     security: [
       {
@@ -74,7 +74,6 @@ export const username = {
         },
       },
       required: true,
-      ['x-name']: 'body',
     },
     responses: {
       ['2XX']: {
@@ -97,15 +96,14 @@ export const username = {
         },
       },
       ['4XX']: {
-        $ref: '#components/responses/genericClientError',
+        $ref: '#/components/responses/genericClientError',
       },
       default: {
-        $ref: '#components/responses/genericServerError',
+        $ref: '#/components/responses/genericServerError',
       },
     },
   },
   delete: {
-    ['x-router-controller']: 'index',
     description: 'Deletes a user.',
     security: [
       {
@@ -144,10 +142,10 @@ export const username = {
         },
       },
       ['4XX']: {
-        $ref: '#components/responses/genericClientError',
+        $ref: '#/components/responses/genericClientError',
       },
       default: {
-        $ref: '#components/responses/genericServerError',
+        $ref: '#/components/responses/genericServerError',
       },
     },
   },

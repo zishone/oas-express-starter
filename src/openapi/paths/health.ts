@@ -1,6 +1,7 @@
-export const _ = {
+import { OpenAPIV3 } from 'openapi-types';
+
+export const _: OpenAPIV3.PathItemObject = {
   get: {
-    ['x-router-controller']: 'index',
     description: 'Gets health.',
     operationId: 'healthController',
     responses: {
@@ -24,10 +25,10 @@ export const _ = {
         },
       },
       ['4XX']: {
-        $ref: '#components/responses/genericClientError',
+        $ref: '#/components/responses/genericClientError',
       },
       default: {
-        $ref: '#components/responses/genericServerError',
+        $ref: '#/components/responses/genericServerError',
       },
     },
   },

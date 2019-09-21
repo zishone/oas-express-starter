@@ -1,14 +1,10 @@
 import debug = require('debug');
-import {
-  appConfig,
-  loggerConfig,
-} from '../config';
+import { appConfig } from '../config';
 
 export class Logger {
   private filename: string;
 
   constructor(private component: string, filename: string) {
-    debug.enable(`*${appConfig.name}:${loggerConfig.level}*`);
     this.filename = filename.split('.')[0].split('/').pop() || '';
   }
 
