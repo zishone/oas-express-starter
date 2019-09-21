@@ -1,3 +1,4 @@
+import { OpenAPIV3 } from 'openapi-types';
 import {
   CredentialsModel,
   GenericModel,
@@ -7,7 +8,9 @@ import {
   UserModel,
 } from '../../models';
 
-export const schemas = {
+export const schemas: {
+  [key: string]: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject;
+} = {
   generic: new GenericModel().getOasSchema(),
   genericSuccess: {
     type: 'object',
@@ -18,7 +21,6 @@ export const schemas = {
       },
       data: {
         $ref: '#/components/schemas/generic',
-        nullable: true,
       },
     },
   },
@@ -31,7 +33,6 @@ export const schemas = {
       },
       data: {
         $ref: '#/components/schemas/generic',
-        nullable: true,
       },
     },
   },
@@ -43,13 +44,13 @@ export const schemas = {
         enum: ['error'],
       },
       message: {
+        type: 'string',
+      },
+      code: {
+        type: 'number',
         oneOf: [
           {
-            type: 'number',
-          },
-          {
             type: 'string',
-            nullable: true,
           },
         ],
       },

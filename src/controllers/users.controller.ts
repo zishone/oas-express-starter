@@ -18,7 +18,7 @@ const logger = new Logger('controller', __filename);
 export const getUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
     logger.begun('getUserController');
-    const username = req.swagger.params.username.value;
+    const username = req.params.username;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const projection = {
       password: 0,
@@ -47,8 +47,8 @@ export const getUserController = async (req: Request, res: Response, _: NextFunc
 export const updateUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
     logger.begun('updateUserController');
-    const username = req.swagger.params.username.value;
-    const update = req.swagger.params.body.value;
+    const username = req.params.username;
+    const update = req.body;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     if (update.password) {
       const salt = bcrypt.genSaltSync(authConfig.saltRounds);
@@ -87,7 +87,7 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
 export const deleteUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
     logger.begun('deleteUserController');
-    const username = req.swagger.params.username.value;
+    const username = req.params.username;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const projection = {
       password: 0,

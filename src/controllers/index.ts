@@ -11,7 +11,7 @@ import {
   updateUserController,
 } from './users.controller';
 
-export = {
+export const controllers = {
   healthController: new MiddlewareChain(healthController).getHandler(),
   loginController: new MiddlewareChain(loginController).getHandler(),
   refreshController: new MiddlewareChain(refreshController).getHandler(),

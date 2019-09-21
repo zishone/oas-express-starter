@@ -4,9 +4,6 @@ import { NextFunction } from 'express';
 declare module 'express' {
   interface Request {
     mongo: MongoManager;
-    swagger: {
-      params: any;
-    };
   }
 
   interface Response {

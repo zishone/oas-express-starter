@@ -1,3 +1,5 @@
 export const loggerConfig = {
-  level: process.env.CONFIG_LOG_LEVEL || 'info',
+  morgan: {
+    format: process.env.CONFIG_MORGAN_FORMAT || 'combined',
+  },
 };

@@ -4,7 +4,8 @@ import {
   json,
   urlencoded,
 } from 'express';
-import oasTools = require('oas-tools');
+import { initialize } from 'express-openapi';
+import morgan = require('morgan');
 import passport = require('passport');
 import {
   ExtractJwt,
@@ -14,10 +15,11 @@ import {
 import {
   authConfig,
   corsConfig,
+  loggerConfig,
   mongoConfig,
-  oasConfig,
 } from './config';
 import { COLLECTIONS } from './constants';
+import { controllers } from './controllers';
 import { MongoManager } from './helpers';
 import {
   jsendMiddleware,
@@ -36,6 +38,7 @@ export class App {
     await this.composeMiddlewares();
     await this.configureOas();
     await this.configurePassport();
+    await this.configureMorgan();
     this.app.emit('ready');
   }
 
@@ -49,15 +52,40 @@ export class App {
   }
 
   private async configureOas(): Promise<void> {
-    oasTools.configure(oasConfig);
-    await new Promise((resolve, reject) => {
-      oasTools.initialize(spec, this.app, (error: Error) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
+    initialize({
+      app: this.app,
+      apiDoc: spec,
+      operations: controllers,
+      exposeApiDocs: true,
+      validateApiDoc: true,
+      docsPath: '/apidocs',
+      securityHandlers: {
+        bearerAuth: async (req: any): Promise<boolean> => {
+          return await new Promise((resolve, reject) => {
+            passport.authenticate('jwt', {session: false}, (error: Error, user: any, _: any): void => {
+              try {
+                if (error) {
+                  throw error;
+                } else if (!user) {
+                  req.res.jsend.fail({
+                    Authorization: 'Authentication failed.',
+                  }, 401);
+                } else {
+                  req.logIn(user, (err: Error) => {
+                    if (err) {
+                      throw err;
+                    } else {
+                      resolve(true);
+                    }
+                  });
+                }
+              } catch (error) {
+                reject(error);
+              }
+            })(req, req.res, req.next);
+          });
+        },
+      },
     });
   }
 
@@ -92,5 +120,9 @@ export class App {
 
   private async connectMongo(): Promise<void> {
     this.mongo = new MongoManager(mongoConfig);
+  }
+
+  private async configureMorgan(): Promise<void> {
+    this.app.use(morgan(loggerConfig.morgan.format));
   }
 }

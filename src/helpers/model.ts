@@ -1,15 +1,15 @@
-import { AnySchema } from '@hapi/joi';
 import joi = require('@hapi/joi');
 import { convert } from 'joi-openapi';
+import { OpenAPIV3 } from 'openapi-types';
 
 export class Model {
-  constructor(private schema: AnySchema) {}
+  constructor(private schema: joi.Schema) {}
 
-  public getJoiSchema(): any {
+  public getJoiSchema(): joi.Schema {
     return this.schema;
   }
 
-  public getOasSchema(): any {
+  public getOasSchema(): OpenAPIV3.SchemaObject {
     return convert(this.schema)!;
   }
 
