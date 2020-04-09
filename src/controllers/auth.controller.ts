@@ -88,9 +88,9 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
     const refreshToken = jwt.sign(payload, authConfig.refreshSecret, {
       expiresIn: authConfig.refreshTtl,
     });
+    res.cookie('refresh', refreshToken);
     res.jsend.success({
       bearerToken: `Bearer ${bearerToken}`,
-      refreshToken: `Refresh ${refreshToken}`,
     });
     logger.succeeded('loginController');
   } catch (error) {
@@ -106,10 +106,9 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
 export const refreshController = async (req: Request, res: Response , _: NextFunction) => {
   try {
     logger.begun('refreshController');
-    const tokens = req.body;
+    const refreshToken = req.cookies['refresh'];
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
-    const refreshRegex = /^Refresh\s/;
-    const refreshPayload: any = jwt.verify(tokens.refreshToken.replace(refreshRegex, ''), authConfig.refreshSecret);
+    const refreshPayload: any = jwt.verify(refreshToken, authConfig.refreshSecret);
     const filter = {
       username: refreshPayload.username,
     };
@@ -128,12 +127,12 @@ export const refreshController = async (req: Request, res: Response , _: NextFun
     const bearerToken = jwt.sign(payload, authConfig.bearerSecret, {
       expiresIn: authConfig.bearerTtl,
     });
-    const refreshToken = jwt.sign(payload, authConfig.refreshSecret, {
+    const newRefreshToken = jwt.sign(payload, authConfig.refreshSecret, {
       expiresIn: authConfig.refreshTtl,
     });
+    res.cookie('refresh', newRefreshToken);
     res.jsend.success({
       bearerToken: `Bearer ${bearerToken}`,
-      refreshToken: `Refresh ${refreshToken}`,
     });
     logger.succeeded('refreshController');
   } catch (error) {

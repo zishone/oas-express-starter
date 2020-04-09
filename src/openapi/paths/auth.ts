@@ -89,19 +89,9 @@ export const login: OpenAPIV3.PathItemObject = {
 };
 
 export const refresh: OpenAPIV3.PathItemObject = {
-  post: {
+  get: {
     description: 'Refreshes access tokens.',
     operationId: 'refreshController',
-    requestBody: {
-      content: {
-        ['application/json']: {
-          schema: {
-            $ref: '#/components/schemas/tokens',
-          },
-        },
-      },
-      required: true,
-    },
     responses: {
       ['2XX']: {
         description: 'Success',
