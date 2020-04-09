@@ -12,6 +12,7 @@ import {
   Strategy,
   VerifiedCallback,
 } from 'passport-jwt';
+import swagger = require('swagger-ui-express');
 import {
   authConfig,
   corsConfig,
@@ -49,6 +50,7 @@ export class App {
     this.app.use(cors(corsConfig));
     this.app.use(passport.initialize());
     this.app.use(jsendMiddleware());
+    this.app.use('/swagger', swagger.serve, swagger.setup(spec));
   }
 
   private async configureOas(): Promise<void> {
