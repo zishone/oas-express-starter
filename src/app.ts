@@ -1,3 +1,4 @@
+import cookieParser = require('cookie-parser');
 import cors = require('cors');
 import {
   Application,
@@ -12,6 +13,10 @@ import {
   Strategy,
   VerifiedCallback,
 } from 'passport-jwt';
+import {
+  serve,
+  setup,
+} from 'swagger-ui-express';
 import {
   authConfig,
   corsConfig,
@@ -46,9 +51,11 @@ export class App {
     this.app.use(mongoMiddleware(this.mongo));
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
+    this.app.use(cookieParser());
     this.app.use(cors(corsConfig));
     this.app.use(passport.initialize());
     this.app.use(jsendMiddleware());
+    this.app.use('/swagger', serve, setup(spec));
   }
 
   private async configureOas(): Promise<void> {
