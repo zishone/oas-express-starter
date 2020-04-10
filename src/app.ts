@@ -6,6 +6,7 @@ import {
   urlencoded,
 } from 'express';
 import { initialize } from 'express-openapi';
+import expressRequestId = require('express-request-id');
 import morgan = require('morgan');
 import passport = require('passport');
 import {
@@ -18,6 +19,7 @@ import {
   setup,
 } from 'swagger-ui-express';
 import {
+  appConfig,
   authConfig,
   corsConfig,
   loggerConfig,
@@ -48,6 +50,7 @@ export class App {
   }
 
   private async composeMiddlewares(): Promise<void> {
+    this.app.use(expressRequestId());
     this.app.use(mongoMiddleware(this.mongo));
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
@@ -55,7 +58,9 @@ export class App {
     this.app.use(cors(corsConfig));
     this.app.use(passport.initialize());
     this.app.use(jsendMiddleware());
-    this.app.use('/swagger', serve, setup(spec));
+    if (appConfig.env === 'development') {
+      this.app.use('/apidocs', serve, setup(spec));
+    }
   }
 
   private async configureOas(): Promise<void> {
@@ -63,9 +68,8 @@ export class App {
       app: this.app,
       apiDoc: spec,
       operations: controllers,
-      exposeApiDocs: true,
+      exposeApiDocs: false,
       validateApiDoc: true,
-      docsPath: '/apidocs',
       securityHandlers: {
         bearerAuth: async (req: any): Promise<boolean> => {
           return await new Promise((resolve, reject) => {

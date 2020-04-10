@@ -14,14 +14,9 @@
         "${workspaceFolder}/dist/**/*.js"
       ],
       "env": {
-        "CONFIG_PORT": "4000",
-        "CONFIG_BEARER_SECRET": "bearer_secret",
-        "CONFIG_REFRESH_SECRET": "refresh_secret",
-        "CONFIG_BEARER_TTL": "300",
-        "CONFIG_REFRESH_TTL": "3600",
-        "CONFIG_LOG_LEVEL": "info",
-        "CONFIG_MONGO_URI": "mongodb://127.0.0.1:27017",
-        "CONFIG_DB_NAME": "test"
+        "CONFIG_MONGO_URI": "mongodb://root:password@127.0.0.1:27017?authSource=admin",
+        "CONFIG_DB_NAME": "testDB",
+        "DEBUG": "*oas-express-starter*",
       }
     }
   ]

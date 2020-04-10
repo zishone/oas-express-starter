@@ -88,8 +88,9 @@ describe('auth', () => {
         .returns(tokens.refreshToken);
 
       const response = await request(app)
-        .post('/api/v1/auth/refresh')
-        .send(tokens);
+        .get('/api/v1/auth/refresh')
+        .set('Cookie', `refresh=${tokens.refreshToken}`)
+        .send();
 
       expect(response.status).to.equals(200);
     });

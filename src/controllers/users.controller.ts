@@ -17,26 +17,22 @@ const logger = new Logger('controller', __filename);
  */
 export const getUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
-    logger.begun('getUserController');
+    logger.begun(req.id, 'getUserController');
     const username = req.params.username;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
-    const projection = {
-      password: 0,
-    };
+    const projection = { password: 0 };
     const user = await userCollection.findOne({ username }, { projection });
     if (!user) {
-      const data = {
-        username: 'User not found.',
-      };
-      logger.failed('getUserController', data);
-      res.jsend.fail(data, 404);
+      const data = { username: 'User not found.' };
+      logger.failed(req.id, 'getUserController', data);
+      res.jsend.fail(data);
       return;
     }
     res.jsend.success(user);
-    logger.succeeded('getUserController');
+    logger.succeeded(req.id, 'getUserController');
   } catch (error) {
-    logger.failed('getUserController', error);
-    res.jsend.error(error);
+    logger.failed(req.id, 'getUserController', error);
+    res.jsend.error(error.message);
   }
 };
 
@@ -46,7 +42,7 @@ export const getUserController = async (req: Request, res: Response, _: NextFunc
  */
 export const updateUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
-    logger.begun('updateUserController');
+    logger.begun(req.id, 'updateUserController');
     const username = req.params.username;
     const update = req.body;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
@@ -68,15 +64,15 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
       const data = {
         username: 'User not found.',
       };
-      logger.failed('updateUserController', data);
-      res.jsend.fail(data, 404);
+      logger.failed(req.id, 'updateUserController', data);
+      res.jsend.fail(data);
       return;
     }
     res.jsend.success(user);
-    logger.succeeded('updateUserController');
+    logger.succeeded(req.id, 'updateUserController');
   } catch (error) {
-    logger.failed('updateUserController', error);
-    res.jsend.error(error);
+    logger.errored(req.id, 'updateUserController', error);
+    res.jsend.error(error.message);
   }
 };
 
@@ -86,7 +82,7 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
  */
 export const deleteUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
-    logger.begun('deleteUserController');
+    logger.begun(req.id, 'deleteUserController');
     const username = req.params.username;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const projection = {
@@ -97,15 +93,15 @@ export const deleteUserController = async (req: Request, res: Response, _: NextF
       const data = {
         username: 'User not found.',
       };
-      logger.failed('deleteUserController', data);
-      res.jsend.fail(data, 404);
+      logger.failed(req.id, 'deleteUserController', data);
+      res.jsend.fail(data);
       return;
     }
     await userCollection.deleteOne({ username });
     res.jsend.success(user);
-    logger.succeeded('deleteUserController');
+    logger.succeeded(req.id, 'deleteUserController');
   } catch (error) {
-    logger.failed('deleteUserController', error);
-    res.jsend.error(error);
+    logger.failed(req.id, 'deleteUserController', error);
+    res.jsend.error(error.message);
   }
 };

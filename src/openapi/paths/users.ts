@@ -40,10 +40,10 @@ export const username: OpenAPIV3.PathItemObject = {
         },
       },
       ['4XX']: {
-        $ref: '#/components/responses/genericClientError',
+        $ref: '#/components/responses/genericFail',
       },
       default: {
-        $ref: '#/components/responses/genericServerError',
+        $ref: '#/components/responses/genericError',
       },
     },
   },
@@ -96,10 +96,10 @@ export const username: OpenAPIV3.PathItemObject = {
         },
       },
       ['4XX']: {
-        $ref: '#/components/responses/genericClientError',
+        $ref: '#/components/responses/genericFail',
       },
       default: {
-        $ref: '#/components/responses/genericServerError',
+        $ref: '#/components/responses/genericError',
       },
     },
   },
@@ -142,10 +142,10 @@ export const username: OpenAPIV3.PathItemObject = {
         },
       },
       ['4XX']: {
-        $ref: '#/components/responses/genericClientError',
+        $ref: '#/components/responses/genericFail',
       },
       default: {
-        $ref: '#/components/responses/genericServerError',
+        $ref: '#/components/responses/genericError',
       },
     },
   },

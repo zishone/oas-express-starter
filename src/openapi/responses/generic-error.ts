@@ -1,7 +1,7 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const genericServerError: OpenAPIV3.ResponseObject = {
-  description: '5XX Server Error',
+export const genericError: OpenAPIV3.ResponseObject = {
+  description: '5XX Error',
   content: {
     ['application/json']: {
       schema: {
