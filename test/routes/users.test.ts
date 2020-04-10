@@ -11,7 +11,7 @@ import {
   it,
 } from 'mocha';
 import passport = require('passport');
-import { createSandbox } from 'sinon';
+import sinon = require('sinon');
 import { MongoCollection } from '../../src/helpers';
 import { UserModel } from '../../src/models';
 import { app } from '../../src/server';
@@ -19,7 +19,7 @@ import { app } from '../../src/server';
 use(chaiHttp);
 
 describe('auth', () => {
-  const sandbox = createSandbox();
+  const sandbox = sinon.createSandbox();
 
   afterEach(() => {
     sandbox.restore();

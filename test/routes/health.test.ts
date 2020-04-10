@@ -8,14 +8,14 @@ import {
   describe,
   it,
 } from 'mocha';
-import { createSandbox } from 'sinon';
-import { app } from '../../src/server';
+import sinon = require('sinon');
 import { MongoManager } from '../../src/helpers';
+import { app } from '../../src/server';
 
 use(chaiHttp);
 
 describe('health', () => {
-  const sandbox = createSandbox();
+  const sandbox = sinon.createSandbox();
 
   afterEach(() => {
     sandbox.restore();
