@@ -71,7 +71,7 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
     res.jsend.success(user);
     logger.succeeded(req.id, 'updateUserController');
   } catch (error) {
-    logger.failed('updateUserController', error);
+    logger.errored(req.id, 'updateUserController', error);
     res.jsend.error(error.message);
   }
 };

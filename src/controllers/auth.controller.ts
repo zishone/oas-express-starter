@@ -38,8 +38,8 @@ export const registerController = async (req: Request, res: Response , _: NextFu
     res.jsend.success(user);
     logger.succeeded(req.id, 'registerController');
   } catch (error) {
-    logger.errored('registerController', error);
-    res.jsend.error(error.message);
+    logger.errored(req.id, 'registerController', error);
+    res.jsend.error(error.message, 1);
   }
 };
 
@@ -74,7 +74,7 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
     res.jsend.success({ bearerToken: `Bearer ${bearerToken}` });
     logger.succeeded(req.id, 'loginController');
   } catch (error) {
-    logger.errored('loginController', error);
+    logger.errored(req.id, 'loginController', error);
     res.jsend.error(error.message);
   }
 };
