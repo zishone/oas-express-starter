@@ -1,0 +1,8 @@
+{
+  "seedOnly": false,
+  "migrateForce": false,
+  "infoCollection": "_mongover",
+  "dropFirst": false,
+  "alias": "testDB",
+  "version": "1.0.0"
+}

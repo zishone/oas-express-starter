@@ -1,7 +1,9 @@
 import express = require('express');
 import { App } from './app';
-import { appConfig } from './config';
+import { appConfig, mongoConfig } from './config';
 import { Logger } from './helpers';
+import { apply } from 'mongover';
+import { join } from 'path';
 
 const logger = new Logger('root', __filename);
 
@@ -14,5 +16,10 @@ app.on('ready', () => {
 });
 
 new App(app).configure();
+
+apply({
+  specPath: './dist/database',
+  uri: mongoConfig.mongoUri,
+});
 
 export { app };
