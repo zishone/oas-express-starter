@@ -25,7 +25,7 @@ export const getUserController = async (req: Request, res: Response, _: NextFunc
     if (!user) {
       const data = { username: 'User not found.' };
       logger.failed(req.id, 'getUserController', data);
-      res.jsend.fail(data, 404);
+      res.jsend.fail(data);
       return;
     }
     res.jsend.success(user);
@@ -65,7 +65,7 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
         username: 'User not found.',
       };
       logger.failed(req.id, 'updateUserController', data);
-      res.jsend.fail(data, 404);
+      res.jsend.fail(data);
       return;
     }
     res.jsend.success(user);
@@ -94,7 +94,7 @@ export const deleteUserController = async (req: Request, res: Response, _: NextF
         username: 'User not found.',
       };
       logger.failed(req.id, 'deleteUserController', data);
-      res.jsend.fail(data, 404);
+      res.jsend.fail(data);
       return;
     }
     await userCollection.deleteOne({ username });

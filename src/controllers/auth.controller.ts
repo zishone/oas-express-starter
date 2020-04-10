@@ -57,7 +57,7 @@ export const loginController = async (req: Request, res: Response , _: NextFunct
     if (!user) {
       const data = { username: 'User not found.' };
       logger.failed(req.id, 'loginController', data);
-      res.jsend.fail(data, 404);
+      res.jsend.fail(data);
       return;
     }
     const isMatch = bcrypt.compareSync(credentials.password, user.password);
@@ -87,6 +87,12 @@ export const refreshController = async (req: Request, res: Response , _: NextFun
   try {
     logger.begun(req.id, 'refreshController');
     const refreshToken = req.cookies['refresh'];
+    if (!refreshToken) {
+      const data = { refresh: 'Cookie not found.' };
+      logger.failed(req.id, 'refreshController', data);
+      res.jsend.fail(data);
+      return;
+    }
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const refreshPayload: any = jwt.verify(refreshToken, authConfig.refreshSecret);
     const filter = { username: refreshPayload.username };
@@ -94,7 +100,7 @@ export const refreshController = async (req: Request, res: Response , _: NextFun
     if (!user) {
       const data = { refreshToken: 'User not found.' };
       logger.failed(req.id, 'refreshController', data);
-      res.jsend.fail(data, 404);
+      res.jsend.fail(data);
       return;
     }
     const payload = { username: user.username };
