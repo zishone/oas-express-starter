@@ -16,9 +16,11 @@ app.on('ready', () => {
 
 new App(app).configure();
 
-apply({
-  specPath: './dist/database',
-  uri: mongoConfig.mongoUri,
-});
+if (appConfig.env !== 'testing') {
+  apply({
+    specPath: './dist/database',
+    uri: mongoConfig.mongoUri,
+  });
+}
 
 export { app };
