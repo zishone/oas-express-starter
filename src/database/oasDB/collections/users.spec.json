@@ -1,0 +1,26 @@
+{
+  "dropFirst": false,
+  "dropIndexesFirst": false,
+  "options": {},
+  "indexes": [
+    {
+      "dropFirst": false,
+      "keys": {
+        "username": 1
+      },
+      "options": {
+        "unique": true,
+        "name": "username_1"
+      }
+    }
+  ],
+  "data": {
+    "preservePrimaryKey": false,
+    "upsertFields": [
+      "username"
+    ],
+    "ignoreFields": [
+      "password"
+    ]
+  }
+}
