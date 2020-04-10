@@ -14,12 +14,12 @@ const logger = new Logger('controller', __filename);
  */
 export const healthController = async (req: Request, res: Response , _: NextFunction) => {
   try {
-    logger.begun('healthController');
+    logger.begun(req.id, 'healthController');
     const health = await new HealthCheckService(req.mongo).getHealth();
     res.jsend.success(health);
-    logger.succeeded('healthController');
+    logger.succeeded(req.id, 'healthController');
   } catch (error) {
-    logger.failed('healthController', error);
-    res.jsend.error(error);
+    logger.errored(req.id, 'healthController', error);
+    res.jsend.error(error.message);
   }
 };

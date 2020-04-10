@@ -1,8 +1,8 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { genericClientError } from './generic-client-error';
-import { genericServerError } from './generic-server-error';
+import { genericError } from './generic-error';
+import { genericFail } from './generic-fail';
 
 export const responses: OpenAPIV3.ResponsesObject = {
-  genericClientError,
-  genericServerError,
+  genericFail,
+  genericError,
 };
