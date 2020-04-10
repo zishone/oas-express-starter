@@ -7,4 +7,4 @@ module.exports = [
     password: '$2a$12$GWLLEuXtmL.K07I1MWquA.cZoibCuhxOJcp9D/sw1N9XGd.2SxLPu',
     createDate: + new Date(),
   }
-]
+];

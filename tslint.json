@@ -2,6 +2,9 @@
   "extends": [
     "tslint:recommended"
   ],
+  "linterOptions": {
+    "exclude": ["src/database/**"]
+  },
   "rules": {
     "interface-name": false,
     "max-line-length": [
