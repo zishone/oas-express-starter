@@ -73,12 +73,14 @@ export class MongoCollection {
   }
 
   public async updateOne(filter: any = {}, update: any, options?: UpdateManyOptions): Promise<UpdateWriteOpResult> {
+    delete update._id;
     const db = await this.mongo.getDb();
     return await db.collection(this.collectionName)
       .updateOne(filter, update, options);
   }
 
   public async updateMany(filter: any = {}, update: any, options?: UpdateManyOptions): Promise<UpdateWriteOpResult> {
+    delete update._id;
     const db = await this.mongo.getDb();
     return await db.collection(this.collectionName)
       .updateMany(filter, update, options);
