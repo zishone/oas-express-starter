@@ -1,5 +1,6 @@
 import cookieParser = require('cookie-parser');
 import cors = require('cors');
+import { EventEmitter } from 'events';
 import {
   Application,
   json,
@@ -22,20 +23,22 @@ import { COLLECTIONS } from './constants';
 import { controllers } from './controllers';
 import { MongoManager } from './helpers';
 import {
+  emmiterMiddleware,
   jsendMiddleware,
   mongoMiddleware,
 } from './middlewares';
 import { authMiddleware } from './middlewares';
-import { UserModel } from './models';
 import { spec } from './openapi';
 
 export class App {
   private mongo!: MongoManager;
+  private emmiter!: EventEmitter;
 
   constructor(private app: Application) {}
 
   public async configure() {
     await this.connectMongo();
+    await this.initializeListeners();
     await this.composeMiddlewares();
     await this.configureOas();
     await this.configurePassport();
@@ -59,6 +62,7 @@ export class App {
     if (config.ENV === 'development') {
       this.app.use('/apidocs', serve, setup(spec));
     }
+    this.app.use(emmiterMiddleware(this.emmiter));
   }
 
   private async configureOas(): Promise<void> {
@@ -108,5 +112,9 @@ export class App {
 
   private async connectMongo(): Promise<void> {
     this.mongo = new MongoManager(config.DB_URI, config.DB_NAME);
+  }
+
+  private async initializeListeners(): Promise<void> {
+    this.emmiter = new EventEmitter();
   }
 }
