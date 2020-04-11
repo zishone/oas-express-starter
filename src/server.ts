@@ -1,25 +1,24 @@
+import debug = require('debug');
 import express = require('express');
 import { apply } from 'mongover';
 import { App } from './app';
-import { appConfig, mongoConfig } from './config';
-import { Logger } from './helpers';
-
-const logger = new Logger('root', __filename);
+import { config } from './config';
 
 const app = express();
 
 app.on('ready', () => {
-  app.listen({ port: appConfig.port }, () => {
-    logger.info('Accepting connections at port: %d', appConfig.port);
+  app.listen({ port: config.APP_PORT }, () => {
+    debug(`${require('../package.json').name}:debug:`)('Accepting connections at port: %d', config.APP_PORT);
+    debug(`${require('../package.json').name}:info:`)('Accepting connections at port: %d', config.APP_PORT);
   });
 });
 
 new App(app).configure();
 
-if (appConfig.env !== 'testing') {
+if (config.ENV !== 'testing') {
   apply({
     specPath: './dist/database',
-    uri: mongoConfig.mongoUri,
+    uri: config.DB_URI,
   });
 }
 

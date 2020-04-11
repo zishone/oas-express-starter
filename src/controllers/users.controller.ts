@@ -4,7 +4,7 @@ import {
   Request,
   Response,
 } from 'express';
-import { authConfig } from '../config';
+import { config } from '../config';
 import { COLLECTIONS } from '../constants';
 import { Logger } from '../helpers';
 import { UserModel } from '../models';
@@ -17,21 +17,21 @@ const logger = new Logger('controller', __filename);
  */
 export const getUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
-    logger.begun(req.id, 'getUserController');
+    logger.info(req.id, 'getUserController', 'begun');
     const username = req.params.username;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const projection = { password: 0 };
     const user = await userCollection.findOne({ username }, { projection });
     if (!user) {
       const data = { username: 'User not found.' };
-      logger.failed(req.id, 'getUserController', data);
+      logger.error(req.id, 'getUserController', data);
       res.jsend.fail(data);
       return;
     }
     res.jsend.success(user);
-    logger.succeeded(req.id, 'getUserController');
+    logger.info(req.id, 'getUserController', 'succeeded');
   } catch (error) {
-    logger.failed(req.id, 'getUserController', error);
+    logger.fatal(req.id, 'getUserController', error);
     res.jsend.error(error.message);
   }
 };
@@ -42,12 +42,12 @@ export const getUserController = async (req: Request, res: Response, _: NextFunc
  */
 export const updateUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
-    logger.begun(req.id, 'updateUserController');
+    logger.info(req.id, 'updateUserController', 'begun');
     const username = req.params.username;
     const update = req.body;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     if (update.password) {
-      const salt = bcrypt.genSaltSync(authConfig.saltRounds);
+      const salt = bcrypt.genSaltSync(config.SALT_ROUNDS);
       update.password = bcrypt.hashSync(update.password, salt);
     }
     await userCollection.updateOne({ username }, {
@@ -64,14 +64,14 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
       const data = {
         username: 'User not found.',
       };
-      logger.failed(req.id, 'updateUserController', data);
+      logger.error(req.id, 'updateUserController', data);
       res.jsend.fail(data);
       return;
     }
     res.jsend.success(user);
-    logger.succeeded(req.id, 'updateUserController');
+    logger.info(req.id, 'updateUserController', 'succeeded');
   } catch (error) {
-    logger.errored(req.id, 'updateUserController', error);
+    logger.fatal(req.id, 'updateUserController', error);
     res.jsend.error(error.message);
   }
 };
@@ -82,7 +82,7 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
  */
 export const deleteUserController = async (req: Request, res: Response, _: NextFunction) => {
   try {
-    logger.begun(req.id, 'deleteUserController');
+    logger.info(req.id, 'deleteUserController', 'begun');
     const username = req.params.username;
     const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
     const projection = {
@@ -93,15 +93,15 @@ export const deleteUserController = async (req: Request, res: Response, _: NextF
       const data = {
         username: 'User not found.',
       };
-      logger.failed(req.id, 'deleteUserController', data);
+      logger.error(req.id, 'deleteUserController', data);
       res.jsend.fail(data);
       return;
     }
     await userCollection.deleteOne({ username });
     res.jsend.success(user);
-    logger.succeeded(req.id, 'deleteUserController');
+    logger.info(req.id, 'deleteUserController', 'succeeded');
   } catch (error) {
-    logger.failed(req.id, 'deleteUserController', error);
+    logger.info(req.id, 'deleteUserController', error);
     res.jsend.error(error.message);
   }
 };

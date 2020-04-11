@@ -19,13 +19,19 @@ export interface MongoConfig {
 export class MongoManager {
   private client!: MongoClient;
 
-  constructor(private mongoConfig: MongoConfig) {}
+  constructor(
+    private dbUri: string,
+    private dbName: string,
+  ) {}
 
   public async getDb(): Promise<Db> {
     if (!this.client || !this.client.isConnected()) {
-      this.client = await MongoClient.connect(this.mongoConfig.mongoUri, this.mongoConfig.clientOptions);
+      this.client = await MongoClient.connect(this.dbUri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
     }
-    return this.client.db(this.mongoConfig.dbName, this.mongoConfig.dbOptions);
+    return this.client.db(this.dbName);
   }
 
   public collection(collectionName: string, model?: Model): MongoCollection {
