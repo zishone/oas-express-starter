@@ -1,13 +1,10 @@
-import bcrypt = require('bcryptjs');
 import {
   NextFunction,
   Request,
   Response,
 } from 'express';
-import { config } from '../config';
-import { COLLECTIONS } from '../constants';
 import { Logger } from '../helpers';
-import { UserModel } from '../models';
+import { UsersService } from '../services';
 
 const logger = new Logger('controller', __filename);
 
@@ -19,17 +16,15 @@ export const getUserController = async (req: Request, res: Response, _: NextFunc
   try {
     logger.info(req.id, 'getUserController', 'begun');
     const username = req.params.username;
-    const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
-    const projection = { password: 0 };
-    const user = await userCollection.findOne({ username }, { projection });
-    if (!user) {
-      const data = { username: 'User not found.' };
-      logger.error(req.id, 'getUserController', data);
-      res.jsend.fail(data);
+    const usersService = new UsersService(req.id, req.mongo);
+    const user = await usersService.getUser(username);
+    if (usersService.fail) {
+      logger.error(req.id, 'getUserController', usersService.fail);
+      res.jsend.fail(usersService.fail);
       return;
     }
-    res.jsend.success(user);
     logger.info(req.id, 'getUserController', 'succeeded');
+    res.jsend.success(user);
   } catch (error) {
     logger.fatal(req.id, 'getUserController', error);
     res.jsend.error(error.message);
@@ -45,31 +40,15 @@ export const updateUserController = async (req: Request, res: Response, _: NextF
     logger.info(req.id, 'updateUserController', 'begun');
     const username = req.params.username;
     const update = req.body;
-    const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
-    if (update.password) {
-      const salt = bcrypt.genSaltSync(config.SALT_ROUNDS);
-      update.password = bcrypt.hashSync(update.password, salt);
-    }
-    await userCollection.updateOne({ username }, {
-      $set: update,
-    });
-    const filter = {
-      username: update.username || username,
-    };
-    const projection = {
-      password: 0,
-    };
-    const user = await userCollection.findOne(filter, { projection });
-    if (!user) {
-      const data = {
-        username: 'User not found.',
-      };
-      logger.error(req.id, 'updateUserController', data);
-      res.jsend.fail(data);
+    const usersService = new UsersService(req.id, req.mongo);
+    const user = await usersService.updateUser(username, update);
+    if (usersService.fail) {
+      logger.error(req.id, 'updateUserController', usersService.fail);
+      res.jsend.fail(usersService.fail);
       return;
     }
-    res.jsend.success(user);
     logger.info(req.id, 'updateUserController', 'succeeded');
+    res.jsend.success(user);
   } catch (error) {
     logger.fatal(req.id, 'updateUserController', error);
     res.jsend.error(error.message);
@@ -84,22 +63,15 @@ export const deleteUserController = async (req: Request, res: Response, _: NextF
   try {
     logger.info(req.id, 'deleteUserController', 'begun');
     const username = req.params.username;
-    const userCollection = req.mongo.collection(COLLECTIONS.USERS, new UserModel());
-    const projection = {
-      password: 0,
-    };
-    const user = await userCollection.findOne({ username }, { projection });
-    if (!user) {
-      const data = {
-        username: 'User not found.',
-      };
-      logger.error(req.id, 'deleteUserController', data);
-      res.jsend.fail(data);
+    const usersService = new UsersService(req.id, req.mongo);
+    const user = await usersService.deleteUser(username);
+    if (usersService.fail) {
+      logger.error(req.id, 'deleteUserController', usersService.fail);
+      res.jsend.fail(usersService.fail);
       return;
     }
-    await userCollection.deleteOne({ username });
-    res.jsend.success(user);
     logger.info(req.id, 'deleteUserController', 'succeeded');
+    res.jsend.success(user);
   } catch (error) {
     logger.info(req.id, 'deleteUserController', error);
     res.jsend.error(error.message);
