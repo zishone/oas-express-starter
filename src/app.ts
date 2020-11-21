@@ -1,67 +1,70 @@
-import cookieParser = require('cookie-parser');
-import cors = require('cors');
 import {
   Application,
   json,
   urlencoded,
 } from 'express';
-import { initialize } from 'express-openapi';
-import expressRequestId = require('express-request-id');
-import passport = require('passport');
 import {
-  ExtractJwt,
-  Strategy,
-  VerifiedCallback,
-} from 'passport-jwt';
+  Server,
+  createServer,
+} from 'http';
 import {
-  serve,
-  setup,
-} from 'swagger-ui-express';
-import { config } from './config';
-import { COLLECTIONS } from './constants';
-import { controllers } from './controllers';
-import { MongoManager } from './helpers';
-import {
+  emmiterMiddleware,
+  errorMiddleware,
   jsendMiddleware,
   mongoMiddleware,
+  mqueryMiddleware,
+  passportMiddleware,
+  requestIdMiddleware,
 } from './middlewares';
-import { authMiddleware } from './middlewares';
-import { UserModel } from './models';
+import { EventEmitter } from 'events';
+import { Mongo } from './helpers';
+import cookieParser = require('cookie-parser');
+import cors = require('cors');
+import { activitySubscriber } from './subscribers';
+import { config } from './config';
+import { controllers } from './controllers';
+import { initialize } from 'express-openapi';
+import passport = require('passport');
 import { spec } from './openapi';
 
 export class App {
-  private mongo!: MongoManager;
+  private mongo!: Mongo;
+  private server: Server;
+  private emmiter!: EventEmitter;
+  private app: Application;
 
-  constructor(private app: Application) {}
+  constructor(app: Application) {
+    this.app = app;
+    this.server = createServer(this.app);
+  }
 
   public async configure() {
     await this.connectMongo();
+    await this.concentrateSubscribers();
     await this.composeMiddlewares();
-    await this.configureOas();
-    await this.configurePassport();
-    this.app.emit('ready');
+    await this.constructOas();
+    this.app.emit('ready', this.server);
   }
 
   private async composeMiddlewares(): Promise<void> {
-    this.app.use(expressRequestId());
+    this.app.use(requestIdMiddleware());
     this.app.use(mongoMiddleware(this.mongo));
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(cors({
-      origin: '*',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      preflightContinue: false,
-      optionsSuccessStatus: 204,
+      origin: config.CORS_ORIGIN,
+      methods: config.CORS_METHODS,
+      credentials: config.CORS_CREDENTIALS,
     }));
     this.app.use(jsendMiddleware());
     this.app.use(passport.initialize());
-    if (config.ENV === 'development') {
-      this.app.use('/apidocs', serve, setup(spec));
-    }
+    this.app.use(emmiterMiddleware(this.emmiter));
+    this.app.use(mqueryMiddleware());
+    this.app.use(errorMiddleware());
   }
 
-  private async configureOas(): Promise<void> {
+  private async constructOas(): Promise<void> {
     initialize({
       app: this.app,
       apiDoc: spec,
@@ -69,44 +72,28 @@ export class App {
       exposeApiDocs: false,
       validateApiDoc: true,
       securityHandlers: {
-        bearerAuth: async (req: any): Promise<boolean> => {
-          return await authMiddleware()(req, req.res, req.next);
+        loginAuth: async (req: any): Promise<boolean> => {
+          return await new Promise((resolve, reject) => {
+            passportMiddleware(this.mongo)(req, req.res, (error: any) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(true);
+              }
+            });
+          });
         },
       },
-    });
-  }
-
-  private async configurePassport() {
-    const options = {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: config.BEARER_SECRET,
-    };
-    const strategy = new Strategy(options, async (payload: any, done: VerifiedCallback) => {
-        try {
-          const filter = {
-            username: payload.username,
-          };
-          const projection = {
-            password: 0,
-          };
-          const user = await this.mongo.collection(COLLECTIONS.USERS)
-            .findOne(filter, { projection });
-          done(null, user);
-        } catch (error) {
-          done(error);
-        }
-      },
-    );
-    passport.use(strategy);
-    passport.serializeUser((user, done) => {
-      done(null, user);
-    });
-    passport.deserializeUser((user, done) => {
-      done(null, user);
+      errorMiddleware: errorMiddleware(),
     });
   }
 
   private async connectMongo(): Promise<void> {
-    this.mongo = new MongoManager(config.DB_URI, config.DB_NAME);
+    this.mongo = new Mongo(config.DB_URI, config.DB_NAME);
+  }
+
+  private async concentrateSubscribers(): Promise<void> {
+    this.emmiter = new EventEmitter();
+    activitySubscriber(this.mongo, this.emmiter);
   }
 }

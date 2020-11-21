@@ -1,14 +1,39 @@
+import dotenv = require('dotenv');
+
+dotenv.config();
+
+const {
+  NODE_ENV,
+  CONFIG_CORS_ORIGIN,
+  CONFIG_CORS_METHODS,
+  CONFIG_CORS_CREDENTIALS,
+  CONFIG_APP_PORT,
+  CONFIG_DB_URI,
+  CONFIG_DB_NAME,
+  CONFIG_SALT_ROUNDS,
+  CONFIG_SALT_KEY,
+  CONFIG_LOGIN_SECRET,
+  CONFIG_LOGIN_TTL,
+} = process.env;
+
 export const config = {
-  ENV:            process.env.NODE_ENV                      || 'development',
+  APP_NAME: require('../../package.json').name,
+  APP_VERSION: require('../../package.json').version,
 
-  APP_PORT:           parseFloat(process.env.CONFIG_APP_PORT    || '3000'),
+  ENV: NODE_ENV || 'development',
 
-  SALT_ROUNDS:    parseFloat(process.env.CONFIG_SALT_ROUNDS || '12'),
-  BEARER_SECRET:  process.env.CONFIG_BEARER_SECRET          || 'bearer_secret',
-  REFRESH_SECRET: process.env.CONFIG_REFRESH_SECRET         || 'refresh_secret',
-  BEARER_TTL:     parseFloat(process.env.CONFIG_BEARER_TTL  || '300'),
-  REFRESH_TTL:    parseFloat(process.env.CONFIG_REFRESH_TTL || '3600'),
+  CORS_ORIGIN: CONFIG_CORS_ORIGIN || '*',
+  CORS_METHODS: CONFIG_CORS_METHODS || 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  CORS_CREDENTIALS: JSON.parse(CONFIG_CORS_CREDENTIALS || 'true'),
 
-  DB_URI:         process.env.CONFIG_DB_URI                 || 'mongodb://127.0.0.1:27017/',
-  DB_NAME:        process.env.CONFIG_DB_NAME                || 'oasDB',
+  APP_PORT: parseFloat(CONFIG_APP_PORT || '3000'),
+
+  DB_URI: CONFIG_DB_URI || 'mongodb://127.0.0.1:27017',
+  DB_NAME: CONFIG_DB_NAME || 'oasDB',
+
+  SALT_ROUNDS: parseFloat(CONFIG_SALT_ROUNDS || '12'),
+  SALT_KEY: CONFIG_SALT_KEY || 'salt',
+
+  LOGIN_SECRET: CONFIG_LOGIN_SECRET || 'login_secret',
+  LOGIN_TTL: parseFloat(CONFIG_LOGIN_TTL || '2592000'),
 };

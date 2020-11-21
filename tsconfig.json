@@ -5,13 +5,9 @@
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
-    "allowJs": true,
     "resolveJsonModule": true,
     "typeRoots": ["./src/types"]
   },
-  "include": [
-    "src",
-    "src/**/*.json"
-  ],
+  "include": ["src"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }

@@ -42,8 +42,9 @@ dist/**/*
 # Ignore docs
 docs/**/*
 
-# Ignore local preferences
+# Ignore locals
 .vscode/**/*
+.local/**/*
 
 # ignore yarn.lock
 yarn.lock
