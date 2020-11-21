@@ -15,6 +15,7 @@ export class Model {
   }
 
   public getOasSchema(): OpenAPIV3.SchemaObject {
+    // TODO: Fix joi ot openapi conversion
     return convert({
       isJoi: true,
       ...this.schema,

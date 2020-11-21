@@ -2,6 +2,7 @@ import debug = require('debug');
 import { STATES } from '../constants';
 import { config } from '../config';
 
+// TODO: Improve logging by using winston
 export class Logger {
   private filename: string;
   private component: string;
