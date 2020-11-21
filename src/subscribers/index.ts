@@ -1,1 +1,1 @@
-export default {};
+export { activitySubscriber } from './activity.subscriber';

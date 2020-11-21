@@ -1,0 +1,65 @@
+{
+  "drop": false,
+  "recreate": false,
+  "recreateIndexes": false,
+  "options": {},
+  "indexes": [
+    {
+      "drop": false,
+      "recreate": false,
+      "keys": {
+        "userId": 1
+      },
+      "options": {
+        "unique": true,
+        "background": true,
+        "name": "userId_1"
+      }
+    },
+    {
+      "drop": false,
+      "recreate": false,
+      "keys": {
+        "username": 1
+      },
+      "options": {
+        "unique": true,
+        "background": true,
+        "name": "username_1"
+      }
+    },
+    {
+      "drop": false,
+      "recreate": false,
+      "keys": {
+        "email": 1
+      },
+      "options": {
+        "unique": true,
+        "background": true,
+        "name": "email_1"
+      }
+    },
+    {
+      "drop": false,
+      "recreate": false,
+      "keys": {
+        "createdOn": 1
+      },
+      "options": {
+        "background": true,
+        "name": "createdOn_1"
+      }
+    }
+  ],
+  "data": {
+    "upsert": {
+      "preserve_id": false,
+      "identifiers": ["userId"],
+      "ignoreFields": ["password"]
+    },
+    "rename": {},
+    "unset": [],
+    "delete": {}
+  }
+}

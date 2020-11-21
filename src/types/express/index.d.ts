@@ -1,11 +1,24 @@
-import { MongoManager } from '../../helpers';
+import { Mongo } from '../../helpers';
 import { EventEmitter } from 'events';
 
 declare module 'express' {
   interface Request {
-    mongo: MongoManager;
+    mongo: Mongo;
     id: string;
     emmiter: EventEmitter;
+    mquery: {
+      filter: any;
+      options: any;
+      isPaginated: boolean;
+    };
+    user: {
+      userId: string;
+      username: string;
+      email: string;
+      name: string;
+      role: string;
+      createdOn: number;
+    };
   }
 
   interface Response {

@@ -1,0 +1,9 @@
+{
+  "drop": false,
+  "seedOnly": false,
+  "migrateForce": false,
+  "recreate": false,
+  "info": "_info",
+  "alias": "oasDB",
+  "version": "0.1.0"
+}

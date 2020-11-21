@@ -1,0 +1,24 @@
+version: '3'
+services:
+  oas-express-starter:
+    depends_on: 
+      - mongodb
+    build: .
+    env_file: 
+      - .env
+    ports:
+      - "3000:3000"
+    networks:
+      - oas-net
+  mongodb:
+    image: mongo:4.2
+    volumes: 
+      - "./.local/mongodb/data/db:/data/db"
+    ports:
+      - "27017"
+    logging:
+      driver: none
+    networks:
+      - oas-net
+networks: 
+  oas-net:

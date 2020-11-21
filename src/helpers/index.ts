@@ -1,6 +1,5 @@
 export { Logger } from './logger';
-export { MiddlewareChain } from './middleware-chain';
 export { Model } from './model';
-export { MongoCollection } from './mongo-collection';
-export { MongoManager } from './mongo-manager';
-export { Service } from './service';
+export { Collection } from './collection';
+export { Mongo } from './mongo';
+export { Fail } from './fail';

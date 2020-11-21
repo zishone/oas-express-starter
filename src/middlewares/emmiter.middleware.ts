@@ -1,13 +1,13 @@
-import { EventEmitter } from 'events';
 import {
   NextFunction,
   Request,
   Response,
 } from 'express';
+import { EventEmitter } from 'events';
 
 export const emmiterMiddleware = (emmiter: EventEmitter): any => {
-  return (res: Request, _: Response, next: NextFunction): void => {
-    res.emmiter = emmiter;
+  return (req: Request, _: Response, next: NextFunction): void => {
+    req.emmiter = emmiter;
     next();
   };
 };

@@ -1,67 +1,24 @@
-import { OpenAPIV3 } from 'openapi-types';
 import {
-  CredentialsModel,
-  GenericModel,
-  HealthModel,
-  NewUserModel,
-  TokensModel,
+  ActivityModel,
+  NoteModel,
   UserModel,
 } from '../../models';
+import { OpenAPIV3 } from 'openapi-types';
+import { generic } from './generic';
+import { genericError } from './generic-error';
+import { genericFail } from './generic-fail';
+import { genericSuccess } from './generic-success';
+import { pagination } from './pagination';
 
-export const schemas: {
-  [key: string]: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject;
-} = {
-  generic: new GenericModel().getOasSchema(),
-  genericSuccess: {
-    type: 'object',
-    properties: {
-      status: {
-        type: 'string',
-        enum: ['success'],
-      },
-      data: {
-        $ref: '#/components/schemas/generic',
-      },
-    },
-  },
-  genericFail: {
-    type: 'object',
-    properties: {
-      status: {
-        type: 'string',
-        enum: ['fail'],
-      },
-      data: {
-        $ref: '#/components/schemas/generic',
-      },
-    },
-  },
-  genericError: {
-    type: 'object',
-    properties: {
-      status: {
-        type: 'string',
-        enum: ['error'],
-      },
-      message: {
-        type: 'string',
-      },
-      code: {
-        type: 'number',
-        oneOf: [
-          {
-            type: 'string',
-          },
-        ],
-      },
-      data: {
-        $ref: '#/components/schemas/generic',
-      },
-    },
-  },
-  health: new HealthModel().getOasSchema(),
-  newUser: new NewUserModel().getOasSchema(),
+export const schemas: { [key: string]: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject } = {
+  generic,
+  genericSuccess,
+  genericFail,
+  genericError,
+
+  pagination,
+
   user: new UserModel().getOasSchema(),
-  credentials: new CredentialsModel().getOasSchema(),
-  tokens: new TokensModel().getOasSchema(),
+  note: new NoteModel().getOasSchema(),
+  activity: new ActivityModel().getOasSchema(),
 };

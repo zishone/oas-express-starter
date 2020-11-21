@@ -1,30 +1,37 @@
 import debug = require('debug');
+import { STATES } from '../constants';
+import { config } from '../config';
 
 export class Logger {
   private filename: string;
-  private appName: string;
+  private component: string;
 
-  constructor(private component: string, filename: string) {
+  constructor(component: string, filename: string) {
+    this.component = component;
     this.filename = filename.split('.')[0].split('/').pop() || '';
-    this.appName = require('../../package.json').name;
   }
 
   public debug(reqId: string, functionName: string, state: string, arg?: any) {
-    debug(`${this.appName}:debug:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${state} %O`, arg);
+    debug(`${config.APP_NAME}:debug:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${state} %O`, arg);
   }
 
   public info(reqId: string, functionName: string, state: string, arg?: any) {
     this.debug(reqId, functionName, state, arg);
-    debug(`${this.appName}:info:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${state} %o`, arg?.message ? arg.message : arg);
+    debug(`${config.APP_NAME}:info:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${state} %o`, arg);
+  }
+
+  public warn(reqId: string, functionName: string, arg?: any) {
+    this.debug(reqId, functionName, STATES.WARNED, arg);
+    debug(`${config.APP_NAME}:warn:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.WARNED} %O`, arg);
   }
 
   public error(reqId: string, functionName: string, arg?: any) {
-    this.info(reqId, functionName, 'failed', arg);
-    debug(`${this.appName}:error:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.failed %O`, arg);
+    this.debug(reqId, functionName, STATES.FAILED, arg);
+    debug(`${config.APP_NAME}:error:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.FAILED} %O`, arg);
   }
 
   public fatal(reqId: string, functionName: string, arg: any) {
-    this.info(reqId, functionName, 'errored', arg);
-    debug(`${this.appName}:fatal:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.errored %O`, arg);
+    this.debug(reqId, functionName, STATES.ERRORED, arg);
+    debug(`${config.APP_NAME}:fatal:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.ERRORED} %O`, arg);
   }
 }
