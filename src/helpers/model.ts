@@ -1,7 +1,7 @@
 import joi = require('joi');
+import j2s = require('joi-to-swagger');
 import { ERROR_CODES } from '../constants';
 import { OpenAPIV3 } from 'openapi-types';
-import { convert } from 'joi-openapi';
 
 export class Model {
   private schema: joi.Schema;
@@ -15,11 +15,8 @@ export class Model {
   }
 
   public getOasSchema(): OpenAPIV3.SchemaObject {
-    // TODO: Fix joi ot openapi conversion
-    return convert({
-      isJoi: true,
-      ...this.schema,
-    });
+    const { swagger } = j2s(this.schema);
+    return swagger;
   }
 
   public async validateOne(value: any, line?: number): Promise<any> {

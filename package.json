@@ -26,7 +26,7 @@
     "express-openapi": "^4.6.5",
     "fs-extra": "^9.0.1",
     "joi": "^17.3.0",
-    "joi-openapi": "^0.1.14",
+    "joi-to-swagger": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.2.1",
     "mongover": "^2.1.1",
