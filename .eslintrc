@@ -1,11 +1,9 @@
 {
-  "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint"
   ],
   "parserOptions": {
-    "tsconfigRootDir": "./src",
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
@@ -17,12 +15,23 @@
     "no-console": "error",
     "sort-imports": "error",
     "quotes": ["error", "single"],
-    "comma-dangle": ["error", "always-multiline"],
-    "camelcase": "error"
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "camelcase": "error",
+    "no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false,
+        "argsIgnorePattern": "^_"
+      }
+    ]
   },
   "ignorePatterns": [
-    "dist",
-    "db",
-    "src/types"
+    "src/types",
+    "db/migrations"
   ]
 }

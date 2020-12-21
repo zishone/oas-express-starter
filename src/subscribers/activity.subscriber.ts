@@ -1,27 +1,15 @@
-import {
-  Logger,
-  Mongo,
-} from '../helpers';
-import { ActivityService } from '../services';
+import { ActivityModel } from '../models';
 import { EventEmitter } from 'events';
-import { STATES } from '../constants';
-import { extractIp } from '../utils';
+import { Logger } from '../helpers';
+import { User } from 'express';
 
-const logger = new Logger('subscriber', __filename);
-
-export const activitySubscriber = (mongo: Mongo, emmiter: EventEmitter): any => {
-  emmiter.on('activity', async ({ req, user, type, state }) => {
+export const activitySubscriber = (logger: Logger, emitter: EventEmitter, activityModel: ActivityModel): void => {
+  emitter.on('activity', async ({ user, type }: { user: User, type: string }) => {
     try {
-      logger.debug(req.id, 'activitySubscriber', STATES.BEGUN, `activity.${type}.${state}`);
-      const activityService = new ActivityService(req.id, mongo);
-      const ip = extractIp(req);
-      await activityService.addActivity(user.userId, type, state, ip)
-        .catch((error: any) => {
-          throw error;
-        })
-      logger.debug(req.id, 'activitySubscriber', STATES.SUCCEEDED, `activity.${type}.${state}`);
+      // TODO: Make this into a service
+      await activityModel.save(activityModel.create(user.id, type));
     } catch (error) {
-      logger.fatal(req.id, 'activitySubscriber', error);
+      // TODO: log error
     }
   });
 };

@@ -1,23 +1,29 @@
-import joi = require('joi');
-import { Model } from '../helpers';
-import { nanoid } from '../utils';
+import {
+  Logger,
+  Model,
+  Mongo,
+} from '../helpers';
+import joi from 'joi';
+import { nanoid } from 'nanoid';
 
 export class NoteModel extends Model {
-  constructor() {
-    const schema = joi.object().keys({
-      noteId: joi.string(),
-      userId: joi.string(),
-      title: joi.string(),
-      body: joi.string(),
-      modifiedOn: joi.number(),
-      createdOn: joi.number(),
-    });
-    super(schema);
+  static collectionName: string = 'notes';
+  static schema: joi.Schema = joi.object().keys({
+    id: joi.string(),
+    userId: joi.string(),
+    title: joi.string(),
+    body: joi.string(),
+    modifiedOn: joi.number(),
+    createdOn: joi.number(),
+  });
+
+  constructor(logger: Logger, mongo: Mongo) {
+    super(logger, mongo, NoteModel.schema, NoteModel.collectionName);
   }
 
-  public newNote(userId: string, title: string, body: string) {
+  public create(userId: string, title: string, body: string) {
     return {
-      noteId: nanoid(),
+      id: nanoid(12),
       userId,
       title,
       body,

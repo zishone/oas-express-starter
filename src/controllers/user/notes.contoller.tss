@@ -3,36 +3,30 @@ import {
   Request,
   Response,
 } from 'express';
-import { Logger } from '../../helpers';
 import { NoteService } from '../../services';
-import { STATES } from '../../constants';
-
-const logger = new Logger('controller', __filename);
 
 /**
  * POST /api/v1/user/notes
  */
 export const postUserNotes = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    logger.debug(req.id, 'postUserNotes', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
-    const { userId } = req.user;
+    const { id } = req.user;
     const {
       title,
       body,
     } = req.body;
 
-    const { noteId } = await noteService.addNote(userId, title, body)
+    const { id } = await noteService.addNote(id, title, body)
       .catch((error: any) => {
         throw error;
       });
-    const { note } = await noteService.fetchNote({ noteId })
+    const { note } = await noteService.fetchNote({ id })
       .catch((error: any) => {
         throw error;
       });
 
-    logger.debug(req.id, 'postUserNotes', STATES.SUCCEEDED);
     res.jsend.success({ note }, 201);
   } catch (error) {
     next(error);
@@ -44,22 +38,20 @@ export const postUserNotes = async (req: Request, res: Response, next: NextFunct
  */
 export const getUserNotes = async (req: Request, res: Response , next: NextFunction) => {
   try {
-    logger.debug(req.id, 'getUserNotes', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
     const { filter, options } = req.mquery;
-    const { userId } = req.user;
+    const { id } = req.user;
 
-    filter.userId = userId;
+    filter.id = id;
     const { notes } = await noteService.fetchNotes({
       ...filter,
-      userId,
+      id,
     }, options)
       .catch((error: any) => {
         throw error;
       });
 
-    logger.debug(req.id, 'getUserNotes', STATES.SUCCEEDED);
     res.jsend.success({ notes });
   } catch (error) {
     next(error);
@@ -67,26 +59,24 @@ export const getUserNotes = async (req: Request, res: Response , next: NextFunct
 };
 
 /**
- * GET /api/v1/user/notes/{noteId}
+ * GET /api/v1/user/notes/{id}
  */
 export const getUserNotesById = async (req: Request, res: Response , next: NextFunction) => {
   try {
-    logger.debug(req.id, 'getUserNotesById', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
-    const { noteId } = req.params;
-    const { userId } = req.user;
+    const { id } = req.params;
+    const { id } = req.user;
     const { options } = req.mquery;
 
     const { note } = await noteService.fetchNote({
-      userId,
-      noteId,
+      id,
+      id,
     }, options)
       .catch((error: any) => {
         throw error;
       });
 
-    logger.debug(req.id, 'getUserNotesById', STATES.SUCCEEDED);
     res.jsend.success({ note });
   } catch (error) {
     next(error);
@@ -94,30 +84,29 @@ export const getUserNotesById = async (req: Request, res: Response , next: NextF
 };
 
 /**
- * PUT /api/v1/user/notes/{noteId}
+ * PUT /api/v1/user/notes/{id}
  */
 export const putUserNotesById = async (req: Request, res: Response , next: NextFunction) => {
   try {
-    logger.debug(req.id, 'putUserNotesById', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
-    const { noteId } = req.params;
-    const { userId } = req.user;
+    const { id } = req.params;
+    const { id } = req.user;
     const {
       title,
       body,
     } = req.body;
 
     await noteService.fetchNote({
-      userId,
-      noteId,
+      id,
+      id,
     })
       .catch((error: any) => {
         throw error;
       });
     await noteService.updateNote({
-      userId,
-      noteId,
+      id,
+      id,
     }, {
       title,
       body,
@@ -126,7 +115,6 @@ export const putUserNotesById = async (req: Request, res: Response , next: NextF
         throw error;
       });
 
-    logger.debug(req.id, 'putUserNotesById', STATES.SUCCEEDED);
     res.jsend.success(undefined, 204);
   } catch (error) {
     next(error);
@@ -134,32 +122,30 @@ export const putUserNotesById = async (req: Request, res: Response , next: NextF
 };
 
 /**
- * DELETE /api/v1/user/notes/{noteId}
+ * DELETE /api/v1/user/notes/{id}
  */
 export const deleteUserNotesById = async (req: Request, res: Response , next: NextFunction) => {
   try {
-    logger.debug(req.id, 'deleteUserNotesById', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
-    const { noteId } = req.params;
-    const { userId } = req.user;
+    const { id } = req.params;
+    const { id } = req.user;
 
     await noteService.fetchNote({
-      userId,
-      noteId,
+      id,
+      id,
     })
       .catch((error: any) => {
         throw error;
       });
     await noteService.deleteNote({
-      userId,
-      noteId,
+      id,
+      id,
     })
       .catch((error: any) => {
         throw error;
       });
 
-    logger.debug(req.id, 'deleteUserNotesById', STATES.SUCCEEDED);
     res.jsend.success(undefined, 204);
   } catch (error) {
     next(error);

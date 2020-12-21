@@ -1,28 +1,24 @@
 import {
+  ErrorRequestHandler,
+  NextFunction,
   Request,
   Response,
 } from 'express';
-import { Logger } from '../helpers';
+import { ERROR_CODES } from '../constants';
+import { HttpError } from 'http-errors';
 
-const logger = new Logger('middleware', __filename);
-
-export const errorMiddleware = (): any => {
-  return (error: any, req: Request, res: Response): void => {
-    const payload: any = {};
-    if (error.status >= 400 && error.status < 500) {
-      logger.error(req.id, 'errorMiddleware', error.errors);
-      payload.status = 'fail';
-      payload.data = error.errors ? { details: error.errors } : undefined;
-      res.status(error.status)
-        .send(payload);
-    } else {
-      logger.fatal(req.id, 'errorMiddleware', error);
-      payload.status = 'error';
-      payload.message = error.message || 'Unknown error.',
-      payload.code = error.code,
-      payload.data = error.errors ? { details: error.errors } : undefined;
-      res.status(error.status || 500)
-        .send(payload);
-    }
+export const errorMiddleware = (): ErrorRequestHandler => {
+  return (error: HttpError | any, _req: Request, res: Response, _next: NextFunction): void => {
+    res.status(error.status || 500)
+      .send({
+        status: error.status < 500 ? 'fail' : 'error',
+        message: error.status < 500 ? undefined : error.message || 'Error unknown',
+        code: error.code,
+        data: {
+          errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
+          message: error.status < 500 ? error.message || 'Error unknown' : undefined,
+          details: Array.isArray(error.details) ? error.details : [error.details],
+        },
+      });
   };
 };

@@ -21,7 +21,7 @@ export const user: OpenAPIV3.PathItemObject = {
                 },
                 data: {
                   type: 'object',
-                  properties: { user: { $ref: '#/components/schemas/user' } },
+                  properties: { user: { $ref: '#/components/schemas/UserModel' } },
                 },
               },
             },

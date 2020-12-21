@@ -1,11 +1,12 @@
 import {
   NextFunction,
   Request,
+  RequestHandler,
   Response,
 } from 'express';
 
-export const jsendMiddleware = (): any => {
-  return (_: Request, res: Response, next: NextFunction): void => {
+export const jsendMiddleware = (): RequestHandler => {
+  return (_req: Request, res: Response, next: NextFunction): void => {
     res.jsend = {
       success: (data: any, statusCode?: number): void => {
         res.status(statusCode || 200)

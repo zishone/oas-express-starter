@@ -32,7 +32,7 @@ export const users: OpenAPIV3.PathItemObject = {
                     pagination: { $ref: '#/components/schemas/pagination' },
                     users: {
                       type: 'array',
-                      items: { $ref: '#/components/schemas/user' },
+                      items: { $ref: '#/components/schemas/UserModel' },
                     },
                   },
                 },
@@ -58,7 +58,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'userId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
         description: 'User\'s unique identifier',
@@ -80,7 +80,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
                 },
                 data: {
                   type: 'object',
-                  properties: { user: { $ref: '#/components/schemas/user' } },
+                  properties: { user: { $ref: '#/components/schemas/UserModel' } },
                 },
               },
             },
@@ -101,7 +101,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'userId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
         description: 'User\'s unique identifier',
@@ -156,7 +156,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'userId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
         description: 'User\'s unique identifier',

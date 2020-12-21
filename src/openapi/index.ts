@@ -1,4 +1,5 @@
 import { OpenAPIV3 } from 'openapi-types';
+import { config } from '../config';
 import { parameters } from './parameters';
 import { paths } from './paths';
 import { responses } from './responses';
@@ -8,8 +9,8 @@ import { securitySchemes } from './security-schemes';
 export const spec: OpenAPIV3.Document = {
   openapi: '3.0.0',
   info: {
-    version: require('../../package.json').version,
-    title: require('../../package.json').name,
+    version: config.APP_VERSION,
+    title: config.APP_NAME,
   },
   paths,
   components: {

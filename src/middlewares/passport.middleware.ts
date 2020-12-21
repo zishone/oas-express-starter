@@ -1,39 +1,30 @@
 import {
-  COLLECTIONS,
-  ERROR_CODES,
-  STATES,
-} from '../constants';
-import {
   ExtractJwt,
   Strategy,
   VerifiedCallback,
 } from 'passport-jwt';
 import {
-  Fail,
-  Logger,
-  Mongo,
-} from '../helpers';
-import {
   NextFunction,
   Request,
+  RequestHandler,
   Response,
+  User,
 } from 'express';
+import { ERROR_CODES } from '../constants';
+import { UserModel } from '../models';
 import { config } from '../config';
-import passport = require('passport');
+import httpError from 'http-errors';
+import passport from 'passport';
 
-const logger = new Logger('middleware', __filename);
-
-export const passportMiddleware = (mongo: Mongo): any => {
+export const passportMiddleware = (userModel: UserModel): RequestHandler => {
   const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.LOGIN_SECRET,
   };
-  const strategy = new Strategy(options, async (payload: any, done: VerifiedCallback) => {
+  const strategy = new Strategy(options, async ({ id }: { id: string }, done: VerifiedCallback): Promise<void> => {
       try {
-        const filter = { userId: payload.userId };
-        const projection = { password: 0 };
-        const user = await mongo.collection(COLLECTIONS.USERS)
-          .findOne(filter, { projection });
+        const user = await userModel
+          .fetchOne({ id }, { projection: { password: 0 } });
         done(null, user);
       } catch (error) {
         done(error);
@@ -41,39 +32,33 @@ export const passportMiddleware = (mongo: Mongo): any => {
     },
   );
   passport.use(strategy);
-  passport.serializeUser((user, done) => {
+  passport.serializeUser((user, done): void => {
     done(null, user);
   });
-  passport.deserializeUser((user, done) => {
+  passport.deserializeUser((user, done): void => {
     done(null, user);
   });
-  return async (req: Request, res: Response, next: NextFunction | any) => {
-    logger.debug(req.id, 'passportMiddleware', STATES.BEGUN);
-    passport.authenticate('jwt', {session: false}, (error: Error, user: any, info: any): void => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    passport.authenticate('jwt', { session: false }, (error: Error, user: User, info: any): void => {
       try {
         if (error) {
           throw error;
         }
         if (!user) {
-          throw new Fail(401)
-            .error({
-              errorCode: ERROR_CODES.UNAUTHENTICATED,
-              keys: 'Authorization',
-              message: 'Authentication failed.',
-            })
-            .error(info)
-            .build();
+          throw new Error();
         } else {
-          req.logIn(user, (err: Error) => {
+          req.logIn(user, (err: Error): void => {
             if (err) {
               throw err;
             }
-            logger.debug(req.id, 'passportMiddleware', STATES.SUCCEEDED);
             next();
           });
         }
       } catch (error) {
-        next(error);
+        next(httpError(401, 'Authentication failed', {
+          errorCode: ERROR_CODES.UNAUTHENTICATED,
+          details: info,
+        }));
       }
     })(req, res, next);
   };

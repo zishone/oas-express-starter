@@ -1,28 +1,29 @@
-import joi = require('joi');
-import { Model } from '../helpers';
-import { nanoid } from '../utils';
+import {
+  Logger,
+  Model,
+  Mongo,
+} from '../helpers';
+import joi from 'joi';
+import { nanoid } from 'nanoid';
 
 export class ActivityModel extends Model {
-  constructor() {
-    const schema = joi.object().keys({
-      activityId: joi.string(),
-      userId: joi.string(),
-      description: joi.string().allow(''),
-      type: joi.string(),
-      state: joi.string(),
-      ip: joi.string(),
-      createdOn: joi.number(),
-    });
-    super(schema);
+  static collectionName: string = 'activities';
+  static schema: joi.Schema = joi.object().keys({
+    id: joi.string(),
+    userId: joi.string(),
+    type: joi.string(),
+    createdOn: joi.number(),
+  });
+
+  constructor(logger: Logger, mongo: Mongo) {
+    super(logger, mongo, ActivityModel.schema, ActivityModel.collectionName);
   }
 
-  public newActivity(userId: string, type: string, state: string, ip: string) {
+  public create(userId: string, type: string) {
     return {
-      activityId: nanoid(),
+      id: nanoid(12),
       userId,
       type,
-      state,
-      ip,
       createdOn: Date.now(),
     };
   }

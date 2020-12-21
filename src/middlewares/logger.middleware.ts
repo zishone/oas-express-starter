@@ -4,11 +4,11 @@ import {
   RequestHandler,
   Response,
 } from 'express';
-import { Mongo } from '../helpers';
+import { Logger } from '../helpers';
 
-export const mongoMiddleware = (mongo: Mongo): RequestHandler => {
+export const loggerMiddleware = (logger: Logger): RequestHandler => {
   return (req: Request, _res: Response, next: NextFunction): void => {
-    req.mongo = mongo;
+    req.logger = logger;
     next();
   };
 };

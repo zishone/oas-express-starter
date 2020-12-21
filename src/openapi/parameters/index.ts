@@ -6,7 +6,7 @@ import { page } from './page';
 import { skip } from './skip';
 import { sort } from './sort';
 
-export const parameters: { [key: string]: OpenAPIV3.ParameterObject } = {
+export const parameters: { [parameterName: string]: OpenAPIV3.ParameterObject } = {
   filter,
   fields,
   sort,

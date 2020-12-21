@@ -2,59 +2,63 @@
 import {
   NextFunction,
   Request,
+  RequestHandler,
   Response,
 } from 'express';
-import rsql = require('rsql-mongodb');
-import { Logger } from '../helpers';
+import rsql from 'rsql-mongodb';
 
-const logger = new Logger('middleware', __filename);
-
-export const mqueryMiddleware = (): any => {
-  return (req: Request, _: Response, next: NextFunction): void => {
+export const mqueryMiddleware = (): RequestHandler => {
+  return (req: Request, _res: Response, next: NextFunction): void => {
     req.mquery = {
       filter: {},
       options: {},
       isPaginated: false,
     };
     try {
-      if (req.query.filter) {
+      if (typeof req.query.filter === 'string') {
         req.mquery.filter = rsql(req.query.filter);
       }
     } catch (_) {
-      logger.warn(req.id, 'rsqlMiddleware', 'Wrong filter syntax.');
+      // TODO: warn
     }
 
     req.mquery.options.projection = {};
-    if (req.query.fields) {
+    if (typeof req.query.fields === 'string') {
       req.query.fields.split(';')
-        .forEach((key: string) => {
+        .forEach((key: string): void => {
           req.mquery.options.projection[key] = 1;
         });
     }
 
     req.mquery.options.sort = {};
-    if (req.query.sort) {
+    if (typeof req.query.sort === 'string') {
       req.query.sort.split(';')
-        .forEach((sort: string) => {
+        .forEach((sort: string): void => {
           const keyValue = sort.split('==');
           switch (keyValue[1]) {
             case 'desc':
-              req.mquery.options.sort[keyValue[0]] = -1;
+              (req.mquery.options.sort as any)[keyValue[0]] = -1;
               break;
             case 'asc':
             case undefined:
             default:
-              logger.warn(req.id, 'rsqlMiddleware', 'Wrong sort syntax.');
-              req.mquery.options.sort[keyValue[0]] = 1;
+              // TODO: warn
+              (req.mquery.options.sort as any)[keyValue[0]] = 1;
               break;
           }
         });
     }
 
-    req.mquery.options.limit = parseFloat(req.query.limit || '0');
-    req.mquery.options.skip = parseFloat(req.query.skip || '0');
+    req.mquery.options.limit = 0;
+    if (typeof req.query.limit === 'string') {
+      req.mquery.options.limit = parseFloat(req.query.limit);
+    }
+    req.mquery.options.skip = 0;
+    if (typeof req.query.skip === 'string') {
+      req.mquery.options.skip = parseFloat(req.query.skip);
+    }
 
-    if (req.query.page) {
+    if (typeof req.query.page === 'string') {
       req.mquery.isPaginated = true;
       req.mquery.options.skip = (parseFloat(req.query.page) - 1) * (req.mquery.options.limit || 1);
     }

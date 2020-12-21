@@ -1,38 +1,95 @@
-import debug = require('debug');
-import { STATES } from '../constants';
+import { ENVIRONMENTS } from '../constants';
 import { config } from '../config';
+import { ensureDirSync } from 'fs-extra';
+import winston from 'winston';
 
-// TODO: Improve logging by using winston
 export class Logger {
-  private filename: string;
-  private component: string;
+  private logger: winston.Logger;
+  private stream: any;
 
-  constructor(component: string, filename: string) {
-    this.component = component;
-    this.filename = filename.split('.')[0].split('/').pop() || '';
+  constructor() {
+    ensureDirSync('logs');
+    const transports = [
+      new winston.transports.File({
+        level: 'info',
+        filename: '../logs/info.log',
+        handleExceptions: true,
+        format: winston.format.json(),
+      }),
+      new winston.transports.File({
+        level: 'error',
+        filename: '../logs/error.log',
+        handleExceptions: true,
+        format: winston.format.json(),
+      }),
+      new winston.transports.Console({
+        level: 'info',
+        handleExceptions: true,
+        format: winston.format.json(),
+      }),
+      new winston.transports.Console({
+        level: 'error',
+        handleExceptions: true,
+        format: winston.format.json(),
+      }),
+    ];
+
+    if (config.ENV === ENVIRONMENTS.DEVELOPMENT) {
+      transports.push(new winston.transports.Console({
+        level: 'debug',
+        handleExceptions: true,
+        format: winston.format.json(),
+      }));
+    }
+
+    this.logger = winston.createLogger({
+      defaultMeta: { service: config.APP_NAME },
+      transports,
+    });
+    this.stream = {
+      write: (message: string, _encoding: string) => {
+        this.logger.info(message);
+      },
+    };
   }
 
-  public debug(reqId: string, functionName: string, state: string, arg?: any) {
-    debug(`${config.APP_NAME}:debug:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${state} %O`, arg);
+  public getLogStream() {
+    return this.stream;
   }
 
-  public info(reqId: string, functionName: string, state: string, arg?: any) {
-    this.debug(reqId, functionName, state, arg);
-    debug(`${config.APP_NAME}:info:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${state} %o`, arg);
+  public info(message: string, args: any) {
+    this.logger.info(message, args);
   }
 
-  public warn(reqId: string, functionName: string, arg?: any) {
-    this.debug(reqId, functionName, STATES.WARNED, arg);
-    debug(`${config.APP_NAME}:warn:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.WARNED} %O`, arg);
+  public debug(message: string, args: any) {
+    this.logger.debug(message, args);
   }
 
-  public error(reqId: string, functionName: string, arg?: any) {
-    this.debug(reqId, functionName, STATES.FAILED, arg);
-    debug(`${config.APP_NAME}:error:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.FAILED} %O`, arg);
+  public error(message: string, args: any) {
+    this.logger.error(message, args);
   }
 
-  public fatal(reqId: string, functionName: string, arg: any) {
-    this.debug(reqId, functionName, STATES.ERRORED, arg);
-    debug(`${config.APP_NAME}:fatal:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.ERRORED} %O`, arg);
+  public logSucceeded(reqId: string, invoker: string, args: any = {}): void {
+    this.logger.debug(`[${reqId || 'has-no-reqid'}] ${invoker}.succeeded %o`, {
+      reqId,
+      invoker,
+      ...args,
+    });
+  }
+
+  public logFailed(reqId: string, invoker: string, args: any = {}): void {
+    this.logger.debug(`[${reqId || 'has-no-reqid'}] ${invoker}.failed %o`, {
+      reqId,
+      invoker,
+      ...args,
+    });
+  }
+
+  public logErrored(reqId: string, invoker: string, args: any = {}): void {
+    this.logger.debug(`[${reqId || 'has-no-reqid'}] ${invoker}.errored %o`, {
+      reqId,
+      invoker,
+      ...args,
+    });
   }
 }

@@ -38,7 +38,7 @@ export const userNotes: OpenAPIV3.PathItemObject = {
                 },
                 data: {
                   type: 'object',
-                  properties: { note: { $ref: '#/components/schemas/note' } },
+                  properties: { note: { $ref: '#/components/schemas/NoteModel' } },
                 },
               },
             },
@@ -83,7 +83,7 @@ export const userNotes: OpenAPIV3.PathItemObject = {
                     pagination: { $ref: '#/components/schemas/pagination' },
                     notes: {
                       type: 'array',
-                      items: { $ref: '#/components/schemas/note' },
+                      items: { $ref: '#/components/schemas/NoteModel' },
                     },
                   },
                 },
@@ -109,7 +109,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'noteId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
         description: 'Note\'s unique identifier',
@@ -131,7 +131,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
                 },
                 data: {
                   type: 'object',
-                  properties: { note: { $ref: '#/components/schemas/note' } },
+                  properties: { note: { $ref: '#/components/schemas/NoteModel' } },
                 },
               },
             },
@@ -152,7 +152,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'noteId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
         description: 'Note\'s unique identifier',
@@ -205,7 +205,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'noteId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
         description: 'Note\'s unique identifier',

@@ -1,4 +1,6 @@
-FROM node:alpine3.10
+FROM node:alpine3.12
+
+RUN apk add --update make
 
 WORKDIR /app
 
@@ -13,6 +15,6 @@ COPY ./tsconfig.json ./
 RUN npm run build
 
 COPY ./db/ ./db/
-COPY ./entrypoint.sh ./
+COPY ./Makefile ./
 
-CMD [ "sh", "entrypoint.sh" ]
+CMD [ "make", "run" ]
