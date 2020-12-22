@@ -21,14 +21,15 @@
     ],
     "camelcase": "error",
     "no-unused-vars": [
-      "warn",
+      "error",
       {
         "vars": "all",
         "args": "after-used",
         "ignoreRestSiblings": false,
         "argsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "semi": ["error", "always"]
   },
   "ignorePatterns": [
     "src/types",
