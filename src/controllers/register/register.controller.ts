@@ -20,7 +20,7 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
       name,
     } = req.body;
 
-    const user = await userService.registerUser(username, email, password, name);
+    const { user } = await userService.registerUser(username, email, password, name);
 
     res.jsend.success({ user }, 201);
   } catch (error) {

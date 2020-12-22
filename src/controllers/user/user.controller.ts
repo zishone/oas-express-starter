@@ -18,7 +18,7 @@ export const getUser = async (req: Request, res: Response , next: NextFunction):
     const { id } = req.user;
     const { options } = req.mquery;
 
-    const user = await userService.fetchUserById(id, options);
+    const { user } = await userService.fetchUserById(id, options);
 
     res.jsend.success({ user });
   } catch (error) {

@@ -17,7 +17,7 @@ export const postLogin = async (req: Request, res: Response , next: NextFunction
       password,
     } = req.body;
 
-    const accessToken = await userService.authenticateUser(login, password);
+    const { accessToken } = await userService.authenticateUser(login, password);
 
     res.jsend.success({ accessToken });
   } catch (error) {

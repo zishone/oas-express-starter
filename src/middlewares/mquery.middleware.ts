@@ -12,7 +12,6 @@ export const mqueryMiddleware = (): RequestHandler => {
     req.mquery = {
       filter: {},
       options: {},
-      isPaginated: false,
     };
     try {
       if (typeof req.query.filter === 'string') {
@@ -59,7 +58,6 @@ export const mqueryMiddleware = (): RequestHandler => {
     }
 
     if (typeof req.query.page === 'string') {
-      req.mquery.isPaginated = true;
       req.mquery.options.skip = (parseFloat(req.query.page) - 1) * (req.mquery.options.limit || 1);
     }
 

@@ -1,6 +1,7 @@
 import {
   CollectionInsertManyOptions,
   CommonOptions,
+  Cursor,
   FilterQuery,
   FindOneOptions,
   MongoCountPreferences,
@@ -29,9 +30,9 @@ export class Model<Data> {
     this.collectionName = collectionName;
   }
 
-  private async validate(value: Data): Promise<Data[]> {
-    const valueArray = Array.isArray(value) ? value : [value];
-    const result = joi.array().items(this.schema).validate(valueArray);
+  private async validate(data: Data | Data[]): Promise<Data[]> {
+    const dataArray = Array.isArray(data) ? data : [data];
+    const result = joi.array().items(this.schema).validate(dataArray);
     if (result.error) {
       throw httpError(400, 'Data invalid', {
         errorCode: ERROR_CODES.INVALID,
@@ -63,7 +64,7 @@ export class Model<Data> {
     }
   }
 
-  public async fetch(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Data[]> {
+  public async fetch(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Cursor<Data>> {
     const db = await this.mongo.getDb();
     try {
       options.projection = {
@@ -72,7 +73,7 @@ export class Model<Data> {
       };
       const cursor = db.collection(this.collectionName)
         .find(filter, options);
-      return await cursor.toArray();
+      return cursor;
     } catch (error) {
       throw this.mongoError(error);
     }
@@ -85,20 +86,20 @@ export class Model<Data> {
         _id: 0,
         ...(options.projection || {}),
       };
-      const one = await db.collection(this.collectionName)
+      const data = await db.collection(this.collectionName)
         .findOne(filter, options);
-      if (!one) {
+      if (!data) {
         throw httpError(404, 'Data not found', { errorCode: ERROR_CODES.NOT_FOUND });
       }
-      return one;
+      return data;
     } catch (error) {
       throw this.mongoError(error);
     }
   }
 
-  public async save(data: Data, options: CollectionInsertManyOptions = {}): Promise<string[]> {
+  public async save(data: Data | Data[], options: CollectionInsertManyOptions = {}): Promise<string[]> {
     const dataArray = await this.validate(data);
-    const ids = dataArray.map((one: any): any => one.id);
+    const ids = dataArray.map((d: any): any => d.id);
     const db = await this.mongo.getDb();
     try {
       await db.collection(this.collectionName)

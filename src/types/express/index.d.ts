@@ -16,7 +16,6 @@ declare module 'express' {
     mquery: {
       filter: FilterQuery<any>;
       options: FindOneOptions<any>;
-      isPaginated: boolean;
     };
     user: User;
   }

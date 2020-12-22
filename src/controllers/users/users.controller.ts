@@ -7,6 +7,7 @@ import {
   NoteService,
   UserService,
 } from '../../services';
+import { paginate } from '../../utils';
 
 /**
  * GET /api/v1/users
@@ -17,9 +18,17 @@ export const getUsers = async (req: Request, res: Response , next: NextFunction)
 
     const { filter, options } = req.mquery;
 
-    const users = await userService.fetchUsers(filter, options);
+   
+    const {
+      userCount,
+      users,
+    } = await userService.fetchUsers(filter, options);
+    const pagination = paginate(userCount, options.limit);
 
-    res.jsend.success({ users });
+    res.jsend.success({
+      pagination,
+      users,
+    });
   } catch (error) {
     next(error);
   }
@@ -35,7 +44,7 @@ export const getUsersById = async (req: Request, res: Response , next: NextFunct
     const { id } = req.params;
     const { options } = req.mquery;
 
-    const user = await userService.fetchUserById(id, options);
+    const { user } = await userService.fetchUserById(id, options);
 
     res.jsend.success({ user });
   } catch (error) {

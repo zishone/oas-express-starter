@@ -4,6 +4,7 @@ import {
   Response,
 } from 'express';
 import { NoteService } from '../../services';
+import { paginate } from '../../utils';
 
 /**
  * POST /api/v1/user/notes
@@ -18,7 +19,7 @@ export const postUserNotes = async (req: Request, res: Response, next: NextFunct
       body,
     } = req.body;
 
-    const note = await noteService.createUserNote(userId, title, body);
+    const { note } = await noteService.createUserNote(userId, title, body);
 
     res.jsend.success({ note }, 201);
   } catch (error) {
@@ -36,9 +37,16 @@ export const getUserNotes = async (req: Request, res: Response , next: NextFunct
     const { filter, options } = req.mquery;
     const { id: userId } = req.user;
 
-    const notes = await noteService.fetchUserNotes(userId, filter, options);
+    const {
+      noteCount,
+      notes,
+    } = await noteService.fetchUserNotes(userId, filter, options);
+    const pagination = paginate(noteCount, options.limit);
 
-    res.jsend.success({ notes });
+    res.jsend.success({
+      pagination,
+      notes,
+    });
   } catch (error) {
     next(error);
   }
@@ -55,7 +63,7 @@ export const getUserNotesById = async (req: Request, res: Response , next: NextF
     const { id: userId } = req.user;
     const { options } = req.mquery;
 
-    const note = await noteService.fetchUserNoteById(userId, id, options);
+    const { note } = await noteService.fetchUserNoteById(userId, id, options);
 
     res.jsend.success({ note });
   } catch (error) {

@@ -32,16 +32,16 @@ export class UserService {
     this.userModel = new UserModel(logger, mongo);
   }
 
-  public async registerUser(username: string, email: string, password: string, name: string): Promise<User> {
+  public async registerUser(username: string, email: string, password: string, name: string): Promise<{ user: User }> {
     const salt = genSaltSync(12);
     const saltedPassword = hashSync(password, salt);
     const newUser = this.userModel.create(ROLES.USER, username, email, saltedPassword, name);
     const [id] = await this.userModel.save(newUser);
     const user = await this.userModel.fetchOne({ id }, { projection: { password: 0 } });
-    return user;
+    return { user };
   }
 
-  public async authenticateUser(login: string, password: string): Promise<string> {
+  public async authenticateUser(login: string, password: string): Promise<{ accessToken: string }> {
     const user = await this.userModel.fetchOne({
       $or: [
         { username: login },
@@ -62,21 +62,26 @@ export class UserService {
       throw httpError(401, 'Credentials invalid', { errorCode: ERROR_CODES.UNAUTHENTICATED });
     }
     const accessToken = sign({ id: user.id }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-    return accessToken;
+    return { accessToken };
   }
 
-  public async fetchUserById(id: string, options?: FindOneOptions<any>): Promise<User> {
+  public async fetchUserById(id: string, options?: FindOneOptions<any>): Promise<{ user: User }> {
     const user = await this.userModel.fetchOne({ id }, options);
     delete user.password;
-    return user;
+    return { user };
   }
 
-  public async fetchUsers(filter: FilterQuery<User> = {}, options: FindOneOptions<any> = {}): Promise<User[]> {
-    const users = await this.userModel.fetch(filter, options);
+  public async fetchUsers(filter: FilterQuery<User> = {}, options: FindOneOptions<any> = {}): Promise<{ userCount: number, users: User[]}> {
+    const cursor = await this.userModel.fetch(filter, options);
+    const userCount = await cursor.count();
+    const users = await cursor.toArray();
     for (const user of users) {
       delete user.password;
     }
-    return users;
+    return {
+      userCount,
+      users,
+    };
   }
 
   public async updateUserById(id: string, user: User): Promise<void> {
