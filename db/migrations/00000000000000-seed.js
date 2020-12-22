@@ -43,15 +43,6 @@ module.exports = {
     await db
       .collection('notes')
       .createIndex({ createdOn: 1 });
-    await db
-      .collection('activities')
-      .createIndex({ id: 1 }, { unique: true });
-    await db
-      .collection('activities')
-      .createIndex({ userId: 1 });
-    await db
-      .collection('activities')
-      .createIndex({ createdOn: 1 });
   },
 
   async down(db) {

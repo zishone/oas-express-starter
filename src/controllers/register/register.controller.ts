@@ -9,7 +9,7 @@ import { UserService } from '../../services';
 /**
  * POST /api/v1/register
  */
-export const postRegister = async (req: Request, res: Response, next: NextFunction) => {
+export const postRegister = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
 
@@ -20,14 +20,7 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
       name,
     } = req.body;
 
-    const { id } = await userService.addUser(username, email, password, name)
-      .catch((error: any) => {
-        throw error;
-      });
-    const { user } = await userService.fetchUser({ id }, { projection: { password: 0 } })
-      .catch((error: any) => {
-        throw error;
-      });
+    const user = await userService.registerUser(username, email, password, name);
 
     res.jsend.success({ user }, 201);
   } catch (error) {

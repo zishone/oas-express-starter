@@ -1,3 +1,8 @@
-export { ActivityModel } from './activity.model';
-export { NoteModel } from './note.model';
-export { UserModel } from './user.model';
+export {
+  Note,
+  NoteModel,
+} from './note.model';
+export {
+  User,
+  UserModel,
+} from './user.model';

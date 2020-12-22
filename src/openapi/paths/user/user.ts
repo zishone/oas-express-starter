@@ -35,9 +35,9 @@ export const user: OpenAPIV3.PathItemObject = {
       default: { $ref: '#/components/responses/generic' },
     },
   },
-  put: {
+  patch: {
     tags: ['User'],
-    operationId: 'putUser',
+    operationId: 'patchUser',
     description: 'Updates authenticated user\'s info',
     security: [{ loginAuth: [] }],
     parameters: [],

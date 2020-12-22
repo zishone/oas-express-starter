@@ -145,9 +145,9 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
       default: { $ref: '#/components/responses/generic' },
     },
   },
-  put: {
+  patch: {
     tags: ['User Notes'],
-    operationId: 'putUserNotesById',
+    operationId: 'patchUserNotesById',
     description: 'Updates authenticated user\'s note',
     security: [{ loginAuth: [] }],
     parameters: [

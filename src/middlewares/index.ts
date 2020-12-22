@@ -1,4 +1,3 @@
-export { emitterMiddleware } from './emitter.middleware';
 export { errorMiddleware } from './error.middleware';
 export { jsendMiddleware } from './jsend.middleware';
 export { loggerMiddleware } from './logger.middleware';

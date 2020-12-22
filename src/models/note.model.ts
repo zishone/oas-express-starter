@@ -6,7 +6,16 @@ import {
 import joi from 'joi';
 import { nanoid } from 'nanoid';
 
-export class NoteModel extends Model {
+export interface Note {
+  id?: string;
+  userId?: string;
+  title?: string;
+  body?: string;
+  modifiedOn?: number;
+  createdOn?: number;
+}
+
+export class NoteModel extends Model<Note> {
   static collectionName: string = 'notes';
   static schema: joi.Schema = joi.object().keys({
     id: joi.string(),
@@ -21,12 +30,13 @@ export class NoteModel extends Model {
     super(logger, mongo, NoteModel.schema, NoteModel.collectionName);
   }
 
-  public create(userId: string, title: string, body: string) {
+  public create(userId: string, title: string, body: string): Note {
     return {
       id: nanoid(12),
       userId,
       title,
       body,
+      modifiedOn: 0,
       createdOn: Date.now(),
     };
   }

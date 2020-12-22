@@ -15,9 +15,8 @@ import { ERROR_CODES } from '../constants';
 import { dotnotate } from '../utils';
 import httpError from 'http-errors';
 import joi from 'joi';
-import { nanoid } from 'nanoid';
 
-export class Model {
+export class Model<Data> {
   private logger: Logger;
   private mongo: Mongo;
   private schema: joi.Schema;
@@ -30,9 +29,9 @@ export class Model {
     this.collectionName = collectionName;
   }
 
-  private async validate(value: any): Promise<any[]> {
-    value = Array.isArray(value) ? value : [value];
-    const result = joi.array().items(this.schema).validate(value);
+  private async validate(value: Data): Promise<Data[]> {
+    const valueArray = Array.isArray(value) ? value : [value];
+    const result = joi.array().items(this.schema).validate(valueArray);
     if (result.error) {
       throw httpError(400, 'Data invalid', {
         errorCode: ERROR_CODES.INVALID,
@@ -46,15 +45,15 @@ export class Model {
     switch (error.code) {
       case 11000:
         throw httpError(403, 'Data already exists', {
-          errorCode: ERROR_CODES.INVALID,
-          detail: error,
+          errorCode: ERROR_CODES.DUPLICATE,
+          details: error,
         });
       default:
         throw error;
     }
   }
 
-  public async count(filter: FilterQuery<any> = {}, options: MongoCountPreferences = {}): Promise<number> {
+  public async count(filter: FilterQuery<Data> = {}, options: MongoCountPreferences = {}): Promise<number> {
     const db = await this.mongo.getDb();
     try {
       return await db.collection(this.collectionName)
@@ -64,9 +63,13 @@ export class Model {
     }
   }
 
-  public async fetch(filter: FilterQuery<any> = {}, options: FindOneOptions<any> = {}): Promise<{ [key: string]: any }[]> {
+  public async fetch(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Data[]> {
     const db = await this.mongo.getDb();
     try {
+      options.projection = {
+        _id: 0,
+        ...(options.projection || {}),
+      };
       const cursor = db.collection(this.collectionName)
         .find(filter, options);
       return await cursor.toArray();
@@ -75,9 +78,13 @@ export class Model {
     }
   }
 
-  public async fetchOne(filter: FilterQuery<any> = {}, options: FindOneOptions<any> = {}): Promise<{ [key: string]: any }> {
+  public async fetchOne(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Data> {
     const db = await this.mongo.getDb();
     try {
+      options.projection = {
+        _id: 0,
+        ...(options.projection || {}),
+      };
       const one = await db.collection(this.collectionName)
         .findOne(filter, options);
       if (!one) {
@@ -89,27 +96,20 @@ export class Model {
     }
   }
 
-  public async save(data: any, options: CollectionInsertManyOptions = {}): Promise<string[]> {
-    data = await this.validate(data);
-    const ids: string[] = [];
+  public async save(data: Data, options: CollectionInsertManyOptions = {}): Promise<string[]> {
+    const dataArray = await this.validate(data);
+    const ids = dataArray.map((one: any): any => one.id);
     const db = await this.mongo.getDb();
     try {
       await db.collection(this.collectionName)
-        .insertMany(data.map((one: { [key: string]: any }): { [key: string]: any } => {
-          const id = nanoid(12);
-          ids.push(id);
-          return {
-            id,
-            ...one,
-          }
-        }), options);
+        .insertMany(dataArray, options);
       return ids;
     } catch (error) {
       throw this.mongoError(error);
     }
   }
 
-  public async update(filter: FilterQuery<any> = {}, update: UpdateQuery<any>, options: UpdateManyOptions = {}): Promise<void> {
+  public async update(filter: FilterQuery<Data> = {}, update: UpdateQuery<any>, options: UpdateManyOptions = {}): Promise<void> {
     const db = await this.mongo.getDb();
     try {
       if (update.$set) {
@@ -125,7 +125,7 @@ export class Model {
     }
   }
 
-  public async delete(filter: FilterQuery<any> = {}, options: CommonOptions = {}): Promise<void> {
+  public async delete(filter: FilterQuery<Data> = {}, options: CommonOptions = {}): Promise<void> {
     const db = await this.mongo.getDb();
     try {
       await db.collection(this.collectionName)

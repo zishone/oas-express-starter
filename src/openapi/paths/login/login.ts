@@ -37,10 +37,7 @@ export const login: OpenAPIV3.PathItemObject = {
                 },
                 data: {
                   type: 'object',
-                  properties: {
-                    accessToken: { type: 'string' },
-                    user: { $ref: '#/components/schemas/UserModel' },
-                  },
+                  properties: { accessToken: { type: 'string' } },
                 },
               },
             },

@@ -1,9 +1,22 @@
-import { Logger, Model, Mongo } from '../helpers';
-import { ROLES } from '../constants';
+import {
+  Logger,
+  Model,
+  Mongo,
+} from '../helpers';
 import joi from 'joi';
 import { nanoid } from 'nanoid';
 
-export class UserModel extends Model {
+export interface User {
+  id?: string;
+  username?: string;
+  email?: string;
+  password?: string;
+  name?: string;
+  role?: string;
+  createdOn?: number;
+}
+
+export class UserModel extends Model<User> {
   static collectionName: string = 'users';
   static schema: joi.Schema = joi.object().keys({
     id: joi.string(),
@@ -20,14 +33,14 @@ export class UserModel extends Model {
     super(logger, mongo, UserModel.schema, UserModel.collectionName);
   }
 
-  public create(username: string, email:string, saltedPassword: string, name: string) {
+  public create(role: string, username: string, email:string, saltedPassword: string, name: string): User {
     return {
       id: nanoid(12),
       username,
       email,
       password: saltedPassword,
       name,
-      role: ROLES.USER,
+      role,
       createdOn: Date.now(),
     };
   }

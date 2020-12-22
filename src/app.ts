@@ -1,8 +1,4 @@
 import {
-  ActivityModel,
-  UserModel,
-} from './models';
-import {
   Application,
   Request,
   json,
@@ -17,7 +13,6 @@ import {
   createServer,
 } from 'http';
 import {
-  emitterMiddleware,
   errorMiddleware,
   jsendMiddleware,
   loggerMiddleware,
@@ -26,8 +21,7 @@ import {
   passportMiddleware,
   requestIdMiddleware,
 } from './middlewares';
-import { EventEmitter } from 'events';
-import { activitySubscriber } from './subscribers';
+import { UserModel } from './models';
 import { config } from './config';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
@@ -37,7 +31,6 @@ import { spec } from './openapi';
 
 export class App {
   private app: Application;
-  private emitter: EventEmitter;
   private logger: Logger;
   private mongo: Mongo;
   private server: Server;
@@ -50,7 +43,6 @@ export class App {
 
   public async configure() {
     await this.connectMongo();
-    await this.concentrateSubscribers();
     await this.composeMiddlewares();
     await this.constructOas();
     this.app.emit('ready', this.server);
@@ -63,7 +55,6 @@ export class App {
     this.app.use(requestIdMiddleware());
     this.app.use(loggerMiddleware(this.logger));
     this.app.use(mongoMiddleware(this.mongo));
-    this.app.use(emitterMiddleware(this.emitter));
     this.app.use(jsendMiddleware());
     this.app.use(passport.initialize());
     this.app.use(mqueryMiddleware());
@@ -80,7 +71,8 @@ export class App {
       securityHandlers: {
         loginAuth: async (req: Request): Promise<boolean> => {
           return await new Promise((resolve, reject): void => {
-            passportMiddleware(new UserModel(this.logger, this.mongo))(req, req.res, (error: any): void => {
+            const userModel = new UserModel(this.logger, this.mongo);
+            passportMiddleware(userModel)(req, req.res, (error: any): void => {
               if (error) {
                 reject(error);
               } else {
@@ -96,10 +88,5 @@ export class App {
 
   private async connectMongo(): Promise<void> {
     this.mongo = new Mongo(config.DB_URI, config.DB_NAME);
-  }
-
-  private async concentrateSubscribers(): Promise<void> {
-    this.emitter = new EventEmitter();
-    activitySubscriber(this.logger, this.emitter, new ActivityModel(this.logger, this.mongo));
   }
 }

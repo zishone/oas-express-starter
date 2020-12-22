@@ -6,23 +6,13 @@ import {
   Logger,
   Mongo,
 } from '../../helpers';
-import { EventEmitter } from 'events';
+import { User } from '../../models';
 
 declare module 'express' {
-  interface User {
-    id: string;
-    username: string;
-    email: string;
-    name: string;
-    role: string;
-    createdOn: number;
-  }
-
   interface Request {
     id: string;
     logger: Logger;
     mongo: Mongo;
-    emitter: EventEmitter;
     mquery: {
       filter: FilterQuery<any>;
       options: FindOneOptions<any>;

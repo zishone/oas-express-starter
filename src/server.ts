@@ -1,9 +1,12 @@
 import {
+  COLLECTIONS,
+  ENVIRONMENTS,
+} from './constants';
+import {
   serve,
   setup,
 } from 'swagger-ui-express';
 import { App } from './app';
-import { ENVIRONMENTS } from './constants';
 import { Logger } from './helpers';
 import { config } from './config';
 import express from 'express';
@@ -15,7 +18,7 @@ const logger = new Logger();
 // TODO: log config
 
 const migrateDb = async (): Promise<void> => {
-  if (config.ENV !== ENVIRONMENTS.TESTING) {
+  if (config.ENV === ENVIRONMENTS.TESTING) {
     return;
   }
   migration.config.set({
@@ -28,7 +31,7 @@ const migrateDb = async (): Promise<void> => {
       },
     },
     migrationsDir: join('db', 'migrations'),
-    changelogCollectionName: 'changelog',
+    changelogCollectionName: COLLECTIONS.MIGRATIONS,
   });
   const { db, client } = await migration.database.connect();
   await migration.up(db);

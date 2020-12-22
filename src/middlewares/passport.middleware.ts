@@ -8,10 +8,12 @@ import {
   Request,
   RequestHandler,
   Response,
-  User,
 } from 'express';
+import {
+  User,
+  UserModel,
+} from '../models';
 import { ERROR_CODES } from '../constants';
-import { UserModel } from '../models';
 import { config } from '../config';
 import httpError from 'http-errors';
 import passport from 'passport';

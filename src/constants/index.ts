@@ -1,4 +1,3 @@
-export { ACTIVITY_TYPES } from './activity-types.constant';
 export { COLLECTIONS } from './collections.constant';
 export { ENVIRONMENTS } from './environments.constant';
 export { ERROR_CODES } from './error-codes.constant';
