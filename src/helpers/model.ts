@@ -1,4 +1,6 @@
 import {
+  AggregationCursor,
+  CollectionAggregationOptions,
   CollectionInsertManyOptions,
   CommonOptions,
   Cursor,
@@ -97,9 +99,20 @@ export class Model<Data> {
     }
   }
 
+  public async aggregate<AggregationData>(pipeline: object[], options: CollectionAggregationOptions = {}): Promise<AggregationCursor<AggregationData>> {
+    const db = await this.mongo.getDb();
+    try {
+      const cursor = db.collection(this.collectionName)
+        .aggregate(pipeline, options);
+      return cursor;
+    } catch (error) {
+      throw this.mongoError(error);
+    }
+  }
+
   public async save(data: Data | Data[], options: CollectionInsertManyOptions = {}): Promise<string[]> {
     const dataArray = await this.validate(data);
-    const ids = dataArray.map((d: any): any => d.id);
+    const ids = dataArray.map((d: any): string => d.id);
     const db = await this.mongo.getDb();
     try {
       await db.collection(this.collectionName)
