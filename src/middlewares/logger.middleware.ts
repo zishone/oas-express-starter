@@ -6,12 +6,23 @@ import {
 } from 'express';
 import { Logger } from '../helpers';
 import auth from 'basic-auth';
+import onFinished from 'on-finished';
+import onHeaders from 'on-headers';
 
 export const loggerMiddleware = (logger: Logger): RequestHandler => {
   return (req: Request, res: Response, next: NextFunction): void => {
+    const logData: { [key: string]: any } = {};
+    req.addLogData = (data: { [key: string]: any }): void => {
+      for (const key in data) {
+        logData[key] = data[key];
+      }
+    };
     req.logger = logger;
-    const startTime = Date.now();
-    req.on('close', () => {
+    let responseStartTime = 0;
+    onHeaders(res, (): void => {
+      responseStartTime = Date.now();
+    });
+    onFinished(res, (): void => {
       const endTime = Date.now();
       logger.info('Request finished', {
         'request.id': req.id,
@@ -25,7 +36,8 @@ export const loggerMiddleware = (logger: Logger): RequestHandler => {
         'request.user.agent': req.headers['user-agent'],
         'response.status': res.headersSent ? res.statusCode.toString() : undefined,
         'response.content.length': res.headersSent ? res.getHeader('content-length') : undefined,
-        'response.time': endTime - startTime,
+        'response.time': endTime - responseStartTime,
+        'data': logData,
       });
     });
     next();

@@ -18,7 +18,6 @@ export const getUsers = async (req: Request, res: Response , next: NextFunction)
 
     const { filter, options } = req.mquery;
 
-   
     const {
       userCount,
       users,
