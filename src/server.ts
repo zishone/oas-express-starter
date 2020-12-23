@@ -40,7 +40,7 @@ app.on('ready', async (server): Promise<void> => {
     case ENVIRONMENTS.STAGING:
     case ENVIRONMENTS.PRODUCTION:
       logger.enableInfo();
-      await migrateDb(); 
+      await migrateDb();
       break;
   }
   logger.debug('Environment configs values', { config });

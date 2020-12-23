@@ -15,7 +15,6 @@ export class NoteService {
   private logger: Logger;
   private noteModel: NoteModel;
 
-
   constructor(logger: Logger, mongo: Mongo) {
     this.logger = logger;
     this.noteModel = new NoteModel(logger, mongo);

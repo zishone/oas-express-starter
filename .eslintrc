@@ -29,7 +29,8 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "no-trailing-spaces": ["error"]
   },
   "ignorePatterns": [
     "src/types",
