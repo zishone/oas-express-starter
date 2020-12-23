@@ -30,7 +30,8 @@
       }
     ],
     "semi": ["error", "always"],
-    "no-trailing-spaces": ["error"]
+    "no-trailing-spaces": ["error"],
+    "prefer-rest-params": ["off"]
   },
   "ignorePatterns": [
     "src/types",

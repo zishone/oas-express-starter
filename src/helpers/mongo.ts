@@ -4,6 +4,7 @@ import {
   MongoClientCommonOption,
   MongoClientOptions,
 } from 'mongodb';
+import { Logger } from '.';
 
 export interface MongoConfig {
   mongoUri: string;
@@ -13,16 +14,19 @@ export interface MongoConfig {
 }
 
 export class Mongo {
-  private client!: MongoClient;
+  private logger: Logger;
   private dbUri: string;
   private dbName: string;
+  private client!: MongoClient;
 
-  constructor(dbUri: string, dbName: string) {
+  constructor(logger: Logger, dbUri: string, dbName: string) {
+    this.logger = logger;
     this.dbUri = dbUri;
     this.dbName = dbName;
   }
 
   public async getDb(): Promise<Db> {
+    this.logger.debugFunction('Mongo.getDb', arguments);
     try {
       if (!this.client) {
         throw new Error();

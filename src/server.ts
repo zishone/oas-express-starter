@@ -19,7 +19,7 @@ import { spec } from './openapi';
 
 const app = express();
 const logger = new Logger();
-const mongo = new Mongo(config.DB_URI, config.DB_NAME);
+const mongo = new Mongo(logger, config.DB_URI, config.DB_NAME);
 const migrateDb = async (): Promise<void> => {
   migration.config.set({
     migrationsDir: join('db', 'migrations'),
@@ -27,7 +27,7 @@ const migrateDb = async (): Promise<void> => {
   });
   const db = await mongo.getDb();
   await migration.up(db);
-  logger.debug('Successfully migrated database', { 'db.name': config.DB_NAME });
+  logger.debug('Database migrated', { 'db.name': config.DB_NAME });
 };
 
 app.on('ready', async (server): Promise<void> => {
@@ -43,9 +43,9 @@ app.on('ready', async (server): Promise<void> => {
       await migrateDb();
       break;
   }
-  logger.debug('Environment configs values', { config });
+  logger.debug('Environment config', { config });
   server.listen({ port: config.APP_PORT }, (): void => {
-    logger.info(`Accepting connections at port: ${config.APP_PORT}`);
+    logger.info('Server listening', { port: config.APP_PORT });
   });
 });
 new App(logger, mongo, app).configure();

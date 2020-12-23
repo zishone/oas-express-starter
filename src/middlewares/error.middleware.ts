@@ -8,7 +8,8 @@ import { ERROR_CODES } from '../constants';
 import { HttpError } from 'http-errors';
 
 export const errorMiddleware = (isValidationError: boolean = false): ErrorRequestHandler => {
-  return (error: HttpError | any, _req: Request, res: Response, _next: NextFunction): void => {
+  return (error: HttpError | any, req: Request, res: Response, _next: NextFunction): void => {
+    req.addLogError(error);
     res.status(error.status || 500)
       .send({
         status: error.status < 500 ? 'fail' : 'error',

@@ -20,7 +20,7 @@ import httpError from 'http-errors';
 import joi from 'joi';
 
 export class Model<Data> {
-  private logger: Logger;
+  protected logger: Logger;
   private mongo: Mongo;
   private schema: joi.Schema;
   private collectionName: string;
@@ -33,6 +33,7 @@ export class Model<Data> {
   }
 
   private async validate(data: Data | Data[]): Promise<Data[]> {
+    this.logger.debugFunction('Model.validate', arguments);
     const dataArray = Array.isArray(data) ? data : [data];
     const result = joi.array().items(this.schema).validate(dataArray);
     if (result.error) {
@@ -45,6 +46,7 @@ export class Model<Data> {
   }
 
   private mongoError(error: any) {
+    this.logger.debugFunction('Model.mongoError', arguments);
     switch (error.code) {
       case 11000:
         throw httpError(403, 'Data already exists', {
@@ -57,6 +59,7 @@ export class Model<Data> {
   }
 
   public async count(filter: FilterQuery<Data> = {}, options: MongoCountPreferences = {}): Promise<number> {
+    this.logger.debugFunction('Model.count', arguments);
     const db = await this.mongo.getDb();
     try {
       return await db.collection(this.collectionName)
@@ -67,6 +70,7 @@ export class Model<Data> {
   }
 
   public async fetch(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Cursor<Data>> {
+    this.logger.debugFunction('Model.fetch', arguments);
     const db = await this.mongo.getDb();
     try {
       options.projection = {
@@ -82,6 +86,7 @@ export class Model<Data> {
   }
 
   public async fetchOne(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Data> {
+    this.logger.debugFunction('Model.fetchOne', arguments);
     const db = await this.mongo.getDb();
     try {
       options.projection = {
@@ -100,6 +105,7 @@ export class Model<Data> {
   }
 
   public async aggregate<AggregationData>(pipeline: object[], options: CollectionAggregationOptions = {}): Promise<AggregationCursor<AggregationData>> {
+    this.logger.debugFunction('Model.aggregate', arguments);
     const db = await this.mongo.getDb();
     try {
       const cursor = db.collection(this.collectionName)
@@ -111,6 +117,7 @@ export class Model<Data> {
   }
 
   public async save(data: Data | Data[], options: CollectionInsertManyOptions = {}): Promise<string[]> {
+    this.logger.debugFunction('Model.save', arguments);
     const dataArray = await this.validate(data);
     const ids = dataArray.map((d: any): string => d.id);
     const db = await this.mongo.getDb();
@@ -124,6 +131,7 @@ export class Model<Data> {
   }
 
   public async update(filter: FilterQuery<Data> = {}, update: UpdateQuery<any>, options: UpdateManyOptions = {}): Promise<void> {
+    this.logger.debugFunction('Model.update', arguments);
     const db = await this.mongo.getDb();
     try {
       if (update.$set) {
@@ -140,6 +148,7 @@ export class Model<Data> {
   }
 
   public async delete(filter: FilterQuery<Data> = {}, options: CommonOptions = {}): Promise<void> {
+    this.logger.debugFunction('Model.delete', arguments);
     const db = await this.mongo.getDb();
     try {
       await db.collection(this.collectionName)

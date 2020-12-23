@@ -1,5 +1,6 @@
 import { LOG_LEVELS } from '../constants';
 import { config } from '../config';
+import { dotnotate } from '../utils';
 import { ensureDirSync } from 'fs-extra';
 import winston from 'winston';
 
@@ -16,16 +17,12 @@ export class Logger {
     };
     this.transports = [
       new winston.transports.File({
-        filename: `../logs/${LOG_LEVELS.INFO}.log`,
+        filename: `./logs/${LOG_LEVELS.INFO}.log`,
         level: LOG_LEVELS.INFO,
       }),
       new winston.transports.File({
-        filename: `../logs/${LOG_LEVELS.ERROR}.log`,
+        filename: `./logs/${LOG_LEVELS.ERROR}.log`,
         level: LOG_LEVELS.ERROR,
-      }),
-      new winston.transports.File({
-        filename: `../logs/${LOG_LEVELS.DEBUG}.log`,
-        level: 'debug',
       }),
     ];
     this.logger = winston.createLogger({
@@ -43,14 +40,22 @@ export class Logger {
   }
 
   public info(message: string, args?: { [key: string]: any }): void {
-    this.logger.log(LOG_LEVELS.INFO, message, args);
+    this.logger.log(LOG_LEVELS.INFO, message, dotnotate(args));
   }
 
   public error(message: string, args?: { [key: string]: any }): void {
-    this.logger.log(LOG_LEVELS.ERROR, message, args);
+    this.logger.log(LOG_LEVELS.ERROR, message, dotnotate(args));
   }
 
   public debug(message: string, args?: { [key: string]: any }): void {
-    this.logger.log(LOG_LEVELS.DEBUG, message, args);
+    this.logger.log(LOG_LEVELS.DEBUG, message, dotnotate(args));
+  }
+
+  public debugFunction(functionName: string, functionArgs: any, args: any = {}): void {
+    this.debug('Function called', {
+      functionName,
+      functionArgs: Object.values(functionArgs),
+      ...args,
+    });
   }
 }

@@ -34,6 +34,7 @@ export class UserModel extends Model<User> {
   }
 
   public create(role: string, username: string, email:string, saltedPassword: string, name: string): User {
+    this.logger.debugFunction('UserModel.create', arguments);
     return {
       id: nanoid(12),
       username,

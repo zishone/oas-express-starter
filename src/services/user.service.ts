@@ -33,6 +33,7 @@ export class UserService {
   }
 
   public async registerUser(username: string, email: string, password: string, name: string): Promise<{ user: User }> {
+    this.logger.debugFunction('UserService.registerUser', arguments);
     const salt = genSaltSync(12);
     const saltedPassword = hashSync(password, salt);
     const newUser = this.userModel.create(ROLES.USER, username, email, saltedPassword, name);
@@ -42,6 +43,7 @@ export class UserService {
   }
 
   public async authenticateUser(login: string, password: string): Promise<{ accessToken: string }> {
+    this.logger.debugFunction('UserService.authenticateUser', arguments);
     const user = await this.userModel.fetchOne({
       $or: [
         { username: login },
@@ -66,12 +68,14 @@ export class UserService {
   }
 
   public async fetchUserById(id: string, options?: FindOneOptions<any>): Promise<{ user: User }> {
+    this.logger.debugFunction('UserService.fetchUserById', arguments);
     const user = await this.userModel.fetchOne({ id }, options);
     delete user.password;
     return { user };
   }
 
   public async fetchUsers(filter: FilterQuery<User> = {}, options: FindOneOptions<any> = {}): Promise<{ userCount: number, users: User[]}> {
+    this.logger.debugFunction('UserService.fetchUsers', arguments);
     const cursor = await this.userModel.fetch(filter, options);
     const userCount = await cursor.count();
     const users = await cursor.toArray();
@@ -85,11 +89,13 @@ export class UserService {
   }
 
   public async updateUserById(id: string, user: User): Promise<void> {
+    this.logger.debugFunction('UserService.updateUserById', arguments);
     await this.userModel.fetchOne({ id });
     await this.userModel.update({ id }, { $set: user });
   }
 
   public async updateUserPasswordById(id: string, currentPassword: string, newPassword: string): Promise<void> {
+    this.logger.debugFunction('UserService.updateUserPasswordById', arguments);
     const user = await this.userModel.fetchOne({ id }, { projection: { password: 1 } });
     const isMatch = compareSync(currentPassword, user.password);
     if (!isMatch) {
@@ -101,11 +107,13 @@ export class UserService {
   }
 
   public async deleteUserById(id: string): Promise<void> {
+    this.logger.debugFunction('UserService.deleteUserById', arguments);
     await this.userModel.fetchOne({ id });
     await this.userModel.delete({ id });
   }
 
   public async deleteUserByIdWithCredentials(id: string, password: string): Promise<void> {
+    this.logger.debugFunction('UserService.deleteUserByIdWithCredentials', arguments);
     const user = await this.userModel.fetchOne({ id }, { projection: { password: 1 } });
     const isMatch = compareSync(password, user.password);
     if (!isMatch) {

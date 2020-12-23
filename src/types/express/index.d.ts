@@ -19,6 +19,7 @@ declare module 'express' {
     };
     user: User;
     addLogData: (data: { [key: string]: any }) => void;
+    addLogError: (error: any) => void;
   }
 
   interface Response {

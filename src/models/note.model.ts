@@ -31,6 +31,7 @@ export class NoteModel extends Model<Note> {
   }
 
   public create(userId: string, title: string, body: string): Note {
+    this.logger.debugFunction('NoteModel.create', arguments);
     return {
       id: nanoid(12),
       userId,
