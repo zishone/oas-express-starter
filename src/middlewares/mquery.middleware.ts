@@ -5,6 +5,8 @@ import {
   RequestHandler,
   Response,
 } from 'express';
+import { ERROR_CODES } from '../constants';
+import httpError from 'http-errors';
 import rsql from 'rsql-mongodb';
 
 export const mqueryMiddleware = (): RequestHandler => {
@@ -17,8 +19,11 @@ export const mqueryMiddleware = (): RequestHandler => {
       if (typeof req.query.filter === 'string') {
         req.mquery.filter = rsql(req.query.filter);
       }
-    } catch (_) {
-      // TODO: warn
+    } catch (error) {
+      throw httpError(400, 'Filter invalid', {
+        errorCode: ERROR_CODES.INVALID,
+        details: error,
+      });
     }
 
     req.mquery.options.projection = {};
@@ -40,10 +45,10 @@ export const mqueryMiddleware = (): RequestHandler => {
               break;
             case 'asc':
             case undefined:
-            default:
-              // TODO: warn
               (req.mquery.options.sort as any)[keyValue[0]] = 1;
               break;
+            default:
+              throw httpError(400, 'Sort invalid', { errorCode: ERROR_CODES.INVALID });
           }
         });
     }

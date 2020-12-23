@@ -18,6 +18,7 @@ declare module 'express' {
       options: FindOneOptions<any>;
     };
     user: User;
+    logArgs: { [key: string]: any };
   }
 
   interface Response {

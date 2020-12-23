@@ -22,7 +22,6 @@ import {
   requestIdMiddleware,
 } from './middlewares';
 import { UserModel } from './models';
-import { config } from './config';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
@@ -35,14 +34,14 @@ export class App {
   private mongo: Mongo;
   private server: Server;
 
-  constructor(logger: Logger, app: Application) {
+  constructor(logger: Logger, mongo: Mongo, app: Application) {
     this.logger = logger;
+    this.mongo = mongo;
     this.app = app;
     this.server = createServer(this.app);
   }
 
   public async configure() {
-    await this.connectMongo();
     await this.composeMiddlewares();
     await this.constructOas();
     this.app.emit('ready', this.server);
@@ -82,11 +81,7 @@ export class App {
           });
         },
       },
-      errorMiddleware: errorMiddleware(),
+      errorMiddleware: errorMiddleware(true),
     });
-  }
-
-  private async connectMongo(): Promise<void> {
-    this.mongo = new Mongo(config.DB_URI, config.DB_NAME);
   }
 }

@@ -3,54 +3,51 @@ import {
   ENVIRONMENTS,
 } from './constants';
 import {
+  Logger,
+  Mongo,
+} from './helpers';
+import {
   serve,
   setup,
 } from 'swagger-ui-express';
 import { App } from './app';
-import { Logger } from './helpers';
 import { config } from './config';
 import express from 'express';
 import { join } from 'path';
 import migration from 'migrate-mongo';
 import { spec } from './openapi';
 
+const app = express();
 const logger = new Logger();
-// TODO: log config
-
+const mongo = new Mongo(config.DB_URI, config.DB_NAME);
 const migrateDb = async (): Promise<void> => {
-  if (config.ENV === ENVIRONMENTS.TESTING) {
-    return;
-  }
   migration.config.set({
-    mongodb: {
-      url: config.DB_URI,
-      databaseName: config.DB_NAME,
-      options: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      },
-    },
     migrationsDir: join('db', 'migrations'),
     changelogCollectionName: COLLECTIONS.MIGRATIONS,
   });
-  const { db, client } = await migration.database.connect();
+  const db = await mongo.getDb();
   await migration.up(db);
-  await client.close();
-  // TODO: Log success
+  logger.debug('Successfully migrated database', { 'db.name': config.DB_NAME });
 };
 
-const app = express();
-app.on('ready', (server): void => {
-  server.listen({ port: config.APP_PORT }, async (): Promise<void> => {
-    await migrateDb();
-    // TODO: Log listening
+app.on('ready', async (server): Promise<void> => {
+  switch (config.ENV) {
+    case ENVIRONMENTS.DEVELOPMENT:
+      app.use('/apidocs', serve, setup(spec));
+      logger.enableDebug();
+      await migrateDb();
+      break;
+    case ENVIRONMENTS.STAGING:
+    case ENVIRONMENTS.PRODUCTION:
+      logger.enableInfo();
+      await migrateDb(); 
+      break;
+  }
+  logger.debug('Environment configs values', { config });
+  server.listen({ port: config.APP_PORT }, (): void => {
+    logger.info(`Accepting connections at port: ${config.APP_PORT}`);
   });
 });
-
-if (config.ENV === ENVIRONMENTS.DEVELOPMENT || config.ENV === ENVIRONMENTS.STAGING) {
-  app.use('/apidocs', serve, setup(spec)); 
-}
-
-new App(logger, app).configure();
+new App(logger, mongo, app).configure();
 
 export { app };
