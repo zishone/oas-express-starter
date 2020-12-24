@@ -8,9 +8,7 @@ export const genericError: OpenAPIV3.SchemaObject = {
       enum: ['error'],
     },
     message: { type: 'string' },
-    code: {
-      oneOf: [{ type: 'string' }, { type: 'number' }],
-    },
+    code: { oneOf: [{ type: 'string' }, { type: 'number' }] },
     data: { $ref: '#/components/schemas/generic' },
   },
 };

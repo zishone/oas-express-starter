@@ -40,7 +40,8 @@
       "always"
     ],
     "no-trailing-spaces": ["error"],
-    "prefer-rest-params": ["off"]
+    "prefer-rest-params": ["off"],
+    "object-property-newline": ["error"]
   },
   "ignorePatterns": [
     "src/types",

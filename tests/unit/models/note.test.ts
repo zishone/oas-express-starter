@@ -29,7 +29,15 @@ export default (): void => {
 
         const { id, userId, title, body, createdOn } = noteModel.create(testUserId, testTitle, testBody);
 
-        expect({ userId, title, body }).to.deep.equal({ userId: testUserId, title: testTitle, body: testBody });
+        expect({
+          userId,
+          title,
+          body,
+        }).to.deep.equal({
+          userId: testUserId,
+          title: testTitle,
+          body: testBody,
+        });
         expect(createdOn).to.be.a('number');
         expect(id).to.be.a('string');
       });

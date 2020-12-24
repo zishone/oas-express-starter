@@ -37,7 +37,13 @@ export default (): void => {
           testName,
         );
 
-        expect({ username, email, password, name, role }).to.deep.equal({
+        expect({
+          username,
+          email,
+          password,
+          name,
+          role,
+        }).to.deep.equal({
           username: testUsername,
           email: testEmail,
           password: testSaltedPassword,

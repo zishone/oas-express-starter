@@ -22,11 +22,12 @@ export default (): void => {
   });
 
   describe('getDb', (): void => {
-    it('should create a note object', async (): Promise<void> => {
+    it('should connect to database successfully', async (): Promise<void> => {
+      const commandSpy = sandbox.spy();
       sandbox
         .stub(MongoClient, 'connect')
         .onCall(0)
-        .resolves({ db: (): { command: () => void } => ({ command: async (): Promise<void> => null }) });
+        .resolves({ db: () => ({ command: commandSpy }) });
 
       await mongo.getDb();
       await mongo.getDb();

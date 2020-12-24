@@ -7,8 +7,6 @@ export const genericSuccess: OpenAPIV3.SchemaObject = {
       type: 'string',
       enum: ['success'],
     },
-    data: {
-      $ref: '#/components/schemas/generic',
-    },
+    data: { $ref: '#/components/schemas/generic' },
   },
 };
