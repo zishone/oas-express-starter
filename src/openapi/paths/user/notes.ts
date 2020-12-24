@@ -4,7 +4,7 @@ export const userNotes: OpenAPIV3.PathItemObject = {
   post: {
     tags: ['User Notes'],
     operationId: 'postUserNotes',
-    description: 'Creates an authenticated user\'s note',
+    description: "Creates an authenticated user's note",
     security: [{ loginAuth: [] }],
     requestBody: {
       content: {
@@ -55,7 +55,7 @@ export const userNotes: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['User Notes'],
     operationId: 'getUserNotes',
-    description: 'Gets authenticated user\'s notes',
+    description: "Gets authenticated user's notes",
     security: [{ loginAuth: [] }],
     parameters: [
       { $ref: '#/components/parameters/filter' },
@@ -105,14 +105,14 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['User Notes'],
     operationId: 'getUserNotesById',
-    description: 'Gets authenticated user\'s note',
+    description: "Gets authenticated user's note",
     security: [{ loginAuth: [] }],
     parameters: [
       {
         name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'Note\'s unique identifier',
+        description: "Note's unique identifier",
         required: true,
       },
       { $ref: '#/components/parameters/fields' },
@@ -148,14 +148,14 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
   patch: {
     tags: ['User Notes'],
     operationId: 'patchUserNotesById',
-    description: 'Updates authenticated user\'s note',
+    description: "Updates authenticated user's note",
     security: [{ loginAuth: [] }],
     parameters: [
       {
         name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'Note\'s unique identifier',
+        description: "Note's unique identifier",
         required: true,
       },
     ],
@@ -201,14 +201,14 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
   delete: {
     tags: ['User Notes'],
     operationId: 'deleteUserNotesById',
-    description: 'Deletes authenticated user\'s note',
+    description: "Deletes authenticated user's note",
     security: [{ loginAuth: [] }],
     parameters: [
       {
         name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'Note\'s unique identifier',
+        description: "Note's unique identifier",
         required: true,
       },
     ],

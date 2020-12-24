@@ -1,15 +1,6 @@
-import {
-  user,
-  userPassword,
-} from './user/user';
-import {
-  userNotes,
-  userNotesById,
-} from './user/notes';
-import {
-  users,
-  usersById,
-} from './users/users';
+import { user, userPassword } from './user/user';
+import { userNotes, userNotesById } from './user/notes';
+import { users, usersById } from './users/users';
 import { OpenAPIV3 } from 'openapi-types';
 import { health } from './health/health';
 import { login } from './login/login';

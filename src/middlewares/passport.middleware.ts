@@ -1,18 +1,6 @@
-import {
-  ExtractJwt,
-  Strategy,
-  VerifiedCallback,
-} from 'passport-jwt';
-import {
-  NextFunction,
-  Request,
-  RequestHandler,
-  Response,
-} from 'express';
-import {
-  User,
-  UserModel,
-} from '../models';
+import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { User, UserModel } from '../models';
 import { ERROR_CODES } from '../constants';
 import { config } from '../config';
 import httpError from 'http-errors';
@@ -23,10 +11,11 @@ export const passportMiddleware = (userModel: UserModel): RequestHandler => {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.LOGIN_SECRET,
   };
-  const strategy = new Strategy(options, async ({ id }: { id: string }, done: VerifiedCallback): Promise<void> => {
+  const strategy = new Strategy(
+    options,
+    async ({ id }: { id: string }, done: VerifiedCallback): Promise<void> => {
       try {
-        const user = await userModel
-          .fetchOne({ id }, { projection: { password: 0 } });
+        const user = await userModel.fetchOne({ id }, { projection: { password: 0 } });
         done(null, user);
       } catch (error) {
         done(error);
@@ -57,10 +46,12 @@ export const passportMiddleware = (userModel: UserModel): RequestHandler => {
           });
         }
       } catch (error) {
-        next(httpError(401, 'Authentication failed', {
-          errorCode: ERROR_CODES.UNAUTHENTICATED,
-          details: info,
-        }));
+        next(
+          httpError(401, 'Authentication failed', {
+            errorCode: ERROR_CODES.UNAUTHENTICATED,
+            details: info,
+          }),
+        );
       }
     })(req, res, next);
   };

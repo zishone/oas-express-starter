@@ -4,7 +4,7 @@ export const user: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['User'],
     operationId: 'getUser',
-    description: 'Gets authenticated user\'s info',
+    description: "Gets authenticated user's info",
     security: [{ loginAuth: [] }],
     parameters: [{ $ref: '#/components/parameters/fields' }],
     responses: {
@@ -38,7 +38,7 @@ export const user: OpenAPIV3.PathItemObject = {
   patch: {
     tags: ['User'],
     operationId: 'patchUser',
-    description: 'Updates authenticated user\'s info',
+    description: "Updates authenticated user's info",
     security: [{ loginAuth: [] }],
     parameters: [],
     requestBody: {
@@ -129,17 +129,14 @@ export const userPassword: OpenAPIV3.PathItemObject = {
   put: {
     tags: ['User'],
     operationId: 'putUserPassword',
-    description: 'Updates authenticated user\'s password',
+    description: "Updates authenticated user's password",
     security: [{ loginAuth: [] }],
     requestBody: {
       content: {
         ['application/json']: {
           schema: {
             type: 'object',
-            required: [
-              'currentPassword',
-              'newPassword',
-            ],
+            required: ['currentPassword', 'newPassword'],
             properties: {
               currentPassword: { type: 'string' },
               newPassword: { type: 'string' },

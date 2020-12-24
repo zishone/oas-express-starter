@@ -10,10 +10,7 @@ import {
   UpdateManyOptions,
   UpdateQuery,
 } from 'mongodb';
-import {
-  Logger,
-  Mongo,
-} from '.';
+import { Logger, Mongo } from '.';
 import { ERROR_CODES } from '../constants';
 import { dotnotate } from '../utils';
 import httpError from 'http-errors';
@@ -62,8 +59,7 @@ export class Model<Data> {
     this.logger.debugFunction('Model.count', arguments);
     const db = await this.mongo.getDb();
     try {
-      return await db.collection(this.collectionName)
-        .countDocuments(filter, options);
+      return await db.collection(this.collectionName).countDocuments(filter, options);
     } catch (error) {
       throw this.mongoError(error);
     }
@@ -77,8 +73,7 @@ export class Model<Data> {
         _id: 0,
         ...(options.projection || {}),
       };
-      const cursor = db.collection(this.collectionName)
-        .find(filter, options);
+      const cursor = db.collection(this.collectionName).find(filter, options);
       return cursor;
     } catch (error) {
       throw this.mongoError(error);
@@ -93,8 +88,7 @@ export class Model<Data> {
         _id: 0,
         ...(options.projection || {}),
       };
-      const data = await db.collection(this.collectionName)
-        .findOne(filter, options);
+      const data = await db.collection(this.collectionName).findOne(filter, options);
       if (!data) {
         throw httpError(404, 'Data not found', { errorCode: ERROR_CODES.NOT_FOUND });
       }
@@ -104,12 +98,14 @@ export class Model<Data> {
     }
   }
 
-  public async aggregate<AggregationData>(pipeline: object[], options: CollectionAggregationOptions = {}): Promise<AggregationCursor<AggregationData>> {
+  public async aggregate<AggregationData>(
+    pipeline: object[],
+    options: CollectionAggregationOptions = {},
+  ): Promise<AggregationCursor<AggregationData>> {
     this.logger.debugFunction('Model.aggregate', arguments);
     const db = await this.mongo.getDb();
     try {
-      const cursor = db.collection(this.collectionName)
-        .aggregate(pipeline, options);
+      const cursor = db.collection(this.collectionName).aggregate(pipeline, options);
       return cursor;
     } catch (error) {
       throw this.mongoError(error);
@@ -122,15 +118,18 @@ export class Model<Data> {
     const ids = dataArray.map((d: any): string => d.id);
     const db = await this.mongo.getDb();
     try {
-      await db.collection(this.collectionName)
-        .insertMany(dataArray, options);
+      await db.collection(this.collectionName).insertMany(dataArray, options);
       return ids;
     } catch (error) {
       throw this.mongoError(error);
     }
   }
 
-  public async update(filter: FilterQuery<Data> = {}, update: UpdateQuery<any>, options: UpdateManyOptions = {}): Promise<void> {
+  public async update(
+    filter: FilterQuery<Data> = {},
+    update: UpdateQuery<any>,
+    options: UpdateManyOptions = {},
+  ): Promise<void> {
     this.logger.debugFunction('Model.update', arguments);
     const db = await this.mongo.getDb();
     try {
@@ -140,8 +139,7 @@ export class Model<Data> {
       if (update.$unset) {
         update.$unset = dotnotate(update.$unset);
       }
-      await db.collection(this.collectionName)
-        .updateMany(filter, JSON.parse(JSON.stringify(update)), options);
+      await db.collection(this.collectionName).updateMany(filter, JSON.parse(JSON.stringify(update)), options);
     } catch (error) {
       throw this.mongoError(error);
     }
@@ -151,8 +149,7 @@ export class Model<Data> {
     this.logger.debugFunction('Model.delete', arguments);
     const db = await this.mongo.getDb();
     try {
-      await db.collection(this.collectionName)
-        .deleteMany(filter, options);
+      await db.collection(this.collectionName).deleteMany(filter, options);
     } catch (error) {
       throw this.mongoError(error);
     }

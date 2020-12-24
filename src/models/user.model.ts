@@ -1,8 +1,4 @@
-import {
-  Logger,
-  Model,
-  Mongo,
-} from '../helpers';
+import { Logger, Model, Mongo } from '../helpers';
 import joi from 'joi';
 import { nanoid } from 'nanoid';
 
@@ -33,9 +29,9 @@ export class UserModel extends Model<User> {
     super(logger, mongo, UserModel.schema, UserModel.collectionName);
   }
 
-  public create(role: string, username: string, email:string, saltedPassword: string, name: string): User {
+  public create(role: string, username: string, email: string, saltedPassword: string, name: string): User {
     this.logger.debugFunction('UserModel.create', arguments);
-    return {
+    const user = {
       id: nanoid(12),
       username,
       email,
@@ -44,5 +40,6 @@ export class UserModel extends Model<User> {
       role,
       createdOn: Date.now(),
     };
+    return user;
   }
 }

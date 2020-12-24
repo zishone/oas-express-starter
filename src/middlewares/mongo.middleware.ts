@@ -1,9 +1,4 @@
-import {
-  NextFunction,
-  Request,
-  RequestHandler,
-  Response,
-} from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { Mongo } from '../helpers';
 
 export const mongoMiddleware = (mongo: Mongo): RequestHandler => {

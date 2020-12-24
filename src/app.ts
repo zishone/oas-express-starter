@@ -1,17 +1,6 @@
-import {
-  Application,
-  Request,
-  json,
-  urlencoded,
-} from 'express';
-import {
-  Logger,
-  Mongo,
-} from './helpers';
-import {
-  Server,
-  createServer,
-} from 'http';
+import { Application, Request, json, urlencoded } from 'express';
+import { Logger, Mongo } from './helpers';
+import { Server, createServer } from 'http';
 import {
   errorMiddleware,
   jsendMiddleware,
