@@ -1,5 +1,6 @@
 export const ENVIRONMENTS = {
-  TESTING: 'testing',
+  UNIT: 'unit',
+  INTEGRATION: 'integration',
   DEVELOPMENT: 'development',
   STAGING: 'staging',
   PRODUCTION: 'production',
