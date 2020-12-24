@@ -6,7 +6,8 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "cleanup": "rimraf dist coverage .nyc_output",
-    "lint": "eslint ./src --ext .ts --fix",
+    "lint": "eslint ./src --ext .ts",
+    "lint:fix": "npm run lint -- --fix",
     "test": "mocha --require ts-node/register --require source-map-support/register --file test/index.ts test/unit/**/*.test.ts --timeout 10000 --exit",
     "test:coverage": "nyc --reporter lcov --include src npm run test",
     "test-integration": "mocha --require ts-node/register --require source-map-support/register --file test/index.ts test/integration/**/*.test.ts --timeout 10000 --exit",
@@ -114,7 +115,7 @@
   },
   "lint-staged": {
     "src/**/*.ts": [
-      "npm run lint"
+      "npm run lint:fix"
     ]
   },
   "husky": {
