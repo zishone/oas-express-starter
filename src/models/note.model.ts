@@ -1,8 +1,4 @@
-import {
-  Logger,
-  Model,
-  Mongo,
-} from '../helpers';
+import { Logger, Model, Mongo } from '../helpers';
 import joi from 'joi';
 import { nanoid } from 'nanoid';
 
@@ -32,7 +28,7 @@ export class NoteModel extends Model<Note> {
 
   public create(userId: string, title: string, body: string): Note {
     this.logger.debugFunction('NoteModel.create', arguments);
-    return {
+    const note = {
       id: nanoid(12),
       userId,
       title,
@@ -40,5 +36,6 @@ export class NoteModel extends Model<Note> {
       modifiedOn: 0,
       createdOn: Date.now(),
     };
+    return note;
   }
 }

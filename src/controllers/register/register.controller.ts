@@ -1,9 +1,4 @@
-
-import {
-  NextFunction,
-  Request,
-  Response,
-} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { UserService } from '../../services';
 
 /**
@@ -13,12 +8,7 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
   try {
     const userService = new UserService(req.logger, req.mongo);
 
-    const {
-      username,
-      email,
-      password,
-      name,
-    } = req.body;
+    const { username, email, password, name } = req.body;
 
     const { user } = await userService.registerUser(username, email, password, name);
 

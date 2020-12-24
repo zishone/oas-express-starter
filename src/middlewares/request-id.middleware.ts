@@ -1,9 +1,4 @@
-import {
-  NextFunction,
-  Request,
-  RequestHandler,
-  Response,
-} from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { nanoid } from 'nanoid';
 
 export const requestIdMiddleware = (): RequestHandler => {

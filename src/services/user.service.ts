@@ -1,23 +1,8 @@
-import {
-  ERROR_CODES,
-  ROLES,
-} from '../constants';
-import {
-  FilterQuery,
-  FindOneOptions,
-} from 'mongodb';
-import {
-  Logger,
-  Mongo,
-} from '../helpers';
-import {
-  User,
-  UserModel,
-} from '../models';
-import {
-  genSaltSync,
-  hashSync,
-} from 'bcryptjs';
+import { ERROR_CODES, ROLES } from '../constants';
+import { FilterQuery, FindOneOptions } from 'mongodb';
+import { Logger, Mongo } from '../helpers';
+import { User, UserModel } from '../models';
+import { genSaltSync, hashSync } from 'bcryptjs';
 import { compareSync } from 'bcryptjs';
 import { config } from '../config';
 import httpError from 'http-errors';
@@ -44,12 +29,10 @@ export class UserService {
 
   public async authenticateUser(login: string, password: string): Promise<{ accessToken: string }> {
     this.logger.debugFunction('UserService.authenticateUser', arguments);
-    const user = await this.userModel.fetchOne({
-      $or: [
-        { username: login },
-        { email: login },
-      ],
-    })
+    const user = await this.userModel
+      .fetchOne({
+        $or: [{ username: login }, { email: login }],
+      })
       .catch((error: any) => {
         if (error.statusCode === 404) {
           throw httpError(401, 'Credentials invalid', {
@@ -74,7 +57,10 @@ export class UserService {
     return { user };
   }
 
-  public async fetchUsers(filter: FilterQuery<User> = {}, options: FindOneOptions<any> = {}): Promise<{ userCount: number, users: User[]}> {
+  public async fetchUsers(
+    filter: FilterQuery<User> = {},
+    options: FindOneOptions<any> = {},
+  ): Promise<{ userCount: number; users: User[] }> {
     this.logger.debugFunction('UserService.fetchUsers', arguments);
     const cursor = await this.userModel.fetch(filter, options);
     const userCount = await cursor.count();

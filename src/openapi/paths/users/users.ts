@@ -54,14 +54,14 @@ export const usersById: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['Users'],
     operationId: 'getUsersById',
-    description: 'Gets a user\'s info',
+    description: "Gets a user's info",
     security: [{ loginAuth: [] }],
     parameters: [
       {
         name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'User\'s unique identifier',
+        description: "User's unique identifier",
         required: true,
       },
       { $ref: '#/components/parameters/fields' },
@@ -97,14 +97,14 @@ export const usersById: OpenAPIV3.PathItemObject = {
   patch: {
     tags: ['Users'],
     operationId: 'patchUsersById',
-    description: 'Updates a user\'s info',
+    description: "Updates a user's info",
     security: [{ loginAuth: [] }],
     parameters: [
       {
         name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'User\'s unique identifier',
+        description: "User's unique identifier",
         required: true,
       },
     ],
@@ -159,7 +159,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
         name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'User\'s unique identifier',
+        description: "User's unique identifier",
         required: true,
       },
     ],

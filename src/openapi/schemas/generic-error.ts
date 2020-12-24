@@ -9,10 +9,7 @@ export const genericError: OpenAPIV3.SchemaObject = {
     },
     message: { type: 'string' },
     code: {
-      oneOf: [
-        { type: 'string' },
-        { type: 'number' },
-      ],
+      oneOf: [{ type: 'string' }, { type: 'number' }],
     },
     data: { $ref: '#/components/schemas/generic' },
   },

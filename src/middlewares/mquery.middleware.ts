@@ -1,10 +1,4 @@
-
-import {
-  NextFunction,
-  Request,
-  RequestHandler,
-  Response,
-} from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { ERROR_CODES } from '../constants';
 import httpError from 'http-errors';
 import rsql from 'rsql-mongodb';
@@ -28,29 +22,27 @@ export const mqueryMiddleware = (): RequestHandler => {
 
     req.mquery.options.projection = {};
     if (typeof req.query.fields === 'string') {
-      req.query.fields.split(';')
-        .forEach((key: string): void => {
-          req.mquery.options.projection[key] = 1;
-        });
+      req.query.fields.split(';').forEach((key: string): void => {
+        req.mquery.options.projection[key] = 1;
+      });
     }
 
     req.mquery.options.sort = {};
     if (typeof req.query.sort === 'string') {
-      req.query.sort.split(';')
-        .forEach((sort: string): void => {
-          const keyValue = sort.split('==');
-          switch (keyValue[1]) {
-            case 'desc':
-              (req.mquery.options.sort as any)[keyValue[0]] = -1;
-              break;
-            case 'asc':
-            case undefined:
-              (req.mquery.options.sort as any)[keyValue[0]] = 1;
-              break;
-            default:
-              throw httpError(400, 'Sort invalid', { errorCode: ERROR_CODES.INVALID });
-          }
-        });
+      req.query.sort.split(';').forEach((sort: string): void => {
+        const keyValue = sort.split('==');
+        switch (keyValue[1]) {
+          case 'desc':
+            (req.mquery.options.sort as any)[keyValue[0]] = -1;
+            break;
+          case 'asc':
+          case undefined:
+            (req.mquery.options.sort as any)[keyValue[0]] = 1;
+            break;
+          default:
+            throw httpError(400, 'Sort invalid', { errorCode: ERROR_CODES.INVALID });
+        }
+      });
     }
 
     req.mquery.options.limit = 0;

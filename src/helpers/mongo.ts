@@ -1,9 +1,4 @@
-import {
-  Db,
-  MongoClient,
-  MongoClientCommonOption,
-  MongoClientOptions,
-} from 'mongodb';
+import { Db, MongoClient, MongoClientCommonOption, MongoClientOptions } from 'mongodb';
 import { Logger } from '.';
 
 export interface MongoConfig {

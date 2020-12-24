@@ -1,27 +1,17 @@
-import {
-  NextFunction,
-  Request,
-  Response,
-} from 'express';
-import {
-  NoteService,
-  UserService,
-} from '../../services';
+import { NextFunction, Request, Response } from 'express';
+import { NoteService, UserService } from '../../services';
 import { paginate } from '../../utils';
 
 /**
  * GET /api/v1/users
  */
-export const getUsers = async (req: Request, res: Response , next: NextFunction): Promise<void> => {
+export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
 
     const { filter, options } = req.mquery;
 
-    const {
-      userCount,
-      users,
-    } = await userService.fetchUsers(filter, options);
+    const { userCount, users } = await userService.fetchUsers(filter, options);
     const pagination = paginate(userCount, options.limit);
 
     res.jsend.success({
@@ -36,7 +26,7 @@ export const getUsers = async (req: Request, res: Response , next: NextFunction)
 /**
  * GET /api/v1/users/{id}
  */
-export const getUsersById = async (req: Request, res: Response , next: NextFunction): Promise<void> => {
+export const getUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
 
@@ -54,17 +44,12 @@ export const getUsersById = async (req: Request, res: Response , next: NextFunct
 /**
  * PATCH /api/v1/users/{id}
  */
-export const patchUsersById = async (req: Request, res: Response , next: NextFunction): Promise<void> => {
+export const patchUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
 
     const { id } = req.params;
-    const {
-      username,
-      email,
-      password,
-      name,
-    } = req.body;
+    const { username, email, password, name } = req.body;
 
     await userService.updateUserById(id, {
       username,
@@ -82,7 +67,7 @@ export const patchUsersById = async (req: Request, res: Response , next: NextFun
 /**
  * DELETE /api/v1/users/{id}
  */
-export const deleteUsersById = async (req: Request, res: Response , next: NextFunction): Promise<void> => {
+export const deleteUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
     const noteService = new NoteService(req.logger, req.mongo);

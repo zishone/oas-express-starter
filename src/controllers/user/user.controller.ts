@@ -1,17 +1,10 @@
-import {
-  NextFunction,
-  Request,
-  Response,
-} from 'express';
-import {
-  NoteService,
-  UserService,
-} from '../../services';
+import { NextFunction, Request, Response } from 'express';
+import { NoteService, UserService } from '../../services';
 
 /**
  * GET /api/v1/user
  */
-export const getUser = async (req: Request, res: Response , next: NextFunction): Promise<void> => {
+export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
 
@@ -29,16 +22,12 @@ export const getUser = async (req: Request, res: Response , next: NextFunction):
 /**
  * PATCH /api/v1/user
  */
-export const patchUser = async (req: Request, res: Response , next: NextFunction): Promise<void> => {
+export const patchUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
 
     const { id } = req.user;
-    const {
-      username,
-      email,
-      name,
-    } = req.body;
+    const { username, email, name } = req.body;
 
     await userService.updateUserById(id, {
       username,
@@ -55,7 +44,7 @@ export const patchUser = async (req: Request, res: Response , next: NextFunction
 /**
  * DELETE /api/v1/user
  */
-export const deleteUser = async (req: Request, res: Response , next: NextFunction): Promise<void> => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
     const noteService = new NoteService(req.logger, req.mongo);
@@ -75,7 +64,7 @@ export const deleteUser = async (req: Request, res: Response , next: NextFunctio
 /**
  * PUT /api/v1/user/password
  */
-export const putUserPassword = async (req: Request, res: Response , next: NextFunction): Promise<void> => {
+export const putUserPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService(req.logger, req.mongo);
 

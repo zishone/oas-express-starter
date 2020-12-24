@@ -9,17 +9,23 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended"
+    "plugin:@typescript-eslint/eslint-recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
   ],
   "rules": {
     "no-console": "error",
     "sort-imports": "error",
-    "quotes": ["error", "single"],
+    "quotes": [
+      "error",
+      "single",
+      { "avoidEscape": true }
+    ],
     "comma-dangle": [
       "error",
       "always-multiline"
     ],
-    "camelcase": "error",
+    "camelcase": ["error"],
     "no-unused-vars": [
       "error",
       {
@@ -29,7 +35,10 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "semi": ["error", "always"],
+    "semi": [
+      "error",
+      "always"
+    ],
     "no-trailing-spaces": ["error"],
     "prefer-rest-params": ["off"]
   },

@@ -6,7 +6,7 @@ import winston from 'winston';
 
 export class Logger {
   private transports: winston.transport[];
-  private defualtMeta: { service: string, version: string };
+  private defualtMeta: { service: string; version: string };
   private logger: winston.Logger;
 
   constructor() {
@@ -32,7 +32,7 @@ export class Logger {
   }
 
   public enableInfo(): void {
-    this.logger.add(new winston.transports.Console({ level: LOG_LEVELS.INFO }) );
+    this.logger.add(new winston.transports.Console({ level: LOG_LEVELS.INFO }));
   }
 
   public enableDebug(): void {

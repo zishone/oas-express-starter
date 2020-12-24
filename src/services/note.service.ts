@@ -1,15 +1,6 @@
-import {
-  FilterQuery,
-  FindOneOptions,
-} from 'mongodb';
-import {
-  Logger,
-  Mongo,
-} from '../helpers';
-import {
-  Note,
-  NoteModel,
-} from '../models';
+import { FilterQuery, FindOneOptions } from 'mongodb';
+import { Logger, Mongo } from '../helpers';
+import { Note, NoteModel } from '../models';
 
 export class NoteService {
   private logger: Logger;
@@ -28,12 +19,19 @@ export class NoteService {
     return { note };
   }
 
-  public async fetchUserNotes(userId: string, filter: FilterQuery<Note> = {}, options?: FindOneOptions<any>): Promise<{ noteCount: number, notes: Note[]}> {
+  public async fetchUserNotes(
+    userId: string,
+    filter: FilterQuery<Note> = {},
+    options?: FindOneOptions<any>,
+  ): Promise<{ noteCount: number; notes: Note[] }> {
     this.logger.debugFunction('NoteService.fetchUserNotes', arguments);
-    const cursor = await this.noteModel.fetch({
-      ...filter,
-      userId,
-    }, options);
+    const cursor = await this.noteModel.fetch(
+      {
+        ...filter,
+        userId,
+      },
+      options,
+    );
     const noteCount = await cursor.count();
     const notes = await cursor.toArray();
     return {
@@ -44,10 +42,13 @@ export class NoteService {
 
   public async fetchUserNoteById(userId: string, id: string, options?: FindOneOptions<any>): Promise<{ note: Note }> {
     this.logger.debugFunction('NoteService.fetchUserNoteById', arguments);
-    const note = await this.noteModel.fetchOne({
-      id,
-      userId,
-    }, options);
+    const note = await this.noteModel.fetchOne(
+      {
+        id,
+        userId,
+      },
+      options,
+    );
     return { note };
   }
 
@@ -57,11 +58,14 @@ export class NoteService {
       id,
       userId,
     });
-    await this.noteModel.update({
-      id,
-      userId,
-      modifiedOn: Date.now(),
-    }, { $set: note });
+    await this.noteModel.update(
+      {
+        id,
+        userId,
+        modifiedOn: Date.now(),
+      },
+      { $set: note },
+    );
   }
 
   public async deleteUserNoteById(userId: string, id: string): Promise<void> {

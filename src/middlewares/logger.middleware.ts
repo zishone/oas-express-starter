@@ -1,9 +1,4 @@
-import {
-  NextFunction,
-  Request,
-  RequestHandler,
-  Response,
-} from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { Logger } from '../helpers';
 import auth from 'basic-auth';
 import onFinished from 'on-finished';
@@ -42,7 +37,7 @@ export const loggerMiddleware = (logger: Logger): RequestHandler => {
         'response.status': res.headersSent ? res.statusCode : undefined,
         'response.content.length': res.headersSent ? res.getHeader('content-length') : undefined,
         'response.time': responseEndTime - responseStartTime,
-        'data': logData,
+        data: logData,
       };
       if (hasErrored) {
         logger.error('Request errored', log);
