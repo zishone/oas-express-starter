@@ -34,7 +34,7 @@ export class UserService {
         $or: [{ username: login }, { email: login }],
       })
       .catch((error: any) => {
-        if (error.statusCode === 404) {
+        if (error.status === 404) {
           throw httpError(401, 'Credentials invalid', {
             errorCode: ERROR_CODES.UNAUTHENTICATED,
             details: error,
