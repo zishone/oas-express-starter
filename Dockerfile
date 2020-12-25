@@ -14,6 +14,5 @@ RUN npm run build
 
 COPY ./.env.defaults ./
 COPY ./db/ ./db/
-COPY ./tests ./tests/
 
 CMD npm run start 
