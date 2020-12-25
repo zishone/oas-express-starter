@@ -1,18 +1,19 @@
+import { SinonSpy, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
 import { Logger } from '../../../src/helpers';
-import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { nanoid } from 'nanoid';
 import winston from 'winston';
 
 export default (): void => {
-  let logger: Logger;
   const sandbox = createSandbox();
-  const testData: { [key: string]: any } = {};
+  let logger: Logger;
+  let addSpy: SinonSpy;
+  let logSpy: SinonSpy;
 
   beforeEach((): void => {
-    const addSpy = sandbox.spy();
-    const logSpy = sandbox.spy();
+    addSpy = sandbox.spy();
+    logSpy = sandbox.spy();
     sandbox
       .stub(winston, 'createLogger')
       .onCall(0)
@@ -20,9 +21,6 @@ export default (): void => {
         add: addSpy,
         log: logSpy,
       } as any);
-    testData.testMessage = nanoid(12);
-    testData.testFunctioName = nanoid(12);
-    testData.testFunctionArgs = { '0': nanoid(12) };
     logger = new Logger();
   });
 
@@ -48,7 +46,7 @@ export default (): void => {
 
   describe('info', (): void => {
     it('should log on level info', async (): Promise<void> => {
-      const { testMessage } = testData;
+      const testMessage = nanoid(12);
 
       logger.info(testMessage);
 
@@ -58,7 +56,7 @@ export default (): void => {
 
   describe('error', (): void => {
     it('should log on level error', async (): Promise<void> => {
-      const { testMessage } = testData;
+      const testMessage = nanoid(12);
 
       logger.error(testMessage);
 
@@ -68,7 +66,7 @@ export default (): void => {
 
   describe('debug', (): void => {
     it('should log on level debug', async (): Promise<void> => {
-      const { testMessage } = testData;
+      const testMessage = nanoid(12);
 
       logger.debug(testMessage);
 
@@ -78,7 +76,8 @@ export default (): void => {
 
   describe('debugFunction', (): void => {
     it('should log function and its arguments on level debug', async (): Promise<void> => {
-      const { testFunctioName, testFunctionArgs } = testData;
+      const testFunctioName = nanoid(12);
+      const testFunctionArgs = { '0': nanoid(12) };
 
       logger.debugFunction(testFunctioName, testFunctionArgs);
 

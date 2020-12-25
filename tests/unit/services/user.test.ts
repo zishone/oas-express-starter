@@ -10,27 +10,13 @@ import jsonwebtoken from 'jsonwebtoken';
 import { nanoid } from 'nanoid';
 
 export default (): void => {
-  let userService: UserService;
   const sandbox = createSandbox();
-  const testData: { [key: string]: any } = {};
+  let userService: UserService;
 
   beforeEach((): void => {
-    const logger = { debugFunction: sandbox.spy() };
-    const mongo = { getDb: sandbox.spy() };
+    const logger = { debugFunction: (): void => null };
+    const mongo = { getDb: async (): Promise<void> => null };
     userService = new UserService(logger as any, mongo as any);
-    testData.testUsername = nanoid(12);
-    testData.testPassword = nanoid(12);
-    testData.testNewPassword = nanoid(12);
-    testData.testSalt = nanoid(12);
-    testData.testUser = {
-      id: nanoid(12),
-      username: testData.testUsername,
-      email: nanoid(12),
-      password: nanoid(12),
-      name: nanoid(12),
-      role: ROLES.USER,
-      createdOn: Date.now(),
-    };
   });
 
   afterEach((): void => {
@@ -39,7 +25,17 @@ export default (): void => {
 
   describe('registerUser', (): void => {
     it('should register new user to the database', async (): Promise<void> => {
-      const { testUser, testPassword, testSalt } = testData;
+      const testPassword = nanoid(12);
+      const testSalt = nanoid(12);
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
 
       sandbox.stub(bcryptjs, 'genSaltSync').onCall(0).returns(testSalt);
       sandbox.stub(bcryptjs, 'hashSync').onCall(0).returns(testUser.password);
@@ -55,7 +51,17 @@ export default (): void => {
 
   describe('authenticateUser', (): void => {
     it('should authenticate user', async (): Promise<void> => {
-      const { testUser, testPassword, testAccessToken } = testData;
+      const testPassword = nanoid(12);
+      const testAccessToken = nanoid(12);
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(true);
@@ -70,7 +76,8 @@ export default (): void => {
     });
 
     it('should fail user authentication when user does not exist', async (): Promise<void> => {
-      const { testUsername, testPassword } = testData;
+      const testUsername = nanoid(12);
+      const testPassword = nanoid(12);
       const testStatusCode = 401;
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).rejects(httpError(404));
@@ -84,7 +91,8 @@ export default (): void => {
     });
 
     it('should fail user authentication when fetch from database fails', async (): Promise<void> => {
-      const { testUsername, testPassword } = testData;
+      const testUsername = nanoid(12);
+      const testPassword = nanoid(12);
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).rejects(new Error());
 
@@ -96,7 +104,16 @@ export default (): void => {
     });
 
     it('should fail user authentication when password does not match', async (): Promise<void> => {
-      const { testUser, testPassword } = testData;
+      const testPassword = nanoid(12);
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
       const testStatusCode = 401;
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
@@ -113,7 +130,15 @@ export default (): void => {
 
   describe('fetchUserById', (): void => {
     it('should return user fetched from the database given user id', async (): Promise<void> => {
-      const { testUser } = testData;
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
 
@@ -125,15 +150,24 @@ export default (): void => {
 
   describe('fetchUsers', (): void => {
     it('should return users list fetched from the database', async (): Promise<void> => {
-      const { testUser } = testData;
-      const testUsers = [testUser];
+      const testUsers = [
+        {
+          id: nanoid(12),
+          username: nanoid(12),
+          email: nanoid(12),
+          password: nanoid(12),
+          name: nanoid(12),
+          role: ROLES.USER,
+          createdOn: Date.now(),
+        },
+      ];
 
       sandbox
         .stub(UserModel.prototype, 'fetch')
         .onCall(0)
         .resolves({
-          count: async () => testUsers.length,
-          toArray: async () => testUsers,
+          count: async (): Promise<number> => testUsers.length,
+          toArray: async (): Promise<any[]> => testUsers,
         } as any);
 
       const { userCount, users } = await userService.fetchUsers();
@@ -145,7 +179,15 @@ export default (): void => {
 
   describe('updateUserById', (): void => {
     it('should update user in the database given user id', async (): Promise<void> => {
-      const { testUser } = testData;
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(UserModel.prototype, 'update').onCall(0).resolves();
@@ -158,7 +200,18 @@ export default (): void => {
 
   describe('updateUserPasswordById', (): void => {
     it('should update user password in the database given user id', async (): Promise<void> => {
-      const { testUser, testSalt, testPassword, testNewPassword } = testData;
+      const testPassword = nanoid(12);
+      const testNewPassword = nanoid(12);
+      const testSalt = nanoid(12);
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(true);
@@ -172,7 +225,17 @@ export default (): void => {
     });
 
     it('should fail to update user password when current password does not match', async (): Promise<void> => {
-      const { testUser, testPassword, testNewPassword } = testData;
+      const testPassword = nanoid(12);
+      const testNewPassword = nanoid(12);
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
       const testStatusCode = 403;
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
@@ -191,7 +254,15 @@ export default (): void => {
 
   describe('deleteUserById', (): void => {
     it('should delete a user from the database given user id', async (): Promise<void> => {
-      const { testUser } = testData;
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(UserModel.prototype, 'delete').onCall(0).resolves();
@@ -204,7 +275,16 @@ export default (): void => {
 
   describe('deleteUserByIdWithCredentials', (): void => {
     it('should delete a user from the database given user id and password', async (): Promise<void> => {
-      const { testUser, testPassword } = testData;
+      const testPassword = nanoid(12);
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(true);
@@ -216,7 +296,16 @@ export default (): void => {
     });
 
     it('should fail to delete a user when password does not match', async (): Promise<void> => {
-      const { testUser, testPassword } = testData;
+      const testPassword = nanoid(12);
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
       const testStatusCode = 403;
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);

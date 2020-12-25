@@ -5,42 +5,37 @@ import { expect } from 'chai';
 import { nanoid } from 'nanoid';
 
 export default (): void => {
-  describe('NoteModel', (): void => {
-    let noteModel: NoteModel;
-    const sandbox = createSandbox();
-    const testData: { [key: string]: any } = {};
+  const sandbox = createSandbox();
+  let noteModel: NoteModel;
 
-    beforeEach((): void => {
-      const logger = { debugFunction: sandbox.spy() };
-      const mongo = { getDb: sandbox.spy() };
-      noteModel = new NoteModel(logger as any, mongo as any);
-      testData.testUserId = nanoid(12);
-      testData.testTitle = nanoid(12);
-      testData.testBody = nanoid(12);
-    });
+  beforeEach((): void => {
+    const logger = { debugFunction: (): void => null };
+    const mongo = { getDb: async (): Promise<void> => null };
+    noteModel = new NoteModel(logger as any, mongo as any);
+  });
 
-    afterEach((): void => {
-      sandbox.restore();
-    });
+  afterEach((): void => {
+    sandbox.restore();
+  });
 
-    describe('create', (): void => {
-      it('should create a note object', async (): Promise<void> => {
-        const { testUserId, testTitle, testBody } = testData;
+  describe('create', (): void => {
+    it('should create a note object', async (): Promise<void> => {
+      const testUserId = nanoid(12);
+      const testTitle = nanoid(12);
+      const testBody = nanoid(12);
 
-        const { id, userId, title, body, createdOn } = noteModel.create(testUserId, testTitle, testBody);
+      const { userId, title, body, createdOn } = noteModel.create(testUserId, testTitle, testBody);
 
-        expect({
-          userId,
-          title,
-          body,
-        }).to.deep.equal({
-          userId: testUserId,
-          title: testTitle,
-          body: testBody,
-        });
-        expect(createdOn).to.be.a('number');
-        expect(id).to.be.a('string');
+      expect({
+        userId,
+        title,
+        body,
+      }).to.deep.equal({
+        userId: testUserId,
+        title: testTitle,
+        body: testBody,
       });
+      expect(createdOn).to.be.a('number');
     });
   });
 };

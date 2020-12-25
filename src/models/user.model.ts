@@ -1,6 +1,5 @@
 import { Logger, Model, Mongo } from '../helpers';
 import joi from 'joi';
-import { nanoid } from 'nanoid';
 
 export interface User {
   id?: string;
@@ -32,7 +31,6 @@ export class UserModel extends Model<User> {
   public create(role: string, username: string, email: string, saltedPassword: string, name: string): User {
     this.logger.debugFunction('UserModel.create', arguments);
     const user = {
-      id: nanoid(12),
       username,
       email,
       password: saltedPassword,

@@ -15,6 +15,7 @@ import { ERROR_CODES } from '../constants';
 import { dotnotate } from '../utils';
 import httpError from 'http-errors';
 import joi from 'joi';
+import { nanoid } from 'nanoid';
 
 export class Model<Data> {
   protected logger: Logger;
@@ -115,10 +116,19 @@ export class Model<Data> {
   public async save(data: Data | Data[], options: CollectionInsertManyOptions = {}): Promise<string[]> {
     this.logger.debugFunction('Model.save', arguments);
     const dataArray = await this.validate(data);
-    const ids = dataArray.map((d: any): string => d.id);
+    const ids: string[] = [];
     const db = await this.mongo.getDb();
     try {
-      await db.collection(this.collectionName).insertMany(dataArray, options);
+      const dataArrayMapped = dataArray.map((d: any): string => {
+        const id = nanoid(12);
+        delete d.id;
+        ids.push(id);
+        return {
+          id,
+          ...d,
+        };
+      });
+      await db.collection(this.collectionName).insertMany(dataArrayMapped, options);
       return ids;
     } catch (error) {
       throw this.mongoError(error);

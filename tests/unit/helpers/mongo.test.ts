@@ -1,20 +1,19 @@
+import { SinonSpy, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
 import { Mongo } from '../../../src/helpers';
 import { MongoClient } from 'mongodb';
-import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { nanoid } from 'nanoid';
 
 export default (): void => {
-  let mongo: Mongo;
   const sandbox = createSandbox();
-  const testData: { [key: string]: any } = {};
+  let mongo: Mongo;
 
   beforeEach((): void => {
-    const logger = { debugFunction: sandbox.spy() };
-    testData.testDb = nanoid(12);
-    testData.testUri = nanoid(12);
-    mongo = new Mongo(logger as any, testData.testUri, testData.testDb);
+    const logger = { debugFunction: (): void => null };
+    const testDb = nanoid(12);
+    const testUri = nanoid(12);
+    mongo = new Mongo(logger as any, testUri, testDb);
   });
 
   afterEach((): void => {
@@ -27,7 +26,7 @@ export default (): void => {
       sandbox
         .stub(MongoClient, 'connect')
         .onCall(0)
-        .resolves({ db: () => ({ command: commandSpy }) });
+        .resolves({ db: (): { command: SinonSpy } => ({ command: commandSpy }) });
 
       await mongo.getDb();
       await mongo.getDb();
