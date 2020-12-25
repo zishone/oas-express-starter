@@ -40,13 +40,12 @@ export class App {
     this.app.use(requestIdMiddleware());
     this.app.use(jsendMiddleware());
     this.app.use(loggerMiddleware(this.logger));
+    this.app.use(mongoMiddleware(this.mongo));
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
-    this.app.use(mongoMiddleware(this.mongo));
     this.app.use(passport.initialize());
     this.app.use(mqueryMiddleware());
-    this.app.use(errorMiddleware());
   }
 
   private async constructOas(): Promise<void> {
@@ -70,7 +69,7 @@ export class App {
           });
         },
       },
-      errorMiddleware: errorMiddleware(true),
+      errorMiddleware: errorMiddleware(),
     });
   }
 }

@@ -2,10 +2,10 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { ERROR_CODES } from '../constants';
 import { HttpError } from 'http-errors';
 
-export const errorMiddleware = (isValidationError: boolean = false): ErrorRequestHandler => {
+export const errorMiddleware = (): ErrorRequestHandler => {
   return (error: HttpError | any, req: Request, res: Response, _next: NextFunction): void => {
     req.addLogError(error);
-    if (isValidationError || error.type === 'entity.parse.failed') {
+    if (error.errors || error.type === 'entity.parse.failed') {
       res.jsend.fail(
         {
           errorCode: ERROR_CODES.INVALID,
