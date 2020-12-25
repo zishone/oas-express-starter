@@ -1,10 +1,9 @@
+import { COLLECTIONS, ERROR_CODES } from '../../../src/constants';
 import { SinonMock, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
-import { ERROR_CODES } from '../../../src/constants';
 import { Model } from '../../../src/helpers';
 import { expect } from 'chai';
 import joi from 'joi';
-import { nanoid } from 'nanoid';
 
 export default (): void => {
   const sandbox = createSandbox();
@@ -15,7 +14,7 @@ export default (): void => {
     const logger = { debugFunction: (): void => null };
     const mongo = { getDb: async (): Promise<void> => null };
     const schema = {};
-    const testCollectionName = nanoid(12);
+    const testCollectionName = COLLECTIONS.USERS;
     mongoMock = sandbox.mock(mongo);
     model = new Model<any>(logger as any, mongo as any, schema as any, testCollectionName);
   });

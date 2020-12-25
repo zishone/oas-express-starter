@@ -12,7 +12,6 @@
     "test:coverage": "nyc --reporter lcov --include src npm run test",
     "test-integration": "mocha --require ts-node/register --require source-map-support/register --file tests/integration/index.ts tests/integration/**/*.test.ts --timeout 10000 --exit",
     "test-integration:coverage": "nyc --reporter lcov --include src npm run test",
-    "pre-commit": "lint-staged && npm run test",
     "build": "tsc --skipLibCheck",
     "build:watch": "tsc --watch",
     "start": "node dist/server.js",
@@ -109,18 +108,5 @@
     "starter",
     "template",
     "boilerplate"
-  ],
-  "nyc": {
-    "extends": "@istanbuljs/nyc-config-typescript"
-  },
-  "lint-staged": {
-    "src/**/*.ts": [
-      "npm run lint:fix"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run pre-commit"
-    }
-  }
+  ]
 }
