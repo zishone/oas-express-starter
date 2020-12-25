@@ -23,5 +23,13 @@ services:
       driver: none
     networks:
       - oas-net
+  mongodb-integration:
+    image: mongo:4.2
+    ports:
+      - "27017"
+    logging:
+      driver: none
+    networks:
+      - oas-net
 networks: 
   oas-net:

@@ -1,4 +1,4 @@
-.PHONY: ensure-dotenv build up test run test-integration 
+.PHONY:   build up test run test-integration 
 
 define readPackageJson
 	$(shell node -p "require('./package.json').$(1)")
@@ -14,45 +14,37 @@ endif
 include .env
 export $(shell sed 's/=.*//' .env)
 
-build: ensure-dotenv
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
+set-environments:
+export APP_NAME=${CONFIG_APP_NAME}
+export APP_VERSION=${CONFIG_APP_VERSION}
+export APP_PORT=${CONFIG_APP_PORT}
+
+build: ensure-dotenv set-environments
 	docker-compose build \
 		${SERVICE}
 
-up: ensure-dotenv
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
+up: build
 	docker-compose up \
 		${SERVICE}
 
 test: build
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
 	docker-compose run \
-		-v [.data=/app/.data] \
+		-v [./.data=/app/.data] \
 		--no-deps \
 		oas-service \
 		npm run test:coverage
 
 run: build
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
 	docker-compose run \
-		-v [.data=/app/.data] \
+		-v [./.data=/app/.data] \
 		--no-deps \
 		oas-service \
 		npm run start
 
 test-integration: build
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
+	docker-compose up -d mongodb-integration && \
 	docker-compose run \
-		-v [.data=/app/.data] \
+		-v [./.data=/app/.data] \
+		--no-deps \
 		oas-service \
 		npm run test-integration:coverage

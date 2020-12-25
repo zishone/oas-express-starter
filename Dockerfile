@@ -2,8 +2,6 @@ FROM node:alpine3.12
 
 WORKDIR /app
 
-RUN mkdir .data
-
 COPY ./package.json ./
 COPY ./package-lock.json ./
 
@@ -18,4 +16,4 @@ COPY ./.env.defaults ./
 COPY ./db/ ./db/
 COPY ./tests ./tests/
 
-CMD [ "npm", "run", "start" ]
+CMD npm run start 
