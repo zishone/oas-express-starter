@@ -1,40 +1,17 @@
-
-import {
-  NextFunction,
-  Request,
-  Response,
-} from 'express';
-import { Logger } from '../../helpers';
-import { STATES } from '../../constants';
+import { NextFunction, Request, Response } from 'express';
 import { UserService } from '../../services';
-
-const logger = new Logger('controller', __filename);
 
 /**
  * POST /api/v1/register
  */
-export const postRegister = async (req: Request, res: Response, next: NextFunction) => {
+export const postRegister = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    logger.debug(req.id, 'postRegister', STATES.BEGUN);
-    const userService = new UserService(req.id, req.mongo);
+    const userService = new UserService(req.logger, req.mongo);
 
-    const {
-      username,
-      email,
-      password,
-      name,
-    } = req.body;
+    const { username, email, password, name } = req.body;
 
-    const { userId } = await userService.addUser(username, email, password, name)
-      .catch((error: any) => {
-        throw error;
-      });
-    const { user } = await userService.fetchUser({ userId }, { projection: { password: 0 } })
-      .catch((error: any) => {
-        throw error;
-      });
+    const { user } = await userService.registerUser(username, email, password, name);
 
-    logger.debug(req.id, 'postRegister', STATES.SUCCEEDED);
     res.jsend.success({ user }, 201);
   } catch (error) {
     next(error);

@@ -1,28 +1,43 @@
-import {
-  Request,
-  Response,
-} from 'express';
-import { Logger } from '../helpers';
+import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import { ERROR_CODES } from '../constants';
+import { HttpError } from 'http-errors';
 
-const logger = new Logger('middleware', __filename);
-
-export const errorMiddleware = (): any => {
-  return (error: any, req: Request, res: Response): void => {
-    const payload: any = {};
-    if (error.status >= 400 && error.status < 500) {
-      logger.error(req.id, 'errorMiddleware', error.errors);
-      payload.status = 'fail';
-      payload.data = error.errors ? { details: error.errors } : undefined;
-      res.status(error.status)
-        .send(payload);
-    } else {
-      logger.fatal(req.id, 'errorMiddleware', error);
-      payload.status = 'error';
-      payload.message = error.message || 'Unknown error.',
-      payload.code = error.code,
-      payload.data = error.errors ? { details: error.errors } : undefined;
-      res.status(error.status || 500)
-        .send(payload);
+export const errorMiddleware = (isValidationError: boolean = false): ErrorRequestHandler => {
+  return (error: HttpError | any, req: Request, res: Response, _next: NextFunction): void => {
+    req.addLogError(error);
+    if (isValidationError || error.type === 'entity.parse.failed') {
+      res.jsend.fail(
+        {
+          errorCode: ERROR_CODES.INVALID,
+          message: 'Invalid payload',
+          details: error.errors,
+        },
+        error.status,
+      );
+      return;
+    }
+    if (error.status < 500) {
+      res.jsend.fail(
+        {
+          errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
+          message: error.message || 'Error unknown',
+          details: Array.isArray(error.details) ? error.details : [error.details],
+        },
+        error.status,
+      );
+      return;
+    }
+    if (!(error.status < 500)) {
+      res.jsend.error(
+        error.message || 'Error unknown',
+        error.code,
+        {
+          errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
+          details: Array.isArray(error.details) ? error.details : [error.details],
+        },
+        error.status,
+      );
+      return;
     }
   };
 };

@@ -1,13 +1,5 @@
-import {
-  Collection,
-  Model,
-} from '.';
-import {
-  Db,
-  MongoClient,
-  MongoClientCommonOption,
-  MongoClientOptions,
-} from 'mongodb';
+import { Db, MongoClient, MongoClientCommonOption, MongoClientOptions } from 'mongodb';
+import { Logger } from '.';
 
 export interface MongoConfig {
   mongoUri: string;
@@ -17,31 +9,30 @@ export interface MongoConfig {
 }
 
 export class Mongo {
-  private client!: MongoClient;
+  private logger: Logger;
   private dbUri: string;
   private dbName: string;
+  private client!: MongoClient;
 
-  constructor(dbUri: string, dbName: string) {
+  constructor(logger: Logger, dbUri: string, dbName: string) {
+    this.logger = logger;
     this.dbUri = dbUri;
     this.dbName = dbName;
   }
 
   public async getDb(): Promise<Db> {
+    this.logger.debugFunction('Mongo.getDb', arguments);
     try {
       if (!this.client) {
         throw new Error();
       }
       await this.client.db('test').command({ ping: 1 });
-    } catch (_) {
+    } catch (_error: any) {
       this.client = await MongoClient.connect(this.dbUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
     }
     return this.client.db(this.dbName);
-  }
-
-  public collection(collectionName: string, model?: Model): Collection {
-    return new Collection(this, collectionName, model);
   }
 }

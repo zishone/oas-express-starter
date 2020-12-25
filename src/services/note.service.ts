@@ -1,91 +1,90 @@
-import {
-  COLLECTIONS,
-  ERROR_CODES,
-  STATES,
-} from '../constants';
-import {
-  Collection,
-  Fail,
-  Logger,
-  Mongo,
-} from '../helpers';
-import { NoteModel } from '../models';
-
-const logger = new Logger('service', __filename);
+import { FilterQuery, FindOneOptions } from 'mongodb';
+import { Logger, Mongo } from '../helpers';
+import { Note, NoteModel } from '../models';
 
 export class NoteService {
+  private logger: Logger;
   private noteModel: NoteModel;
-  private notesCollection: Collection;
-  private reqId: string;
-  private mongo: Mongo;
 
-  constructor(reqId: string, mongo: Mongo) {
-    this.reqId = reqId;
-    this.mongo = mongo;
-    this.noteModel = new NoteModel();
-    this.notesCollection = this.mongo.collection(COLLECTIONS.NOTES, this.noteModel);
+  constructor(logger: Logger, mongo: Mongo) {
+    this.logger = logger;
+    this.noteModel = new NoteModel(logger, mongo);
   }
 
-  public async countNotes(filter?: any, options?: any): Promise<{ noteCount: number }> {
-    logger.debug(this.reqId, 'countNotes', STATES.BEGUN);
-    const noteCount = await this.notesCollection.countDocuments(filter, options);
-    logger.debug(this.reqId, 'countNotes', STATES.SUCCEEDED);
-    return { noteCount };
-  }
-
-  public async fetchNotes(filter?: any, options?: any): Promise<{ notes: any[] }> {
-    logger.debug(this.reqId, 'fetchNotes', STATES.BEGUN);
-    const cursor = await this.notesCollection.find(filter, options);
-    const notes = await cursor.toArray();
-    logger.debug(this.reqId, 'fetchNotes', STATES.SUCCEEDED);
-    return { notes };
-  }
-
-  public async fetchNote(filter?: any, options?: any): Promise<{ note: any }> {
-    logger.debug(this.reqId, 'fetchNote', STATES.BEGUN);
-    const note = await this.notesCollection.findOne(filter, options);
-    if (!note) {
-      throw new Fail(404)
-        .error({
-          errorCode: ERROR_CODES.NOT_FOUND,
-          keys: ['note'],
-          message: 'Note does not exist.',
-        })
-        .build();
-    }
-    logger.debug(this.reqId, 'fetchNote', STATES.SUCCEEDED);
+  public async createUserNote(userId: string, title: string, body: string): Promise<{ note: Note }> {
+    this.logger.debugFunction('NoteService.createUserNote', arguments);
+    const newNote = this.noteModel.create(userId, title, body);
+    const [id] = await this.noteModel.save(newNote);
+    const note = await this.noteModel.fetchOne({ id });
     return { note };
   }
 
-  public async addNote(userId: string, title: string, body: string): Promise<{ noteId: string }> {
-    logger.debug(this.reqId, 'addNote', STATES.BEGUN);
-    const note = this.noteModel.newNote(userId, title, body);
-    await this.notesCollection.insertOne(note);
-    logger.debug(this.reqId, 'addNote', STATES.SUCCEEDED);
-    return { noteId: note.noteId };
+  public async fetchUserNotes(
+    userId: string,
+    filter: FilterQuery<Note> = {},
+    options?: FindOneOptions<any>,
+  ): Promise<{ noteCount: number; notes: Note[] }> {
+    this.logger.debugFunction('NoteService.fetchUserNotes', arguments);
+    const cursor = await this.noteModel.fetch(
+      {
+        ...filter,
+        userId,
+      },
+      options,
+    );
+    const noteCount = await cursor.count();
+    const notes = await cursor.toArray();
+    return {
+      noteCount,
+      notes,
+    };
   }
 
-  public async updateNote(filter: any, update: any): Promise<{}> {
-    logger.debug(this.reqId, 'updateNote', STATES.BEGUN);
-    if (Object.keys(update).length > 0) {
-      update.modifiedOn = + Date.now();
-    }
-    await this.notesCollection.updateOne(filter, { $set: update });
-    logger.debug(this.reqId, 'updateNote', STATES.SUCCEEDED);
-    return {};
+  public async fetchUserNoteById(userId: string, id: string, options?: FindOneOptions<any>): Promise<{ note: Note }> {
+    this.logger.debugFunction('NoteService.fetchUserNoteById', arguments);
+    const note = await this.noteModel.fetchOne(
+      {
+        id,
+        userId,
+      },
+      options,
+    );
+    return { note };
   }
 
-  public async deleteNote(filter: any): Promise<{}> {
-    logger.debug(this.reqId, 'deleteNote', STATES.BEGUN);
-    await this.notesCollection.deleteOne(filter);
-    logger.debug(this.reqId, 'deleteNote', STATES.SUCCEEDED);
-    return {};
+  public async updateUserNoteById(userId: string, id: string, note: Note): Promise<void> {
+    this.logger.debugFunction('NoteService.updateUserNoteById', arguments);
+    await this.noteModel.fetchOne({
+      id,
+      userId,
+    });
+    await this.noteModel.update(
+      {
+        id,
+        userId,
+        modifiedOn: Date.now(),
+      },
+      { $set: note },
+    );
   }
 
-  public async deleteNotes(filter: any): Promise<{}> {
-    logger.debug(this.reqId, 'deleteNotes', STATES.BEGUN);
-    await this.notesCollection.deleteMany(filter);
-    logger.debug(this.reqId, 'deleteNotes', STATES.SUCCEEDED);
-    return {};
+  public async deleteUserNoteById(userId: string, id: string): Promise<void> {
+    this.logger.debugFunction('NoteService.deleteUserNoteById', arguments);
+    await this.noteModel.fetchOne({
+      id,
+      userId,
+    });
+    await this.noteModel.delete({
+      id,
+      userId,
+    });
+  }
+
+  public async deleteUserNotes(userId: string, filter: FilterQuery<Note> = {}): Promise<void> {
+    this.logger.debugFunction('NoteService.deleteUserNotes', arguments);
+    await this.noteModel.delete({
+      ...filter,
+      userId,
+    });
   }
 }

@@ -1,24 +1,25 @@
-import { Mongo } from '../../helpers';
-import { EventEmitter } from 'events';
+import {
+  FilterQuery,
+  FindOneOptions,
+} from 'mongodb';
+import {
+  Logger,
+  Mongo,
+} from '../../helpers';
+import { User } from '../../models';
 
 declare module 'express' {
   interface Request {
-    mongo: Mongo;
     id: string;
-    emmiter: EventEmitter;
+    logger: Logger;
+    mongo: Mongo;
     mquery: {
-      filter: any;
-      options: any;
-      isPaginated: boolean;
+      filter: FilterQuery<any>;
+      options: FindOneOptions<any>;
     };
-    user: {
-      userId: string;
-      username: string;
-      email: string;
-      name: string;
-      role: string;
-      createdOn: number;
-    };
+    user: User;
+    addLogData: (data: { [key: string]: any }) => void;
+    addLogError: (error: any) => void;
   }
 
   interface Response {

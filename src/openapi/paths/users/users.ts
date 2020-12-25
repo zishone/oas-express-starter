@@ -32,7 +32,7 @@ export const users: OpenAPIV3.PathItemObject = {
                     pagination: { $ref: '#/components/schemas/pagination' },
                     users: {
                       type: 'array',
-                      items: { $ref: '#/components/schemas/user' },
+                      items: { $ref: '#/components/schemas/UserModel' },
                     },
                   },
                 },
@@ -54,14 +54,14 @@ export const usersById: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['Users'],
     operationId: 'getUsersById',
-    description: 'Gets a user\'s info',
+    description: "Gets a user's info",
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'userId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'User\'s unique identifier',
+        description: "User's unique identifier",
         required: true,
       },
       { $ref: '#/components/parameters/fields' },
@@ -80,7 +80,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
                 },
                 data: {
                   type: 'object',
-                  properties: { user: { $ref: '#/components/schemas/user' } },
+                  properties: { user: { $ref: '#/components/schemas/UserModel' } },
                 },
               },
             },
@@ -94,17 +94,17 @@ export const usersById: OpenAPIV3.PathItemObject = {
       default: { $ref: '#/components/responses/generic' },
     },
   },
-  put: {
+  patch: {
     tags: ['Users'],
-    operationId: 'putUsersById',
-    description: 'Updates a user\'s info',
+    operationId: 'patchUsersById',
+    description: "Updates a user's info",
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'userId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'User\'s unique identifier',
+        description: "User's unique identifier",
         required: true,
       },
     ],
@@ -156,10 +156,10 @@ export const usersById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'userId',
+        name: 'id',
         in: 'path',
         schema: { type: 'string' },
-        description: 'User\'s unique identifier',
+        description: "User's unique identifier",
         required: true,
       },
     ],

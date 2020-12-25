@@ -1,6 +1,5 @@
 export const COLLECTIONS = {
-  ACCESS: 'access',
-  USERS: 'users',
-  ACTIVITIES: 'activities',
+  MIGRATIONS: 'migrations',
   NOTES: 'notes',
+  USERS: 'users',
 };

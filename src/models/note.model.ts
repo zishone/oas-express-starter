@@ -1,27 +1,39 @@
-import joi = require('joi');
-import { Model } from '../helpers';
-import { nanoid } from '../utils';
+import { Logger, Model, Mongo } from '../helpers';
+import joi from 'joi';
 
-export class NoteModel extends Model {
-  constructor() {
-    const schema = joi.object().keys({
-      noteId: joi.string(),
-      userId: joi.string(),
-      title: joi.string(),
-      body: joi.string(),
-      modifiedOn: joi.number(),
-      createdOn: joi.number(),
-    });
-    super(schema);
+export interface Note {
+  id?: string;
+  userId?: string;
+  title?: string;
+  body?: string;
+  modifiedOn?: number;
+  createdOn?: number;
+}
+
+export class NoteModel extends Model<Note> {
+  static collectionName: string = 'notes';
+  static schema: joi.Schema = joi.object().keys({
+    id: joi.string(),
+    userId: joi.string(),
+    title: joi.string(),
+    body: joi.string(),
+    modifiedOn: joi.number(),
+    createdOn: joi.number(),
+  });
+
+  constructor(logger: Logger, mongo: Mongo) {
+    super(logger, mongo, NoteModel.schema, NoteModel.collectionName);
   }
 
-  public newNote(userId: string, title: string, body: string) {
-    return {
-      noteId: nanoid(),
+  public create(userId: string, title: string, body: string): Note {
+    this.logger.debugFunction('NoteModel.create', arguments);
+    const note = {
       userId,
       title,
       body,
+      modifiedOn: 0,
       createdOn: Date.now(),
     };
+    return note;
   }
 }

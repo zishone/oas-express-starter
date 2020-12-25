@@ -1,46 +1,36 @@
+import { Application, Request, json, urlencoded } from 'express';
+import { Logger, Mongo } from './helpers';
+import { Server, createServer } from 'http';
 import {
-  Application,
-  json,
-  urlencoded,
-} from 'express';
-import {
-  Server,
-  createServer,
-} from 'http';
-import {
-  emmiterMiddleware,
   errorMiddleware,
   jsendMiddleware,
+  loggerMiddleware,
   mongoMiddleware,
   mqueryMiddleware,
   passportMiddleware,
   requestIdMiddleware,
 } from './middlewares';
-import { EventEmitter } from 'events';
-import { Mongo } from './helpers';
-import cookieParser = require('cookie-parser');
-import cors = require('cors');
-import { activitySubscriber } from './subscribers';
-import { config } from './config';
+import { UserModel } from './models';
 import { controllers } from './controllers';
+import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
-import passport = require('passport');
+import passport from 'passport';
 import { spec } from './openapi';
 
 export class App {
-  private mongo!: Mongo;
-  private server: Server;
-  private emmiter!: EventEmitter;
   private app: Application;
+  private logger: Logger;
+  private mongo: Mongo;
+  private server: Server;
 
-  constructor(app: Application) {
+  constructor(logger: Logger, mongo: Mongo, app: Application) {
+    this.logger = logger;
+    this.mongo = mongo;
     this.app = app;
     this.server = createServer(this.app);
   }
 
   public async configure() {
-    await this.connectMongo();
-    await this.concentrateSubscribers();
     await this.composeMiddlewares();
     await this.constructOas();
     this.app.emit('ready', this.server);
@@ -48,18 +38,13 @@ export class App {
 
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
-    this.app.use(mongoMiddleware(this.mongo));
+    this.app.use(jsendMiddleware());
+    this.app.use(loggerMiddleware(this.logger));
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
-    this.app.use(cors({
-      origin: config.CORS_ORIGIN,
-      methods: config.CORS_METHODS,
-      credentials: config.CORS_CREDENTIALS,
-    }));
-    this.app.use(jsendMiddleware());
+    this.app.use(mongoMiddleware(this.mongo));
     this.app.use(passport.initialize());
-    this.app.use(emmiterMiddleware(this.emmiter));
     this.app.use(mqueryMiddleware());
     this.app.use(errorMiddleware());
   }
@@ -72,9 +57,10 @@ export class App {
       exposeApiDocs: false,
       validateApiDoc: true,
       securityHandlers: {
-        loginAuth: async (req: any): Promise<boolean> => {
-          return await new Promise((resolve, reject) => {
-            passportMiddleware(this.mongo)(req, req.res, (error: any) => {
+        loginAuth: async (req: Request): Promise<boolean> => {
+          return await new Promise((resolve, reject): void => {
+            const userModel = new UserModel(this.logger, this.mongo);
+            passportMiddleware(userModel)(req, req.res, (error: any): void => {
               if (error) {
                 reject(error);
               } else {
@@ -84,16 +70,7 @@ export class App {
           });
         },
       },
-      errorMiddleware: errorMiddleware(),
+      errorMiddleware: errorMiddleware(true),
     });
-  }
-
-  private async connectMongo(): Promise<void> {
-    this.mongo = new Mongo(config.DB_URI, config.DB_NAME);
-  }
-
-  private async concentrateSubscribers(): Promise<void> {
-    this.emmiter = new EventEmitter();
-    activitySubscriber(this.mongo, this.emmiter);
   }
 }

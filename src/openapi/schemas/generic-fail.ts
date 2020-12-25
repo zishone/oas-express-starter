@@ -10,19 +10,11 @@ export const genericFail: OpenAPIV3.SchemaObject = {
     data: {
       type: 'object',
       properties: {
+        errorCode: { type: 'string' },
+        message: { type: 'string' },
         details: {
           type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              errorCode: { type: 'string' },
-              keys: {
-                type: 'array',
-                items: { type: 'string' },
-              },
-              message: { type: 'string' },
-            },
-          },
+          items: { $ref: '#/components/schemas/generic' },
         },
       },
     },

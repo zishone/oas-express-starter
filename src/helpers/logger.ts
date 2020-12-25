@@ -1,38 +1,61 @@
-import debug = require('debug');
-import { STATES } from '../constants';
+import { LOG_LEVELS } from '../constants';
 import { config } from '../config';
+import { dotnotate } from '../utils';
+import { ensureDirSync } from 'fs-extra';
+import winston from 'winston';
 
-// TODO: Improve logging by using winston
 export class Logger {
-  private filename: string;
-  private component: string;
+  private transports: winston.transport[];
+  private defualtMeta: { service: string; version: string };
+  private logger: winston.Logger;
 
-  constructor(component: string, filename: string) {
-    this.component = component;
-    this.filename = filename.split('.')[0].split('/').pop() || '';
+  constructor() {
+    ensureDirSync('logs');
+    this.defualtMeta = {
+      service: config.APP_NAME,
+      version: config.APP_VERSION,
+    };
+    this.transports = [
+      new winston.transports.File({
+        filename: `./logs/${LOG_LEVELS.INFO}.log`,
+        level: LOG_LEVELS.INFO,
+      }),
+      new winston.transports.File({
+        filename: `./logs/${LOG_LEVELS.ERROR}.log`,
+        level: LOG_LEVELS.ERROR,
+      }),
+    ];
+    this.logger = winston.createLogger({
+      defaultMeta: this.defualtMeta,
+      transports: this.transports,
+    });
   }
 
-  public debug(reqId: string, functionName: string, state: string, arg?: any) {
-    debug(`${config.APP_NAME}:debug:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${state} %O`, arg);
+  public enableInfo(): void {
+    this.logger.add(new winston.transports.Console({ level: LOG_LEVELS.INFO }));
   }
 
-  public info(reqId: string, functionName: string, state: string, arg?: any) {
-    this.debug(reqId, functionName, state, arg);
-    debug(`${config.APP_NAME}:info:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${state} %o`, arg);
+  public enableDebug(): void {
+    this.logger.add(new winston.transports.Console({ level: LOG_LEVELS.DEBUG }));
   }
 
-  public warn(reqId: string, functionName: string, arg?: any) {
-    this.debug(reqId, functionName, STATES.WARNED, arg);
-    debug(`${config.APP_NAME}:warn:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.WARNED} %O`, arg);
+  public info(message: string, args?: { [key: string]: any }): void {
+    this.logger.log(LOG_LEVELS.INFO, message, dotnotate(args));
   }
 
-  public error(reqId: string, functionName: string, arg?: any) {
-    this.debug(reqId, functionName, STATES.FAILED, arg);
-    debug(`${config.APP_NAME}:error:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.FAILED} %O`, arg);
+  public error(message: string, args?: { [key: string]: any }): void {
+    this.logger.log(LOG_LEVELS.ERROR, message, dotnotate(args));
   }
 
-  public fatal(reqId: string, functionName: string, arg: any) {
-    this.debug(reqId, functionName, STATES.ERRORED, arg);
-    debug(`${config.APP_NAME}:fatal:`)(`[${reqId}] ${this.component}.${this.filename}.${functionName}.${STATES.ERRORED} %O`, arg);
+  public debug(message: string, args?: { [key: string]: any }): void {
+    this.logger.log(LOG_LEVELS.DEBUG, message, dotnotate(args));
+  }
+
+  public debugFunction(functionName: string, functionArguments: any, args: any = {}): void {
+    this.debug('Function called', {
+      'function.name': functionName,
+      'function.arguments': Object.values(functionArguments),
+      ...args,
+    });
   }
 }

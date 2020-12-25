@@ -10,12 +10,7 @@ export const register: OpenAPIV3.PathItemObject = {
         ['application/json']: {
           schema: {
             type: 'object',
-            required: [
-              'username',
-              'email',
-              'password',
-              'name',
-            ],
+            required: ['username', 'email', 'password', 'name'],
             properties: {
               username: { type: 'string' },
               email: { type: 'string' },
@@ -41,7 +36,7 @@ export const register: OpenAPIV3.PathItemObject = {
                 },
                 data: {
                   type: 'object',
-                  properties: { user: { $ref: '#/components/schemas/user' } },
+                  properties: { user: { $ref: '#/components/schemas/UserModel' } },
                 },
               },
             },

@@ -1,38 +1,19 @@
-import {
-  NextFunction,
-  Request,
-  Response,
-} from 'express';
-import { Logger } from '../../helpers';
+import { NextFunction, Request, Response } from 'express';
 import { NoteService } from '../../services';
-import { STATES } from '../../constants';
-
-const logger = new Logger('controller', __filename);
+import { paginate } from '../../utils';
 
 /**
  * POST /api/v1/user/notes
  */
-export const postUserNotes = async (req: Request, res: Response, next: NextFunction) => {
+export const postUserNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    logger.debug(req.id, 'postUserNotes', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
-    const { userId } = req.user;
-    const {
-      title,
-      body,
-    } = req.body;
+    const { id: userId } = req.user;
+    const { title, body } = req.body;
 
-    const { noteId } = await noteService.addNote(userId, title, body)
-      .catch((error: any) => {
-        throw error;
-      });
-    const { note } = await noteService.fetchNote({ noteId })
-      .catch((error: any) => {
-        throw error;
-      });
+    const { note } = await noteService.createUserNote(userId, title, body);
 
-    logger.debug(req.id, 'postUserNotes', STATES.SUCCEEDED);
     res.jsend.success({ note }, 201);
   } catch (error) {
     next(error);
@@ -42,51 +23,38 @@ export const postUserNotes = async (req: Request, res: Response, next: NextFunct
 /**
  * GET /api/v1/user/notes
  */
-export const getUserNotes = async (req: Request, res: Response , next: NextFunction) => {
+export const getUserNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    logger.debug(req.id, 'getUserNotes', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
     const { filter, options } = req.mquery;
-    const { userId } = req.user;
+    const { id: userId } = req.user;
 
-    filter.userId = userId;
-    const { notes } = await noteService.fetchNotes({
-      ...filter,
-      userId,
-    }, options)
-      .catch((error: any) => {
-        throw error;
-      });
+    const { noteCount, notes } = await noteService.fetchUserNotes(userId, filter, options);
+    const pagination = paginate(noteCount, options.limit);
 
-    logger.debug(req.id, 'getUserNotes', STATES.SUCCEEDED);
-    res.jsend.success({ notes });
+    res.jsend.success({
+      pagination,
+      notes,
+    });
   } catch (error) {
     next(error);
   }
 };
 
 /**
- * GET /api/v1/user/notes/{noteId}
+ * GET /api/v1/user/notes/{id}
  */
-export const getUserNotesById = async (req: Request, res: Response , next: NextFunction) => {
+export const getUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    logger.debug(req.id, 'getUserNotesById', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
-    const { noteId } = req.params;
-    const { userId } = req.user;
+    const { id } = req.params;
+    const { id: userId } = req.user;
     const { options } = req.mquery;
 
-    const { note } = await noteService.fetchNote({
-      userId,
-      noteId,
-    }, options)
-      .catch((error: any) => {
-        throw error;
-      });
+    const { note } = await noteService.fetchUserNoteById(userId, id, options);
 
-    logger.debug(req.id, 'getUserNotesById', STATES.SUCCEEDED);
     res.jsend.success({ note });
   } catch (error) {
     next(error);
@@ -94,39 +62,21 @@ export const getUserNotesById = async (req: Request, res: Response , next: NextF
 };
 
 /**
- * PUT /api/v1/user/notes/{noteId}
+ * PATCH /api/v1/user/notes/{id}
  */
-export const putUserNotesById = async (req: Request, res: Response , next: NextFunction) => {
+export const patchUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    logger.debug(req.id, 'putUserNotesById', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
-    const { noteId } = req.params;
-    const { userId } = req.user;
-    const {
+    const { id } = req.params;
+    const { id: userId } = req.user;
+    const { title, body } = req.body;
+
+    await noteService.updateUserNoteById(userId, id, {
       title,
       body,
-    } = req.body;
+    });
 
-    await noteService.fetchNote({
-      userId,
-      noteId,
-    })
-      .catch((error: any) => {
-        throw error;
-      });
-    await noteService.updateNote({
-      userId,
-      noteId,
-    }, {
-      title,
-      body,
-    })
-      .catch((error: any) => {
-        throw error;
-      });
-
-    logger.debug(req.id, 'putUserNotesById', STATES.SUCCEEDED);
     res.jsend.success(undefined, 204);
   } catch (error) {
     next(error);
@@ -134,32 +84,17 @@ export const putUserNotesById = async (req: Request, res: Response , next: NextF
 };
 
 /**
- * DELETE /api/v1/user/notes/{noteId}
+ * DELETE /api/v1/user/notes/{id}
  */
-export const deleteUserNotesById = async (req: Request, res: Response , next: NextFunction) => {
+export const deleteUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    logger.debug(req.id, 'deleteUserNotesById', STATES.BEGUN);
-    const noteService = new NoteService(req.id, req.mongo);
+    const noteService = new NoteService(req.logger, req.mongo);
 
-    const { noteId } = req.params;
-    const { userId } = req.user;
+    const { id } = req.params;
+    const { id: userId } = req.user;
 
-    await noteService.fetchNote({
-      userId,
-      noteId,
-    })
-      .catch((error: any) => {
-        throw error;
-      });
-    await noteService.deleteNote({
-      userId,
-      noteId,
-    })
-      .catch((error: any) => {
-        throw error;
-      });
+    await noteService.deleteUserNoteById(userId, id);
 
-    logger.debug(req.id, 'deleteUserNotesById', STATES.SUCCEEDED);
     res.jsend.success(undefined, 204);
   } catch (error) {
     next(error);

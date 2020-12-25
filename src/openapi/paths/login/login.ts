@@ -10,10 +10,7 @@ export const login: OpenAPIV3.PathItemObject = {
         ['application/json']: {
           schema: {
             type: 'object',
-            required: [
-              'login',
-              'password',
-            ],
+            required: ['login', 'password'],
             properties: {
               login: { type: 'string' },
               password: { type: 'string' },
@@ -37,10 +34,7 @@ export const login: OpenAPIV3.PathItemObject = {
                 },
                 data: {
                   type: 'object',
-                  properties: {
-                    accessToken: { type: 'string' },
-                    user: { $ref: '#/components/schemas/user' },
-                  },
+                  properties: { accessToken: { type: 'string' } },
                 },
               },
             },

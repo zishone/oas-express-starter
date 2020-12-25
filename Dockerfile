@@ -1,4 +1,4 @@
-FROM node:alpine3.10
+FROM node:alpine3.12
 
 WORKDIR /app
 
@@ -8,11 +8,13 @@ COPY ./package-lock.json ./
 RUN npm ci
 
 COPY ./src ./src/
+COPY ./tests ./tests/
 COPY ./tsconfig.json ./
+COPY ./.env.defaults ./
 
 RUN npm run build
 
 COPY ./db/ ./db/
-COPY ./entrypoint.sh ./
+COPY ./Makefile ./
 
-CMD [ "sh", "entrypoint.sh" ]
+CMD [ "npm", "run", "start" ]

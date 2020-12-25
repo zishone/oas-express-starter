@@ -1,13 +1,9 @@
-import {
-  NextFunction,
-  Request,
-  Response,
-} from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { nanoid } from 'nanoid';
 
-export const requestIdMiddleware = (): any => {
-  return (req: Request, _: Response, next: NextFunction): void => {
-    req.id = nanoid(20);
+export const requestIdMiddleware = (): RequestHandler => {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    req.id = nanoid(12);
     next();
   };
 };
