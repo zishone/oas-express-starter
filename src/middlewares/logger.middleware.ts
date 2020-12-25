@@ -37,7 +37,7 @@ export const loggerMiddleware = (logger: Logger): RequestHandler => {
         'response.status': res.headersSent ? res.statusCode : undefined,
         'response.content.length': res.headersSent ? res.getHeader('content-length') : undefined,
         'response.time': responseEndTime - responseStartTime,
-        data: logData,
+        ...logData,
       };
       if (hasErrored) {
         logger.error('Request failed', log);

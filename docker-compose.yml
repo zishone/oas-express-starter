@@ -1,6 +1,7 @@
 version: '3'
 services:
-  oas-express-starter:
+  oas-service:
+    image: '${APP_NAME}:v${APP_VERSION}'
     depends_on: 
       - mongodb
     build: .

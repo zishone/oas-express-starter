@@ -51,10 +51,10 @@ export class Logger {
     this.logger.log(LOG_LEVELS.DEBUG, message, dotnotate(args));
   }
 
-  public debugFunction(functionName: string, functionArgs: any, args: any = {}): void {
+  public debugFunction(functionName: string, functionArguments: any, args: any = {}): void {
     this.debug('Function called', {
-      functionName,
-      functionArgs: Object.values(functionArgs),
+      'function.name': functionName,
+      'function.arguments': Object.values(functionArguments),
       ...args,
     });
   }
