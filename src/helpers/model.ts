@@ -51,6 +51,11 @@ export class Model<Data> {
           errorCode: ERROR_CODES.DUPLICATE,
           details: error,
         });
+      case 16840:
+        throw httpError(403, 'Update empty', {
+          errorCode: ERROR_CODES.INVALID,
+          details: error,
+        });
       default:
         throw error;
     }
@@ -136,7 +141,7 @@ export class Model<Data> {
   }
 
   public async update(
-    filter: FilterQuery<Data> = {},
+    filter: FilterQuery<Data>,
     update: UpdateQuery<any>,
     options: UpdateManyOptions = {},
   ): Promise<void> {
@@ -155,7 +160,7 @@ export class Model<Data> {
     }
   }
 
-  public async delete(filter: FilterQuery<Data> = {}, options: CommonOptions = {}): Promise<void> {
+  public async delete(filter: FilterQuery<Data>, options: CommonOptions = {}): Promise<void> {
     this.logger.debugFunction('Model.delete', arguments);
     const db = await this.mongo.getDb();
     try {

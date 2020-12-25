@@ -190,6 +190,26 @@ export default (): void => {
       expect(id).to.be.a('string');
     });
 
+    it('should save multiple entries in the database', async (): Promise<void> => {
+      const testData = [{}];
+
+      sandbox
+        .stub(joi, 'array')
+        .onCall(0)
+        .returns({
+          items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: testData }) }),
+        } as any);
+      mongoMock.expects('getDb').resolves({
+        collection: (): { [key: string]: any } => ({
+          insertMany: async (): Promise<void> => null,
+        }),
+      } as any);
+
+      const [id] = await model.save(testData);
+
+      expect(id).to.be.a('string');
+    });
+
     it('should fail to save an entry when database error happens', async (): Promise<void> => {
       const testData = {};
 
@@ -256,6 +276,125 @@ export default (): void => {
       } catch (error) {
         expect(error.status).to.equal(testStatusCode);
         expect(error.errorCode).to.equal(ERROR_CODES.INVALID);
+      }
+    });
+  });
+
+  describe('update', (): void => {
+    it('should update entries in the database', async (): Promise<void> => {
+      const testFilter = {};
+      const testUpdate = {
+        $set: {},
+        $unset: {},
+      };
+
+      mongoMock.expects('getDb').resolves({
+        collection: (): { [key: string]: any } => ({
+          updateMany: async (): Promise<void> => null,
+        }),
+      } as any);
+
+      await model.update(testFilter, testUpdate);
+
+      expect(true).to.equal(true);
+    });
+
+    it('should fail to update entries when update object was given', async (): Promise<void> => {
+      const testFilter = {};
+      const testUpdate = {};
+
+      mongoMock.expects('getDb').resolves({
+        collection: (): { [key: string]: any } => ({
+          updateMany: async (): Promise<any> => {
+            throw new Error();
+          },
+        }),
+      } as any);
+
+      try {
+        await model.update(testFilter, testUpdate);
+      } catch (error) {
+        expect(error).to.exist;
+      }
+    });
+
+    it('should fail to update entries when database error happens', async (): Promise<void> => {
+      const testFilter = {};
+      const testUpdate = {
+        $set: {},
+        $unset: {},
+      };
+
+      mongoMock.expects('getDb').resolves({
+        collection: (): { [key: string]: any } => ({
+          updateMany: async (): Promise<any> => {
+            throw { code: 16840 };
+          },
+        }),
+      } as any);
+
+      try {
+        await model.update(testFilter, testUpdate);
+      } catch (error) {
+        expect(error).to.exist;
+      }
+    });
+
+    it('should fail to update entries when update will result in a duplicate', async (): Promise<void> => {
+      const testFilter = {};
+      const testUpdate = {
+        $set: {},
+        $unset: {},
+      };
+      const testStatusCode = 403;
+
+      mongoMock.expects('getDb').resolves({
+        collection: (): { [key: string]: any } => ({
+          updateMany: async (): Promise<any> => {
+            throw { code: 11000 };
+          },
+        }),
+      } as any);
+
+      try {
+        await model.update(testFilter, testUpdate);
+      } catch (error) {
+        expect(error.status).to.equal(testStatusCode);
+        expect(error.errorCode).to.equal(ERROR_CODES.DUPLICATE);
+      }
+    });
+  });
+
+  describe('delete', (): void => {
+    it('should delete entries from database', async (): Promise<void> => {
+      const testFilter = {};
+
+      mongoMock.expects('getDb').resolves({
+        collection: (): { [key: string]: any } => ({
+          deleteMany: async (): Promise<any> => {},
+        }),
+      } as any);
+
+      await model.delete(testFilter);
+
+      expect(true).to.equal(true);
+    });
+
+    it('should fail to delete entries when database error happens', async (): Promise<void> => {
+      const testFilter = {};
+
+      mongoMock.expects('getDb').resolves({
+        collection: (): { [key: string]: any } => ({
+          deleteMany: async (): Promise<any> => {
+            throw new Error();
+          },
+        }),
+      } as any);
+
+      try {
+        await model.delete(testFilter);
+      } catch (error) {
+        expect(error).to.exist;
       }
     });
   });
