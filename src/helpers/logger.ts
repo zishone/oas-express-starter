@@ -1,7 +1,6 @@
 import { LOG_LEVELS } from '../constants';
 import { config } from '../config';
 import { dotnotate } from '../utils';
-import { ensureDirSync } from 'fs-extra';
 import winston from 'winston';
 
 export class Logger {
@@ -10,18 +9,17 @@ export class Logger {
   private logger: winston.Logger;
 
   constructor() {
-    ensureDirSync('logs');
     this.defualtMeta = {
       service: config.APP_NAME,
       version: config.APP_VERSION,
     };
     this.transports = [
       new winston.transports.File({
-        filename: `./logs/${LOG_LEVELS.INFO}.log`,
+        filename: `./.data/logs/${LOG_LEVELS.INFO}.log`,
         level: LOG_LEVELS.INFO,
       }),
       new winston.transports.File({
-        filename: `./logs/${LOG_LEVELS.ERROR}.log`,
+        filename: `./.data/logs/${LOG_LEVELS.ERROR}.log`,
         level: LOG_LEVELS.ERROR,
       }),
     ];

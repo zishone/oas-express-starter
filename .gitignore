@@ -44,7 +44,7 @@ docs/**/*
 
 # Ignore locals
 .vscode/**/*
-.local/**/*
+.data/**/*
 
 # ignore yarn.lock
 yarn.lock

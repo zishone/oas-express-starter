@@ -2,19 +2,21 @@ version: '3'
 services:
   oas-service:
     image: '${APP_NAME}:v${APP_VERSION}'
+    volumes: 
+      - "./.data:/app/.data"
     depends_on: 
       - mongodb
     build: .
     env_file: 
       - .env
     ports:
-      - "3000:3000"
+      - "${APP_PORT}:${APP_PORT}"
     networks:
       - oas-net
   mongodb:
     image: mongo:4.2
     volumes: 
-      - "./.local/mongodb/data/db:/data/db"
+      - "./.data/mongodb/data/db:/data/db"
     ports:
       - "27017"
     logging:

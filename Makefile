@@ -1,48 +1,58 @@
-.PHONY: ensure-dotenv build test run test-integration up
+.PHONY: ensure-dotenv build up test run test-integration 
 
 define readPackageJson
 	$(shell node -p "require('./package.json').$(1)")
 endef
 
-APP_NAME		:= $(firstword $(subst :, ,$(call readPackageJson,name)))
-APP_VERSION	:= $(firstword $(subst :, ,$(call readPackageJson,version)))
+CONFIG_APP_NAME		:= $(firstword $(subst :, ,$(call readPackageJson,name)))
+CONFIG_APP_VERSION	:= $(firstword $(subst :, ,$(call readPackageJson,version)))
 
 ensure-dotenv:
 ifeq (,$(wildcard ./.env))
 	cp .env.defaults .env
 endif
+include .env
+export $(shell sed 's/=.*//' .env)
 
 build: ensure-dotenv
-	APP_NAME=${APP_NAME} \
-	APP_VERSION=${APP_VERSION} \
+	APP_NAME=${CONFIG_APP_NAME} \
+	APP_VERSION=${CONFIG_APP_VERSION} \
+	APP_PORT=${CONFIG_APP_PORT} \
 	docker-compose build \
 		${SERVICE}
 
-test: ensure-dotenv
-	APP_NAME=${APP_NAME} \
-	APP_VERSION=${APP_VERSION} \
+up: ensure-dotenv
+	APP_NAME=${CONFIG_APP_NAME} \
+	APP_VERSION=${CONFIG_APP_VERSION} \
+	APP_PORT=${CONFIG_APP_PORT} \
+	docker-compose up \
+		${SERVICE}
+
+test: build
+	APP_NAME=${CONFIG_APP_NAME} \
+	APP_VERSION=${CONFIG_APP_VERSION} \
+	APP_PORT=${CONFIG_APP_PORT} \
 	docker-compose run \
+		-v [.data=/app/.data] \
 		--no-deps \
 		oas-service \
-		npm run test
+		npm run test:coverage
 
-run: ensure-dotenv
-	APP_NAME=${APP_NAME} \
-	APP_VERSION=${APP_VERSION} \
+run: build
+	APP_NAME=${CONFIG_APP_NAME} \
+	APP_VERSION=${CONFIG_APP_VERSION} \
+	APP_PORT=${CONFIG_APP_PORT} \
 	docker-compose run \
+		-v [.data=/app/.data] \
 		--no-deps \
 		oas-service \
 		npm run start
 
-test-integration: ensure-dotenv
-	APP_NAME=${APP_NAME} \
-	APP_VERSION=${APP_VERSION} \
+test-integration: build
+	APP_NAME=${CONFIG_APP_NAME} \
+	APP_VERSION=${CONFIG_APP_VERSION} \
+	APP_PORT=${CONFIG_APP_PORT} \
 	docker-compose run \
+		-v [.data=/app/.data] \
 		oas-service \
-		npm run test-integration
-
-up: ensure-dotenv
-	APP_NAME=${APP_NAME} \
-	APP_VERSION=${APP_VERSION} \
-	docker-compose up \
-		${SERVICE}
+		npm run test-integration:coverage
