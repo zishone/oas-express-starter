@@ -24,7 +24,7 @@
     "bcryptjs": "^2.4.3",
     "chaindler": "^0.1.4",
     "cookie-parser": "^1.4.5",
-    "dotenv": "^8.2.0",
+    "dotenv-defaults": "^2.0.1",
     "express": "^4.17.1",
     "express-openapi": "^7.2.0",
     "fs-extra": "^9.0.1",
