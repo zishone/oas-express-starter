@@ -15,6 +15,5 @@ COPY ./.env.defaults ./
 RUN npm run build
 
 COPY ./db/ ./db/
-COPY ./Makefile ./
 
 CMD [ "npm", "run", "start" ]
