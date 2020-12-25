@@ -40,7 +40,7 @@ export const loggerMiddleware = (logger: Logger): RequestHandler => {
         data: logData,
       };
       if (hasErrored) {
-        logger.error('Request errored', log);
+        logger.error('Request failed', log);
       } else {
         logger.info('Request finished', log);
       }
