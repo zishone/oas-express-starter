@@ -113,4 +113,4 @@ See also the list of [contributors](https://github.com/zishone/oas-express-start
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/zishone/oas-express-starter/blob/master/LICENSE) file for details.
 
 ## More Details
-Blog coming soon to talk about design decisions.
+Blog coming soon to talk about design decisions and opinionations.
