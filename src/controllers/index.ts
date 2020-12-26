@@ -7,7 +7,7 @@ import {
   postUserNotes,
 } from './user/notes.contoller';
 import { deleteUsersById, getUsers, getUsersById, patchUsersById } from './users/users.controller';
-import { Chain } from 'chaindler';
+import { Chain } from '@zishone/chaindler';
 import { ROLES } from '../constants';
 import { RequestHandler } from 'express';
 import { getHealth } from './health/health.controller';
