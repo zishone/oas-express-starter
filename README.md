@@ -3,17 +3,15 @@
 
 A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript.
 
-## Getting started
+## Quick Start
 * Clone the repository
 ```
 git clone --depth=1 https://github.com/zishone/oas-express-starter.git <project_name>
 ```
 
-* Rename `.env.sample` to `.env` then modify for your configurations.
-
 * Install dependencies
 ```shell
-npm install
+npm ci
 ```
 
 * Build
@@ -24,11 +22,6 @@ npm run build
 * Start
 ```shell
 npm run start
-```
-
-* Build, Start, and Watch
-```shell
-npm run watch
 ```
 
 ## Configuration
@@ -48,55 +41,68 @@ CONFIG_LOGIN_TTL=2592000            # Time to live of login in seconds
 ## Environments
 - `production` - for production
 - `staging` - for staging
-- `testing` - for running unit tests (This is automatically set so don't worry about this)
+- `unit` - for running unit tests (This is automatically set)
+- `integration` - for running integration tests (This is automatically set)
 - `develop` - for development
 
-## Testing
-* Test
-```shell
-npm run test
-```
+## Swagger UI
+Should be available in path `/apidocs` when NODE_ENV is set to `development`.
 
-* Coverage
-```shell
-npm run test:coverage
-```
-Generated Coverage Report: `./coverage/lcov-report/index.html`
+## NPM Scripts
+* `npm run` **`lint`**
+  * To check for lint issues.
+* `npm run` **`lint:fix`**
+  * To check and fix lint issues.
+* `npm run` **`test`**
+  * To run unit tests.
+* `npm run` **`test:coverage`**
+  * To run unit tests and generate coverage report in `./.data/tests/unit`.
+* `npm run` **`test-integration`**
+  * To run integration tests.
+* `npm run` **`test-integration:coverage`**
+  * To run integration tests and generate coverage report in `./.data/tests/integration`.
+* `npm run` **`build`**
+  * To compile typescript into `./dist`.
+* `npm run` **`build:watch`**
+  * To watch for changes and recompile typescript.
+* `npm run` **`start`**
+  * To start service.
+* `npm run` **`start:watch`**
+  * To watch for changes and restart service.
+* `npm run` **`watch`**
+  * To watch for changes and recompile typescript and restart service.
 
-## Docker
-* Using `docker`
-```shell
-docker build -t oas-backend:latest .
-docker run -it -p 3000:3000 --env-file .env oas-backend:latest
-```
-
-* Using `docker-compose`
-```shell
-docker-compose build
-docker-compose up
-```
-
-## API Documentation
-When `NODE_ENV` is set to `development` or `staging`, swagger API documentations will be available at: `/apidocs`.
+## Makefile Targets
+* `make` **`build`**
+  * To build docker image of the service. Uses the name and version in `package.json` to tag the image as `<name>:v<version>`.
+* `make` **`up`**
+  * To start container of the service and also mongodb. Logs and mongodb data will be available at `./.data`, it is mounted as a volume in those containers.
+* `make` **`develop`**
+  * To run start the service inside a container. No need to rebuild because this mounts the whole repository's directory as a volume then executes `npm run start`.
+* `make` **`test`**
+  * To run unit test inside a container. Coverage report will be available in `./.data/tests/unit`.
+* `make` **`test-integration`**
+  * To run integration test inside a container. Coverage report will be available in `./.data/tests/integration`.
 
 ## Project Structure
-| Name                      | Description                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------- |
-| **dist**                  | Contains the distributable (or output) from your TypeScript build. This is the code you ship. |
-| **test**                  | Contains your tests. Separate from source because there is a different build process.         |
-| **src**                   | Contains your source code that will be compiled to the dist dir.                              |
-| **src/config**            | Contains your configuration files and the config builder from environment variables.          |
-| **src/constants**         | Contains your constants.                                                                      |
-| **src/controllers**       | Contains your controllers to handle various http requests.                                    |
-| **src/helpers**           | Contains your resuable helper classes.                                                        |
-| **src/middlewares**       | Contains your custom middlewares.                                                             |
-| **src/models**            | Contains your schema definitions using [joi](https://www.npmjs.com/package/joi).              |
-| **src/openapi**           | Contains your OpenAPI 3.0 specification written as JSON.                                      |
-| **src/services**          | Contains your services, this is where you will put your business logic.                       |
-| **src/types**             | Contains .d.ts files not found on DefinitelyTyped. Covered more in this section.              |
-| **src/utils**             | Contains your reusable stateless utility functions.                                           |
-| **src**/app.ts            | Configurations for you express app.                                                           |
-| **src**/server.ts         | Entry point to your express app.                                                              |
+| Name                      | Description                                                                                                                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **db/migrations**         | Contains database migrations.                                                                                                                                                 |
+| **src/config**            | Contains configuration files and the config builder from environment variables.                                                                                               |
+| **src/constants**         | Contains constant definitions.                                                                                                                                                |
+| **src/controllers**       | Contains controllers to handle various http requests.                                                                                                                         |
+| **src/helpers**           | Contains resuable helper classes.                                                                                                                                             |
+| **src/middlewares**       | Contains custom middlewares.                                                                                                                                                  |
+| **src/models**            | Contains models for the schema definitions and database access per entity.                                                                                                    |
+| **src/openapi**           | Contains OpenAPI 3.0 specification in JSON format.                                                                                                                            |
+| **src/services**          | Contains services, this is where ther business logic lives.                                                                                                                   |
+| **src/types**             | Contains .d.ts files not found on DefinitelyTyped. Covered more in this section.                                                                                              |
+| **src/utils**             | Contains your reusable stateless utility functions.                                                                                                                           |
+| **src**/app.ts            | Configurations for you express app.                                                                                                                                           |
+| **src**/server.ts         | Entry point to your express app.                                                                                                                                              |
+| **tests/integration**     | Contains integration tests.                                                                                                                                                   |
+| **tests/unit**            | Contains unit tests.                                                                                                                                                          |
+| .env.defaults             | Contains default configuration values, if either .env doesn't exist, or .env only contains partial cofigurations, this will be where the default values will be loaded from.  |
 
 ## Authors
 * **Zishran Garces**
@@ -105,3 +111,6 @@ See also the list of [contributors](https://github.com/zishone/oas-express-start
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/zishone/oas-express-starter/blob/master/LICENSE) file for details.
+
+## More Details
+Blog coming soon to talk about design decisions.
