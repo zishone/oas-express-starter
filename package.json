@@ -18,9 +18,10 @@
     "watch": "concurrently -k \"npm run build:watch\"  \"npm run start:watch\""
   },
   "dependencies": {
+    "@zishone/dotnotate": "^0.1.2",
     "basic-auth": "^2.0.1",
     "bcryptjs": "^2.4.3",
-    "chaindler": "^0.1.5",
+    "chaindler": "^0.1.7",
     "cookie-parser": "^1.4.5",
     "dotenv-defaults": "^2.0.1",
     "express": "^4.17.1",

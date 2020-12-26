@@ -1,6 +1,6 @@
 import { LOG_LEVELS } from '../constants';
 import { config } from '../config';
-import { dotnotate } from '../utils';
+import { dotnotate } from '@zishone/dotnotate';
 import winston from 'winston';
 
 export class Logger {

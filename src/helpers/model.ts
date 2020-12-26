@@ -12,7 +12,7 @@ import {
 } from 'mongodb';
 import { Logger, Mongo } from '.';
 import { ERROR_CODES } from '../constants';
-import { dotnotate } from '../utils';
+import { dotnotate } from '@zishone/dotnotate';
 import httpError from 'http-errors';
 import joi from 'joi';
 import { nanoid } from 'nanoid';
