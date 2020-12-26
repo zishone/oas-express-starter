@@ -49,7 +49,7 @@ export const passportMiddleware = (userModel: UserModel): RequestHandler => {
         next(
           httpError(401, 'Authentication failed', {
             errorCode: ERROR_CODES.UNAUTHENTICATED,
-            details: info,
+            details: [error, info],
           }),
         );
       }

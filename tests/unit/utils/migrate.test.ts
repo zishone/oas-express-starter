@@ -11,7 +11,7 @@ export default (): void => {
     sandbox.restore();
   });
 
-  it('should migrate dartabase', async (): Promise<void> => {
+  it('should migrate database', async (): Promise<void> => {
     const logger = { debug: (): void => null };
     const mongo = { getDb: async (): Promise<void> => null };
 
