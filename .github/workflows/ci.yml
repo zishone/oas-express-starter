@@ -1,4 +1,4 @@
-name: build
+name: ci
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,7 +19,20 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run lint
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
       - run: npm run build
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -32,7 +45,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run test:coverage
-      - run: "[[ ! -z "${CODECOV_TOKEN}" ]] && npx codecov -f ./.data/tests/unit/coverage/lcov.info"
+      - run: "[[ ! -z '${CODECOV_TOKEN}' ]] && npx codecov -f ./.data/tests/unit/coverage/lcov.info"
 
   test-integration:
     runs-on: ubuntu-latest
