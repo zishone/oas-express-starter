@@ -9,7 +9,7 @@
     "lint:fix": "npm run lint -- --fix",
     "test": "TS_NODE_FILES=true mocha --require ts-node/register --require source-map-support/register --file tests/unit/index.ts tests/unit/**/*.test.ts --timeout 10000 --exit",
     "test:coverage": "nyc --report-dir .data/tests/unit/coverage --temp-dir .data/tests/unit/.nyc_output --require @istanbuljs/nyc-config-typescript --reporter lcov --include src npm run test",
-    "test-integration": "TS_NODE_FILES=true mocha --require ts-node/register --require source-map-support/register --files --file tests/integration/index.ts tests/integration/**/*.test.ts --timeout 30000 --exit",
+    "test-integration": "TS_NODE_FILES=true mocha --require ts-node/register --require source-map-support/register --file tests/integration/index.ts tests/integration/**/*.test.ts --timeout 30000 --exit",
     "test-integration:coverage": "nyc --report-dir .data/tests/integration/coverage --temp-dir .data/tests/integration/.nyc_output --require @istanbuljs/nyc-config-typescript --reporter lcov --include src npm run test-integration",
     "build": "tsc --skipLibCheck",
     "build:watch": "tsc --watch",

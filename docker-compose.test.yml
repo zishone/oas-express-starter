@@ -3,25 +3,19 @@ services:
   service:
     image: '${APP_NAME}:v${APP_VERSION}'
     volumes: 
-      - "./.data:/app/.data"
+      - "./:/app"
     depends_on: 
       - mongodb
     build: .
-    env_file: 
-      - .env
-    ports:
-      - "${APP_PORT}:${APP_PORT}"
     networks:
-      - oas-net
+      - oas-test-net
   mongodb:
     image: mongo:4.2
-    volumes: 
-      - "./.data/mongodb/data/db:/data/db"
     ports:
       - "27017"
     logging:
       driver: none
     networks:
-      - oas-net
+      - oas-test-net
 networks: 
-  oas-net:
+  oas-test-net:

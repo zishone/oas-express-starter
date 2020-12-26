@@ -1,58 +1,32 @@
-.PHONY: ensure-dotenv build up test run test-integration 
+.PHONY: build up run test test-integration 
 
-define readPackageJson
-	$(shell node -p "require('./package.json').$(1)")
-endef
-
-CONFIG_APP_NAME		:= $(firstword $(subst :, ,$(call readPackageJson,name)))
-CONFIG_APP_VERSION	:= $(firstword $(subst :, ,$(call readPackageJson,version)))
-
-ensure-dotenv:
-ifeq (,$(wildcard ./.env))
-	cp .env.defaults .env
-endif
+$(shell cp -n .env.defaults .env)
 include .env
-export $(shell sed 's/=.*//' .env)
+export APP_NAME=$(shell node -p "require('./package.json').name")
+export APP_VERSION=$(shell node -p "require('./package.json').version")
+export APP_PORT=${CONFIG_APP_PORT}
 
-build: ensure-dotenv
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
+build:
 	docker-compose build \
-		${SERVICE}
+		service
 
-up: ensure-dotenv
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
+up: build
 	docker-compose up \
-		${SERVICE}
+		service
 
-test: build
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
-	docker-compose run \
-		-v [.data=/app/.data] \
+run:
+	docker-compose -f docker-compose.test.yml run \
 		--no-deps \
-		oas-service \
+		service \
+		npm run watch
+
+test:
+	docker-compose -f docker-compose.test.yml run \
+		--no-deps \
+		service \
 		npm run test:coverage
 
-run: build
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
-	docker-compose run \
-		-v [.data=/app/.data] \
-		--no-deps \
-		oas-service \
-		npm run start
-
-test-integration: build
-	APP_NAME=${CONFIG_APP_NAME} \
-	APP_VERSION=${CONFIG_APP_VERSION} \
-	APP_PORT=${CONFIG_APP_PORT} \
-	docker-compose run \
-		-v [.data=/app/.data] \
-		oas-service \
+test-integration:
+	docker-compose -f docker-compose.test.yml run \
+		service \
 		npm run test-integration:coverage
