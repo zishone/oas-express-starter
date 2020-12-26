@@ -14,11 +14,11 @@ up: build
 	docker-compose up \
 		service
 
-run: build
-	docker-compose run \
+run:
+	docker-compose -f docker-compose.test.yml run \
 		--no-deps \
 		service \
-		npm run start
+		npm run watch
 
 test:
 	docker-compose -f docker-compose.test.yml run \

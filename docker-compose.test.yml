@@ -7,12 +7,12 @@ services:
     depends_on: 
       - mongodb
     build: .
-    env_file: 
-      - .env.defaults
     networks:
       - oas-test-net
   mongodb:
     image: mongo:4.2
+    ports:
+      - "27017"
     logging:
       driver: none
     networks:
