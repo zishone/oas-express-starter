@@ -78,15 +78,14 @@ export default (): void => {
     it('should fail user authentication when user does not exist', async (): Promise<void> => {
       const testUsername = nanoid(12);
       const testPassword = nanoid(12);
-      const testStatusCode = 401;
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).rejects(httpError(404));
 
       try {
         await userService.authenticateUser(testUsername, testPassword);
       } catch (error) {
-        expect(error.status).to.equal(testStatusCode);
-        expect(error.errorCode).to.equal(ERROR_CODES.UNAUTHENTICATED);
+        expect(error.status).to.be.equal(401);
+        expect(error.errorCode).to.be.equal(ERROR_CODES.UNAUTHENTICATED);
       }
     });
 
@@ -114,7 +113,6 @@ export default (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const testStatusCode = 401;
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(false);
@@ -122,8 +120,8 @@ export default (): void => {
       try {
         await userService.authenticateUser(testUser.username, testPassword);
       } catch (error) {
-        expect(error.status).to.equal(testStatusCode);
-        expect(error.errorCode).to.equal(ERROR_CODES.UNAUTHENTICATED);
+        expect(error.status).to.be.equal(401);
+        expect(error.errorCode).to.be.equal(ERROR_CODES.UNAUTHENTICATED);
       }
     });
   });
@@ -194,7 +192,7 @@ export default (): void => {
 
       await userService.updateUserById(testUser.id, testUser);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -221,7 +219,7 @@ export default (): void => {
 
       await userService.updateUserPasswordById(testUser.id, testPassword, testNewPassword);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
 
     it('should fail to update user password when current password does not match', async (): Promise<void> => {
@@ -236,7 +234,6 @@ export default (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const testStatusCode = 403;
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(false);
@@ -244,11 +241,11 @@ export default (): void => {
       try {
         await userService.updateUserPasswordById(testUser.id, testPassword, testNewPassword);
       } catch (error) {
-        expect(error.status).to.equal(testStatusCode);
-        expect(error.errorCode).to.equal(ERROR_CODES.NOT_ALLOWED);
+        expect(error.status).to.be.equal(403);
+        expect(error.errorCode).to.be.equal(ERROR_CODES.NOT_ALLOWED);
       }
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -269,7 +266,7 @@ export default (): void => {
 
       await userService.deleteUserById(testUser.id);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -292,7 +289,7 @@ export default (): void => {
 
       await userService.deleteUserByIdWithCredentials(testUser.id, testPassword);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
 
     it('should fail to delete a user when password does not match', async (): Promise<void> => {
@@ -306,7 +303,6 @@ export default (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const testStatusCode = 403;
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(false);
@@ -314,11 +310,11 @@ export default (): void => {
       try {
         await userService.deleteUserByIdWithCredentials(testUser.id, testPassword);
       } catch (error) {
-        expect(error.status).to.equal(testStatusCode);
-        expect(error.errorCode).to.equal(ERROR_CODES.NOT_ALLOWED);
+        expect(error.status).to.be.equal(403);
+        expect(error.errorCode).to.be.equal(ERROR_CODES.NOT_ALLOWED);
       }
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 };

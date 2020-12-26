@@ -31,7 +31,7 @@ export default (): void => {
       await mongo.getDb();
       await mongo.getDb();
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 };

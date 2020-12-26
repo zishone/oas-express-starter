@@ -32,7 +32,7 @@ export default (): void => {
     it('should enable info logs', async (): Promise<void> => {
       logger.enableInfo();
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -40,7 +40,7 @@ export default (): void => {
     it('should enable debug logs', async (): Promise<void> => {
       logger.enableDebug();
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -50,7 +50,7 @@ export default (): void => {
 
       logger.info(testMessage);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -60,7 +60,7 @@ export default (): void => {
 
       logger.error(testMessage);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -70,7 +70,7 @@ export default (): void => {
 
       logger.debug(testMessage);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -81,7 +81,7 @@ export default (): void => {
 
       logger.debugFunction(testFunctioName, testFunctionArgs);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 };

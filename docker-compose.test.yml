@@ -7,12 +7,12 @@ services:
     depends_on: 
       - mongodb
     build: .
+    environment: 
+      CONFIG_DB_URI: mongodb://mongodb:27017
     networks:
       - oas-test-net
   mongodb:
     image: mongo:4.2
-    ports:
-      - "27017"
     logging:
       driver: none
     networks:

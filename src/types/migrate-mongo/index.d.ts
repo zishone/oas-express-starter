@@ -1,4 +1,4 @@
-import * as migration from 'migrate-mongo';
+import 'migrate-mongo';
 
 declare module 'migrate-mongo' {
   namespace config {

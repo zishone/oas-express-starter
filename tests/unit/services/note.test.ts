@@ -100,7 +100,7 @@ export default (): void => {
 
       await noteService.updateUserNoteById(testNote.userId, testNote.id, testNote);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -119,7 +119,7 @@ export default (): void => {
 
       await noteService.deleteUserNoteById(testNote.userId, testNote.id);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 
@@ -131,7 +131,7 @@ export default (): void => {
 
       await noteService.deleteUserNotes(testUserId);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
   });
 };

@@ -35,7 +35,7 @@ export default (): void => {
 
       const count = await model.count();
 
-      expect(count).to.equal(testCount);
+      expect(count).to.be.equal(testCount);
     });
 
     it('should fail to return count when database error happens', async (): Promise<void> => {
@@ -65,7 +65,7 @@ export default (): void => {
 
       await model.fetch();
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
 
     it('should fail to return list of entries when database error happens', async (): Promise<void> => {
@@ -117,8 +117,6 @@ export default (): void => {
     });
 
     it('should fail to return an entry when data was not found', async (): Promise<void> => {
-      const testStatusCode = 404;
-
       mongoMock.expects('getDb').resolves({
         collection: (): { [key: string]: any } => ({
           findOne: async (): Promise<any> => null,
@@ -128,8 +126,8 @@ export default (): void => {
       try {
         await model.fetchOne();
       } catch (error) {
-        expect(error.status).to.equal(testStatusCode);
-        expect(error.errorCode).to.equal(ERROR_CODES.NOT_FOUND);
+        expect(error.status).to.be.equal(404);
+        expect(error.errorCode).to.be.equal(ERROR_CODES.NOT_FOUND);
       }
     });
   });
@@ -146,7 +144,7 @@ export default (): void => {
 
       await model.aggregate<any>(testPipeline);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
 
     it('should fail to aggregate list of entries when database error happens', async (): Promise<void> => {
@@ -235,7 +233,6 @@ export default (): void => {
 
     it('should fail to save an entry when data has duplicate', async (): Promise<void> => {
       const testData = {};
-      const testStatusCode = 403;
 
       sandbox
         .stub(joi, 'array')
@@ -254,14 +251,13 @@ export default (): void => {
       try {
         await model.save(testData);
       } catch (error) {
-        expect(error.status).to.equal(testStatusCode);
-        expect(error.errorCode).to.equal(ERROR_CODES.DUPLICATE);
+        expect(error.status).to.be.equal(403);
+        expect(error.errorCode).to.be.equal(ERROR_CODES.DUPLICATE);
       }
     });
 
     it('should fail to save an entry when data validation fails', async (): Promise<void> => {
       const testData = {};
-      const testStatusCode = 400;
 
       sandbox
         .stub(joi, 'array')
@@ -273,8 +269,8 @@ export default (): void => {
       try {
         await model.save(testData);
       } catch (error) {
-        expect(error.status).to.equal(testStatusCode);
-        expect(error.errorCode).to.equal(ERROR_CODES.INVALID);
+        expect(error.status).to.be.equal(400);
+        expect(error.errorCode).to.be.equal(ERROR_CODES.INVALID);
       }
     });
   });
@@ -295,7 +291,7 @@ export default (): void => {
 
       await model.update(testFilter, testUpdate);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
 
     it('should fail to update entries when update object was given', async (): Promise<void> => {
@@ -345,7 +341,6 @@ export default (): void => {
         $set: {},
         $unset: {},
       };
-      const testStatusCode = 403;
 
       mongoMock.expects('getDb').resolves({
         collection: (): { [key: string]: any } => ({
@@ -358,8 +353,8 @@ export default (): void => {
       try {
         await model.update(testFilter, testUpdate);
       } catch (error) {
-        expect(error.status).to.equal(testStatusCode);
-        expect(error.errorCode).to.equal(ERROR_CODES.DUPLICATE);
+        expect(error.status).to.be.equal(403);
+        expect(error.errorCode).to.be.equal(ERROR_CODES.DUPLICATE);
       }
     });
   });
@@ -376,7 +371,7 @@ export default (): void => {
 
       await model.delete(testFilter);
 
-      expect(true).to.equal(true);
+      expect(true).to.be.equal(true);
     });
 
     it('should fail to delete entries when database error happens', async (): Promise<void> => {
