@@ -32,7 +32,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run test:coverage
-      - run: npx codecov -f ./.data/tests/unit/coverage/lcov.info
+      - run: "[[ ! -z "${CODECOV_TOKEN}" ]] && npx codecov -f ./.data/tests/unit/coverage/lcov.info"
+
   test-integration:
     runs-on: ubuntu-latest
     strategy:
@@ -46,4 +47,4 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: make test-integration
-      - run: npx codecov -f ./.data/tests/integration/coverage/lcov.info
+      - run: "[[ ! -z '${CODECOV_TOKEN}' ]] && npx codecov -f ./.data/tests/integration/coverage/lcov.info"
