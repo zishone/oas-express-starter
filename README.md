@@ -46,7 +46,7 @@ CONFIG_LOGIN_TTL=2592000            # Time to live of login in seconds
 - `develop` - for development
 
 ## Swagger UI
-Should be available in path `/apidocs` when NODE_ENV is set to `development`.
+Should be available on route `/apidocs` when NODE_ENV is set to `development`.
 
 ## NPM Scripts
 * `npm run` **`lint`**
