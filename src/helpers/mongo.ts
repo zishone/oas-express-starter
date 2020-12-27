@@ -1,5 +1,7 @@
 import { Db, MongoClient, MongoClientCommonOption, MongoClientOptions } from 'mongodb';
+import { ERROR_CODES } from '../constants';
 import { Logger } from '.';
+import httpError from 'http-errors';
 
 export interface MongoConfig {
   mongoUri: string;
@@ -34,5 +36,23 @@ export class Mongo {
       });
     }
     return this.client.db(this.dbName);
+  }
+
+  public error(error: any) {
+    this.logger.debugFunction('Mongo.error', arguments);
+    switch (error.code) {
+      case 11000:
+        throw httpError(403, 'Data already exists', {
+          errorCode: ERROR_CODES.DUPLICATE,
+          details: error,
+        });
+      case 9:
+        throw httpError(400, 'Update empty', {
+          errorCode: ERROR_CODES.INVALID,
+          details: error,
+        });
+      default:
+        throw error;
+    }
   }
 }

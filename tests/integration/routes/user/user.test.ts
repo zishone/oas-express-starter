@@ -22,7 +22,6 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       const [testId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -41,7 +40,6 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       await userModel.save(testUser);
 
@@ -73,6 +71,28 @@ export const user = (): void => {
         .send({ username: testNewUsername });
 
       expect(response.status).to.be.equal(204);
+    });
+
+    it('should respond 400 WHEN update is empty', async (): Promise<void> => {
+      const testUser = {
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
+
+      const userModel = new UserModel(logger, mongo);
+      const [testId] = await userModel.save(testUser);
+      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+
+      const response = await request(app)
+        .patch('/api/v1/user')
+        .set('Authorization', `Bearer ${testAccessToken}`)
+        .send({});
+
+      expect(response.status).to.be.equal(400);
     });
 
     it('should respond 403 WHEN update results in a duplicate', async (): Promise<void> => {
@@ -121,7 +141,6 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       const [testId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -145,7 +164,6 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       const [testId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -175,7 +193,6 @@ export const userPassword = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       const [testId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -203,7 +220,6 @@ export const userPassword = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       const [testId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });

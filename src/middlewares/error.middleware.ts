@@ -27,17 +27,14 @@ export const errorMiddleware = (): ErrorRequestHandler => {
       );
       return;
     }
-    if (!(error.status < 500)) {
-      res.jsend.error(
-        error.message || 'Error unknown',
-        error.code,
-        {
-          errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
-          details: Array.isArray(error.details) ? error.details : [error.details],
-        },
-        error.status,
-      );
-      return;
-    }
+    res.jsend.error(
+      error.message || 'Error unknown',
+      error.code,
+      {
+        errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
+        details: Array.isArray(error.details) ? error.details : [error.details],
+      },
+      error.status,
+    );
   };
 };

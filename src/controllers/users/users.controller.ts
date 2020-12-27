@@ -30,10 +30,10 @@ export const getUsersById = async (req: Request, res: Response, next: NextFuncti
   try {
     const userService = new UserService(req.logger, req.mongo);
 
-    const { id } = req.params;
+    const { userId } = req.params;
     const { options } = req.mquery;
 
-    const { user } = await userService.fetchUserById(id, options);
+    const { user } = await userService.fetchUserById(userId, options);
 
     res.jsend.success({ user });
   } catch (error) {
@@ -48,10 +48,10 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
   try {
     const userService = new UserService(req.logger, req.mongo);
 
-    const { id } = req.params;
+    const { userId } = req.params;
     const { username, email, password, name } = req.body;
 
-    await userService.updateUserById(id, {
+    await userService.updateUserById(userId, {
       username,
       email,
       password,
@@ -72,10 +72,10 @@ export const deleteUsersById = async (req: Request, res: Response, next: NextFun
     const userService = new UserService(req.logger, req.mongo);
     const noteService = new NoteService(req.logger, req.mongo);
 
-    const { id } = req.params;
+    const { userId } = req.params;
 
-    await userService.deleteUserById(id);
-    await noteService.deleteUserNotes(id);
+    await userService.deleteUserById(userId);
+    await noteService.deleteUserNotes(userId);
 
     res.jsend.success(undefined, 204);
   } catch (error) {

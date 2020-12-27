@@ -23,7 +23,6 @@ export const login = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       await userModel.save(testUser);
 
@@ -58,7 +57,6 @@ export const login = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       await userModel.save(testUser);
 

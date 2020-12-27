@@ -49,11 +49,11 @@ export const getUserNotesById = async (req: Request, res: Response, next: NextFu
   try {
     const noteService = new NoteService(req.logger, req.mongo);
 
-    const { id } = req.params;
+    const { noteId } = req.params;
     const { id: userId } = req.user;
     const { options } = req.mquery;
 
-    const { note } = await noteService.fetchUserNoteById(userId, id, options);
+    const { note } = await noteService.fetchUserNoteById(userId, noteId, options);
 
     res.jsend.success({ note });
   } catch (error) {
@@ -68,11 +68,11 @@ export const patchUserNotesById = async (req: Request, res: Response, next: Next
   try {
     const noteService = new NoteService(req.logger, req.mongo);
 
-    const { id } = req.params;
+    const { noteId } = req.params;
     const { id: userId } = req.user;
     const { title, body } = req.body;
 
-    await noteService.updateUserNoteById(userId, id, {
+    await noteService.updateUserNoteById(userId, noteId, {
       title,
       body,
     });
@@ -90,10 +90,10 @@ export const deleteUserNotesById = async (req: Request, res: Response, next: Nex
   try {
     const noteService = new NoteService(req.logger, req.mongo);
 
-    const { id } = req.params;
+    const { noteId } = req.params;
     const { id: userId } = req.user;
 
-    await noteService.deleteUserNoteById(userId, id);
+    await noteService.deleteUserNoteById(userId, noteId);
 
     res.jsend.success(undefined, 204);
   } catch (error) {
