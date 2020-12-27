@@ -6,14 +6,11 @@ export const errorMiddleware = (): ErrorRequestHandler => {
   return (error: HttpError | any, req: Request, res: Response, _next: NextFunction): void => {
     req.addLogError(error);
     if (error.errors || error.type === 'entity.parse.failed') {
-      res.jsend.fail(
-        {
-          errorCode: ERROR_CODES.INVALID,
-          message: 'Invalid payload',
-          details: error.errors,
-        },
-        error.status,
-      );
+      res.jsend.fail({
+        errorCode: ERROR_CODES.INVALID,
+        message: 'Invalid payload',
+        details: error.errors,
+      });
       return;
     }
     if (error.status < 500) {
