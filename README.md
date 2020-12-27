@@ -24,8 +24,7 @@ npm run build
 npm run start
 ```
 
-## Configuration
-Example `.env` file:
+## Configuration (dotenv)
 ```
 NODE_ENV=development
 
