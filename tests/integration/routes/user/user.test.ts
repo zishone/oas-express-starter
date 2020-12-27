@@ -4,14 +4,22 @@ import { expect, request, use } from 'chai';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import { ROLES } from '../../../../src/constants';
 import { UserModel } from '../../../../src/models';
+import { UserService } from '../../../../src/services';
 import chaiHttp from 'chai-http';
 import { config } from '../../../../src/config';
+import { createSandbox } from 'sinon';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';
 
 use(chaiHttp);
 
 export const user = (): void => {
+  const sandbox = createSandbox();
+
+  afterEach((): void => {
+    sandbox.restore();
+  });
+
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
       const testUser = {
@@ -46,6 +54,26 @@ export const user = (): void => {
       const response = await request(app).get('/api/v1/user').send();
 
       expect(response.status).to.be.equal(401);
+    });
+
+    it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
+      const testUser = {
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
+      const userModel = new UserModel(logger, mongo);
+      const [testId] = await userModel.save(testUser);
+      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+
+      sandbox.stub(UserService.prototype, 'fetchUserById').onCall(0).rejects();
+
+      const response = await request(app).get('/api/v1/user').set('Authorization', `Bearer ${testAccessToken}`).send();
+
+      expect(response.status).to.be.equal(500);
     });
   });
 
