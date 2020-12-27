@@ -34,4 +34,36 @@ export default (): void => {
       expect(true).to.be.equal(true);
     });
   });
+
+  describe('error', (): void => {
+    it('should throw an httpError 403', async (): Promise<void> => {
+      const testError = { code: 11000 };
+
+      try {
+        mongo.error(testError);
+      } catch (error) {
+        expect(error.status).to.be.equal(403);
+      }
+    });
+
+    it('should throw an httpError 400', async (): Promise<void> => {
+      const testError = { code: 9 };
+
+      try {
+        mongo.error(testError);
+      } catch (error) {
+        expect(error.status).to.be.equal(400);
+      }
+    });
+
+    it('should throw an error', async (): Promise<void> => {
+      const testError = new Error();
+
+      try {
+        mongo.error(testError);
+      } catch (error) {
+        expect(error).to.exist;
+      }
+    });
+  });
 };

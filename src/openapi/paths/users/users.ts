@@ -58,7 +58,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'id',
+        name: 'userId',
         in: 'path',
         schema: { type: 'string' },
         description: "User's unique identifier",
@@ -101,7 +101,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'id',
+        name: 'userId',
         in: 'path',
         schema: { type: 'string' },
         description: "User's unique identifier",
@@ -156,7 +156,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'id',
+        name: 'userId',
         in: 'path',
         schema: { type: 'string' },
         description: "User's unique identifier",

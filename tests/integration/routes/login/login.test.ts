@@ -5,18 +5,11 @@ import { genSaltSync, hashSync } from 'bcryptjs';
 import { ROLES } from '../../../../src/constants';
 import { UserModel } from '../../../../src/models';
 import chaiHttp from 'chai-http';
-import { createSandbox } from 'sinon';
 import { nanoid } from 'nanoid';
 
 use(chaiHttp);
 
 export const login = (): void => {
-  const sandbox = createSandbox();
-
-  afterEach((): void => {
-    sandbox.restore();
-  });
-
   describe('POST', (): void => {
     it('should respond 200', async (): Promise<void> => {
       const testPassword = nanoid(12);
@@ -30,7 +23,6 @@ export const login = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       await userModel.save(testUser);
 
@@ -65,7 +57,6 @@ export const login = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-
       const userModel = new UserModel(logger, mongo);
       await userModel.save(testUser);
 

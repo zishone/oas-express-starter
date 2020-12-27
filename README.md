@@ -1,5 +1,5 @@
 # oas-express-starter
-[![Build](https://github.com/zishone/oas-express-starter/workflows/build/badge.svg)](https://github.com/zishone/oas-express-starter/actions?query=workflow%3Abuild) [![Coverage](https://codecov.io/gh/zishone/oas-express-starter/branch/master/graph/badge.svg)](https://codecov.io/gh/zishone/oas-express-starter) [![License](https://img.shields.io/github/license/zishone/oas-express-starter)](https://github.com/zishone/oas-express-starter/blob/master/LICENSE)
+[![Build](https://github.com/zishone/oas-express-starter/workflows/ci/badge.svg)](https://github.com/zishone/oas-express-starter/actions?query=workflow%3Aci) [![Coverage](https://codecov.io/gh/zishone/oas-express-starter/branch/master/graph/badge.svg)](https://codecov.io/gh/zishone/oas-express-starter) [![License](https://img.shields.io/github/license/zishone/oas-express-starter)](https://github.com/zishone/oas-express-starter/blob/master/LICENSE)
 
 A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript.
 
@@ -113,4 +113,4 @@ See also the list of [contributors](https://github.com/zishone/oas-express-start
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/zishone/oas-express-starter/blob/master/LICENSE) file for details.
 
 ## More Details
-Blog coming soon to talk about design decisions.
+Blog coming soon to talk about design decisions and opinionations.

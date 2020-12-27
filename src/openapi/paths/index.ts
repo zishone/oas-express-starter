@@ -17,8 +17,8 @@ export const paths: OpenAPIV3.PathsObject = {
   '/api/v1/user/password': userPassword,
 
   '/api/v1/user/notes': userNotes,
-  '/api/v1/user/notes/{id}': userNotesById,
+  '/api/v1/user/notes/{noteId}': userNotesById,
 
   '/api/v1/users': users,
-  '/api/v1/users/{id}': usersById,
+  '/api/v1/users/{userId}': usersById,
 };

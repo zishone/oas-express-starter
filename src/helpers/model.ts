@@ -43,31 +43,13 @@ export class Model<Data> {
     return result.value;
   }
 
-  private mongoError(error: any) {
-    this.logger.debugFunction('Model.mongoError', arguments);
-    switch (error.code) {
-      case 11000:
-        throw httpError(403, 'Data already exists', {
-          errorCode: ERROR_CODES.DUPLICATE,
-          details: error,
-        });
-      case 16840:
-        throw httpError(403, 'Update empty', {
-          errorCode: ERROR_CODES.INVALID,
-          details: error,
-        });
-      default:
-        throw error;
-    }
-  }
-
   public async count(filter: FilterQuery<Data> = {}, options: MongoCountPreferences = {}): Promise<number> {
     this.logger.debugFunction('Model.count', arguments);
     const db = await this.mongo.getDb();
     try {
       return await db.collection(this.collectionName).countDocuments(filter, options);
     } catch (error) {
-      throw this.mongoError(error);
+      throw this.mongo.error(error);
     }
   }
 
@@ -82,7 +64,7 @@ export class Model<Data> {
       const cursor = db.collection(this.collectionName).find(filter, options);
       return cursor;
     } catch (error) {
-      throw this.mongoError(error);
+      throw this.mongo.error(error);
     }
   }
 
@@ -100,7 +82,7 @@ export class Model<Data> {
       }
       return data;
     } catch (error) {
-      throw this.mongoError(error);
+      throw this.mongo.error(error);
     }
   }
 
@@ -114,7 +96,7 @@ export class Model<Data> {
       const cursor = db.collection(this.collectionName).aggregate(pipeline, options);
       return cursor;
     } catch (error) {
-      throw this.mongoError(error);
+      throw this.mongo.error(error);
     }
   }
 
@@ -136,7 +118,7 @@ export class Model<Data> {
       await db.collection(this.collectionName).insertMany(dataArrayMapped, options);
       return ids;
     } catch (error) {
-      throw this.mongoError(error);
+      throw this.mongo.error(error);
     }
   }
 
@@ -156,7 +138,7 @@ export class Model<Data> {
       }
       await db.collection(this.collectionName).updateMany(filter, JSON.parse(JSON.stringify(update)), options);
     } catch (error) {
-      throw this.mongoError(error);
+      throw this.mongo.error(error);
     }
   }
 
@@ -166,7 +148,7 @@ export class Model<Data> {
     try {
       await db.collection(this.collectionName).deleteMany(filter, options);
     } catch (error) {
-      throw this.mongoError(error);
+      throw this.mongo.error(error);
     }
   }
 }

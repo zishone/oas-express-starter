@@ -3,6 +3,7 @@ import { SinonMock, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
 import { Model } from '../../../src/helpers';
 import { expect } from 'chai';
+import httpError from 'http-errors';
 import joi from 'joi';
 
 export default (): void => {
@@ -12,7 +13,12 @@ export default (): void => {
 
   beforeEach((): void => {
     const logger = { debugFunction: (): void => null };
-    const mongo = { getDb: async (): Promise<void> => null };
+    const mongo = {
+      getDb: async (): Promise<void> => null,
+      error: () => {
+        throw new Error();
+      },
+    };
     const schema = {};
     const testCollectionName = COLLECTIONS.USERS;
     mongoMock = sandbox.mock(mongo);
@@ -122,6 +128,7 @@ export default (): void => {
           findOne: async (): Promise<any> => null,
         }),
       } as any);
+      mongoMock.expects('error').throws(httpError(404, { errorCode: ERROR_CODES.NOT_FOUND }));
 
       try {
         await model.fetchOne();
@@ -247,6 +254,7 @@ export default (): void => {
           },
         }),
       } as any);
+      mongoMock.expects('error').throws(httpError(403, { errorCode: ERROR_CODES.DUPLICATE }));
 
       try {
         await model.save(testData);
@@ -349,6 +357,7 @@ export default (): void => {
           },
         }),
       } as any);
+      mongoMock.expects('error').throws(httpError(403, { errorCode: ERROR_CODES.DUPLICATE }));
 
       try {
         await model.update(testFilter, testUpdate);

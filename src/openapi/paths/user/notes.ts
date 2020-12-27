@@ -109,7 +109,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'id',
+        name: 'noteId',
         in: 'path',
         schema: { type: 'string' },
         description: "Note's unique identifier",
@@ -152,7 +152,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'id',
+        name: 'noteId',
         in: 'path',
         schema: { type: 'string' },
         description: "Note's unique identifier",
@@ -205,7 +205,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     security: [{ loginAuth: [] }],
     parameters: [
       {
-        name: 'id',
+        name: 'noteId',
         in: 'path',
         schema: { type: 'string' },
         description: "Note's unique identifier",
