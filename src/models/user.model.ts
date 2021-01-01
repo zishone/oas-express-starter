@@ -1,4 +1,5 @@
-import { Logger, Model, Mongo } from '../helpers';
+import { Model, Mongo } from '../helpers';
+import { Logger } from '@zishone/logan';
 import joi from 'joi';
 
 export interface User {
@@ -29,7 +30,7 @@ export class UserModel extends Model<User> {
   }
 
   public create(role: string, username: string, email: string, saltedPassword: string, name: string): User {
-    this.logger.debugFunction('UserModel.create', arguments);
+    this.logger.debugFunctionCall('UserModel.create', arguments);
     const user = {
       username,
       email,

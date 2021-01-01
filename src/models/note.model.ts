@@ -1,4 +1,5 @@
-import { Logger, Model, Mongo } from '../helpers';
+import { Model, Mongo } from '../helpers';
+import { Logger } from '@zishone/logan';
 import joi from 'joi';
 
 export interface Note {
@@ -26,7 +27,7 @@ export class NoteModel extends Model<Note> {
   }
 
   public create(userId: string, title: string, body: string): Note {
-    this.logger.debugFunction('NoteModel.create', arguments);
+    this.logger.debugFunctionCall('NoteModel.create', arguments);
     const note = {
       userId,
       title,

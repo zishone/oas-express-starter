@@ -10,8 +10,9 @@ import {
   UpdateManyOptions,
   UpdateQuery,
 } from 'mongodb';
-import { Logger, Mongo } from '.';
 import { ERROR_CODES } from '../constants';
+import { Logger } from '@zishone/logan';
+import { Mongo } from '.';
 import { dotnotate } from '@zishone/dotnotate';
 import httpError from 'http-errors';
 import joi from 'joi';
@@ -31,7 +32,7 @@ export class Model<Data> {
   }
 
   private async validate(data: Data | Data[]): Promise<Data[]> {
-    this.logger.debugFunction('Model.validate', arguments);
+    this.logger.debugFunctionCall('Model.validate', arguments);
     const dataArray = Array.isArray(data) ? data : [data];
     const result = joi.array().items(this.schema).validate(dataArray);
     if (result.error) {
@@ -44,7 +45,7 @@ export class Model<Data> {
   }
 
   public async count(filter: FilterQuery<Data> = {}, options: MongoCountPreferences = {}): Promise<number> {
-    this.logger.debugFunction('Model.count', arguments);
+    this.logger.debugFunctionCall('Model.count', arguments);
     const db = await this.mongo.getDb();
     try {
       return await db.collection(this.collectionName).countDocuments(filter, options);
@@ -54,7 +55,7 @@ export class Model<Data> {
   }
 
   public async fetch(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Cursor<Data>> {
-    this.logger.debugFunction('Model.fetch', arguments);
+    this.logger.debugFunctionCall('Model.fetch', arguments);
     const db = await this.mongo.getDb();
     try {
       options.projection = {
@@ -69,7 +70,7 @@ export class Model<Data> {
   }
 
   public async fetchOne(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Data> {
-    this.logger.debugFunction('Model.fetchOne', arguments);
+    this.logger.debugFunctionCall('Model.fetchOne', arguments);
     const db = await this.mongo.getDb();
     try {
       options.projection = {
@@ -90,7 +91,7 @@ export class Model<Data> {
     pipeline: object[],
     options: CollectionAggregationOptions = {},
   ): Promise<AggregationCursor<AggregationData>> {
-    this.logger.debugFunction('Model.aggregate', arguments);
+    this.logger.debugFunctionCall('Model.aggregate', arguments);
     const db = await this.mongo.getDb();
     try {
       const cursor = db.collection(this.collectionName).aggregate(pipeline, options);
@@ -101,7 +102,7 @@ export class Model<Data> {
   }
 
   public async save(data: Data | Data[], options: CollectionInsertManyOptions = {}): Promise<string[]> {
-    this.logger.debugFunction('Model.save', arguments);
+    this.logger.debugFunctionCall('Model.save', arguments);
     const dataArray = await this.validate(data);
     const ids: string[] = [];
     const db = await this.mongo.getDb();
@@ -127,7 +128,7 @@ export class Model<Data> {
     update: UpdateQuery<any>,
     options: UpdateManyOptions = {},
   ): Promise<void> {
-    this.logger.debugFunction('Model.update', arguments);
+    this.logger.debugFunctionCall('Model.update', arguments);
     const db = await this.mongo.getDb();
     try {
       if (update.$set) {
@@ -143,7 +144,7 @@ export class Model<Data> {
   }
 
   public async delete(filter: FilterQuery<Data>, options: CommonOptions = {}): Promise<void> {
-    this.logger.debugFunction('Model.delete', arguments);
+    this.logger.debugFunctionCall('Model.delete', arguments);
     const db = await this.mongo.getDb();
     try {
       await db.collection(this.collectionName).deleteMany(filter, options);

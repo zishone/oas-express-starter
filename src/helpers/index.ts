@@ -1,3 +1,2 @@
-export { Logger } from './logger';
 export { Model } from './model';
 export { Mongo } from './mongo';

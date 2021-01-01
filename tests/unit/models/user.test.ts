@@ -10,7 +10,7 @@ export default (): void => {
   let userModel: UserModel;
 
   beforeEach((): void => {
-    const logger = { debugFunction: (): void => null };
+    const logger = { debugFunctionCall: (): void => null };
     const mongo = { getDb: async (): Promise<void> => null };
     userModel = new UserModel(logger as any, mongo as any);
   });

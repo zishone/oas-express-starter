@@ -1,6 +1,6 @@
 import { Db, MongoClient, MongoClientCommonOption, MongoClientOptions } from 'mongodb';
 import { ERROR_CODES } from '../constants';
-import { Logger } from '.';
+import { Logger } from '@zishone/logan';
 import httpError from 'http-errors';
 
 export interface MongoConfig {
@@ -23,7 +23,7 @@ export class Mongo {
   }
 
   public async getDb(): Promise<Db> {
-    this.logger.debugFunction('Mongo.getDb', arguments);
+    this.logger.debugFunctionCall('Mongo.getDb', arguments);
     try {
       if (!this.client) {
         throw new Error();
@@ -39,7 +39,7 @@ export class Mongo {
   }
 
   public error(error: any) {
-    this.logger.debugFunction('Mongo.error', arguments);
+    this.logger.debugFunctionCall('Mongo.error', arguments);
     switch (error.code) {
       case 11000:
         throw httpError(403, 'Data already exists', {

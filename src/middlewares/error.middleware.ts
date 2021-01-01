@@ -24,14 +24,9 @@ export const errorMiddleware = (): ErrorRequestHandler => {
       );
       return;
     }
-    res.jsend.error(
-      error.message || 'Error unknown',
-      error.code,
-      {
-        errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
-        details: Array.isArray(error.details) ? error.details : [error.details],
-      },
-      error.status,
-    );
+    res.jsend.error(error.message || 'Error unknown', error.status, error.code, {
+      errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
+      details: Array.isArray(error.details) ? error.details : [error.details],
+    });
   };
 };

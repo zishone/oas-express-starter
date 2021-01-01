@@ -1,14 +1,14 @@
 import { Application, Request, json, urlencoded } from 'express';
-import { Logger, Mongo } from './helpers';
+import { Logger, log } from '@zishone/logan';
 import { Server, createServer } from 'http';
 import {
   errorMiddleware,
-  loggerMiddleware,
   mongoMiddleware,
   mqueryMiddleware,
   passportMiddleware,
   requestIdMiddleware,
 } from './middlewares';
+import { Mongo } from './helpers';
 import { UserModel } from './models';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
@@ -39,7 +39,7 @@ export class App {
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
     this.app.use(jsend());
-    this.app.use(loggerMiddleware(this.logger));
+    this.app.use(log(this.logger));
     this.app.use(mongoMiddleware(this.mongo));
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
