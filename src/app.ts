@@ -3,7 +3,6 @@ import { Logger, Mongo } from './helpers';
 import { Server, createServer } from 'http';
 import {
   errorMiddleware,
-  jsendMiddleware,
   loggerMiddleware,
   mongoMiddleware,
   mqueryMiddleware,
@@ -14,6 +13,7 @@ import { UserModel } from './models';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
+import { jsend } from '@zishone/jasenda';
 import passport from 'passport';
 import { spec } from './openapi';
 
@@ -38,7 +38,7 @@ export class App {
 
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
-    this.app.use(jsendMiddleware());
+    this.app.use(jsend());
     this.app.use(loggerMiddleware(this.logger));
     this.app.use(mongoMiddleware(this.mongo));
     this.app.use(json());

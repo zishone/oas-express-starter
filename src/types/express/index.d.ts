@@ -1,3 +1,4 @@
+import 'express';
 import {
   FilterQuery,
   FindOneOptions,
@@ -20,13 +21,5 @@ declare module 'express' {
     user: User;
     addLogData: (data: { [key: string]: any }) => void;
     addLogError: (error: any) => void;
-  }
-
-  interface Response {
-    jsend: {
-      success: (data: any, statusCode?: number) => void;
-      fail: (data: any, statusCode?: number) => void;
-      error: (message: string, code?: number, data?: any, statusCode?: number) => void;
-    };
   }
 }
