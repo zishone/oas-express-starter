@@ -14,7 +14,7 @@ export default (): void => {
   let userService: UserService;
 
   beforeEach((): void => {
-    const logger = { debugFunction: (): void => null };
+    const logger = { debugFunctionCall: (): void => null };
     const mongo = { getDb: async (): Promise<void> => null };
     userService = new UserService(logger as any, mongo as any);
   });

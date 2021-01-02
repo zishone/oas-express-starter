@@ -10,7 +10,7 @@ export default (): void => {
   let noteService: NoteService;
 
   beforeEach((): void => {
-    const logger = { debugFunction: (): void => null };
+    const logger = { debugFunctionCall: (): void => null };
     const mongo = { getDb: async (): Promise<void> => null };
     noteService = new NoteService(logger as any, mongo as any);
   });

@@ -10,7 +10,7 @@ export default (): void => {
   let mongo: Mongo;
 
   beforeEach((): void => {
-    const logger = { debugFunction: (): void => null };
+    const logger = { debugFunctionCall: (): void => null };
     const testDb = nanoid(12);
     const testUri = nanoid(12);
     mongo = new Mongo(logger as any, testUri, testDb);

@@ -1,14 +1,20 @@
-import { Logger, Mongo } from './helpers';
 import { serve, setup } from 'swagger-ui-express';
 import { App } from './app';
 import { ENVIRONMENTS } from './constants';
+import { Logger } from '@zishone/logan';
+import { Mongo } from './helpers';
 import { config } from './config';
 import express from 'express';
 import { migrate } from './utils';
 import { spec } from './openapi';
 
 const app = express();
-const logger = new Logger();
+const logger = new Logger({
+  defaultMeta: {
+    service: config.APP_NAME,
+    version: config.APP_VERSION,
+  },
+});
 const mongo = new Mongo(logger, config.DB_URI, config.DB_NAME);
 
 app.on(
@@ -25,6 +31,8 @@ app.on(
         case ENVIRONMENTS.STAGING:
         case ENVIRONMENTS.PRODUCTION:
           logger.enableInfo();
+          logger.enableInfoFile();
+          logger.enableErrorFile();
           await migrate(logger, mongo);
           break;
       }

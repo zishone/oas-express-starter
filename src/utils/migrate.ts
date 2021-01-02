@@ -1,5 +1,6 @@
-import { Logger, Mongo } from '../helpers';
 import { COLLECTIONS } from '../constants';
+import { Logger } from '@zishone/logan';
+import { Mongo } from '../helpers';
 import { config } from '../config';
 import { join } from 'path';
 import migration from 'migrate-mongo';
