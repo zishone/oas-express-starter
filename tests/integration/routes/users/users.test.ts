@@ -42,10 +42,7 @@ export const users = (): void => {
       };
       await userModel.save(testUser);
 
-      const response = await request(app)
-        .get(`/api/v1/users?filter=username==${testUser.username}&fields=username&sort=createdOn&limit=0&skip=0&page=1`)
-        .set('Authorization', `Bearer ${testAccessToken}`)
-        .send();
+      const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${testAccessToken}`).send();
 
       expect(response.status).to.be.equal(200);
     });
@@ -72,12 +69,7 @@ export const users = (): void => {
       };
       await userModel.save(testUser);
 
-      const response = await request(app)
-        .get(
-          `/api/v1/users?filter=username==${testUser.username}&fields=username&sort=createdOn==asc&limit=0&skip=0&page=1`,
-        )
-        .set('Authorization', `Bearer ${testAccessToken}`)
-        .send();
+      const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${testAccessToken}`).send();
 
       expect(response.status).to.be.equal(200);
     });
@@ -104,78 +96,9 @@ export const users = (): void => {
       };
       await userModel.save(testUser);
 
-      const response = await request(app)
-        .get(
-          `/api/v1/users?filter=username==${testUser.username}&fields=username&sort=createdOn==desc&limit=0&skip=0&page=1`,
-        )
-        .set('Authorization', `Bearer ${testAccessToken}`)
-        .send();
+      const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${testAccessToken}`).send();
 
       expect(response.status).to.be.equal(200);
-    });
-
-    it('should respond 400 WHEN filter is invalid', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
-      const userModel = new UserModel(logger, mongo);
-      const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
-      await userModel.save(testUser);
-
-      const response = await request(app)
-        .get(
-          `/api/v1/users?filter=username=/=${testUser.username}&fields=username&sort=createdOn&limit=0&skip=0&page=1`,
-        )
-        .set('Authorization', `Bearer ${testAccessToken}`)
-        .send();
-
-      expect(response.status).to.be.equal(400);
-    });
-
-    it('should respond 400 WHEN sort is invalid', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
-      const userModel = new UserModel(logger, mongo);
-      const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
-      await userModel.save(testUser);
-
-      const response = await request(app)
-        .get(
-          `/api/v1/users?filter=username==${testUser.username}&fields=username&sort=createdOn==any&limit=0&skip=0&page=1`,
-        )
-        .set('Authorization', `Bearer ${testAccessToken}`)
-        .send();
-
-      expect(response.status).to.be.equal(400);
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
@@ -193,10 +116,7 @@ export const users = (): void => {
 
       sandbox.stub(UserService.prototype, 'fetchUsers').onCall(0).rejects();
 
-      const response = await request(app)
-        .get('/api/v1/users?fields=username&sort=createdOn&limit=0&skip=0&page=1')
-        .set('Authorization', `Bearer ${testAccessToken}`)
-        .send();
+      const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${testAccessToken}`).send();
 
       expect(response.status).to.be.equal(500);
     });
