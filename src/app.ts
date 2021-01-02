@@ -1,19 +1,14 @@
 import { Application, Request, json, urlencoded } from 'express';
 import { Logger, log } from '@zishone/logan';
 import { Server, createServer } from 'http';
-import {
-  errorMiddleware,
-  mongoMiddleware,
-  mqueryMiddleware,
-  passportMiddleware,
-  requestIdMiddleware,
-} from './middlewares';
+import { errorMiddleware, mongoMiddleware, passportMiddleware, requestIdMiddleware } from './middlewares';
 import { Mongo } from './helpers';
 import { UserModel } from './models';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
 import { jsend } from '@zishone/jasenda';
+import { mquery } from '@zishone/monique';
 import passport from 'passport';
 import { spec } from './openapi';
 
@@ -45,7 +40,7 @@ export class App {
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(passport.initialize());
-    this.app.use(mqueryMiddleware());
+    this.app.use(mquery());
   }
 
   private async constructOas(): Promise<void> {

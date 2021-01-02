@@ -1,10 +1,7 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { fields } from './fields';
-import { filter } from './filter';
-import { limit } from './limit';
-import { page } from './page';
-import { skip } from './skip';
-import { sort } from './sort';
+import { openapi } from '@zishone/monique';
+
+const { fields, filter, limit, page, skip, sort } = openapi.components.parameters;
 
 export const parameters: { [parameterName: string]: OpenAPIV3.ParameterObject } = {
   filter,
