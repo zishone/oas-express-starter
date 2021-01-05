@@ -1,4 +1,4 @@
-.PHONY: build up develop test test-integration 
+.PHONY: build up run test test-integration 
 
 $(shell cp -n .env.defaults .env)
 include .env
@@ -14,7 +14,7 @@ up: build
 	docker-compose up \
 		service
 
-develop:
+run:
 	docker-compose -f docker-compose.test.yml run \
 		--no-deps \
 		service \

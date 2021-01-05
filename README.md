@@ -76,8 +76,8 @@ Should be available on route `/apidocs` when NODE_ENV is set to `development`.
   * To build docker image of the service. Uses the name and version in `package.json` to tag the image as `<name>:v<version>`.
 * `make` **`up`**
   * To start container of the service and also mongodb. Logs and mongodb data will be available at `./.data`, it is mounted as a volume in those containers.
-* `make` **`develop`**
-  * To run start the service inside a container. No need to rebuild because this mounts the whole repository's directory as a volume then executes `npm run start`.
+* `make` **`run`**
+  * To run start the service inside a container and watch for changes. No need to rebuild because this mounts the whole repository's directory as a volume then executes `npm run watch`.
 * `make` **`test`**
   * To run unit test inside a container. Coverage report will be available in `./.data/tests/unit`.
 * `make` **`test-integration`**
