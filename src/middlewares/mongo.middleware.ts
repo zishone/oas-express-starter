@@ -3,11 +3,7 @@ import { Mongo } from '../helpers';
 
 export const mongoMiddleware = (mongo: Mongo): RequestHandler => {
   return (req: Request, _res: Response, next: NextFunction): void => {
-    try {
-      req.mongo = mongo;
-      next();
-    } catch (error) {
-      next(error);
-    }
+    req.mongo = mongo;
+    next();
   };
 };
