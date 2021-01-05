@@ -1,3 +1,3 @@
 export { Model } from './model';
 export { Mongo } from './mongo';
-export { Socket } from './socket';
+export { SocketIO } from './socket-io';

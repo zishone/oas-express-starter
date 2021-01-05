@@ -1,31 +1,28 @@
 import { Application, Request, json, urlencoded } from 'express';
 import { Logger, log } from '@zishone/logan';
-import { Mongo, Socket } from './helpers';
+import { Mongo, SocketIO } from './helpers';
 import { Server, createServer } from 'http';
 import {
-  emitterMiddleware,
   errorMiddleware,
   mongoMiddleware,
   passportMiddleware,
   requestIdMiddleware,
+  socketIOMiddleware,
 } from './middlewares';
-import { EventEmitter } from 'events';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
 import { jsend } from '@zishone/jasenda';
 import { mquery } from '@zishone/monique';
-import { notificationListener } from './listeners';
 import passport from 'passport';
 import { spec } from './openapi';
 
 export class App {
   private app: Application;
-  private emitter: EventEmitter;
   private logger: Logger;
   private mongo: Mongo;
   private server: Server;
-  private socket: Socket;
+  private socketIO: SocketIO;
 
   constructor(app: Application, logger: Logger, mongo: Mongo) {
     this.app = app;
@@ -35,22 +32,20 @@ export class App {
   }
 
   public async configure() {
-    await this.createEmitters();
+    await this.createSocketIO();
     await this.composeMiddlewares();
-    await this.commenceListeners();
     await this.constructOas();
     this.app.emit('ready', this.server);
   }
 
-  private async createEmitters(): Promise<void> {
-    this.emitter = new EventEmitter();
-    this.socket = new Socket(this.logger, this.server, this.mongo);
+  private async createSocketIO(): Promise<void> {
+    this.socketIO = new SocketIO(this.logger, this.server, this.mongo);
   }
 
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
     this.app.use(mongoMiddleware(this.mongo));
-    this.app.use(emitterMiddleware(this.emitter));
+    this.app.use(socketIOMiddleware(this.socketIO));
     this.app.use(log(this.logger));
     this.app.use(jsend());
     this.app.use(json());
@@ -58,10 +53,6 @@ export class App {
     this.app.use(cookieParser());
     this.app.use(mquery());
     this.app.use(passport.initialize());
-  }
-
-  private async commenceListeners(): Promise<void> {
-    notificationListener(this.logger, this.emitter, this.socket);
   }
 
   private async constructOas(): Promise<void> {

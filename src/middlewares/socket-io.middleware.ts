@@ -1,9 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { EventEmitter } from 'events';
+import { SocketIO } from '../helpers';
 
-export const emitterMiddleware = (emitter: EventEmitter): RequestHandler => {
+export const socketIOMiddleware = (socketIO: SocketIO): RequestHandler => {
   return (req: Request, _res: Response, next: NextFunction): void => {
-    req.emitter = emitter;
+    req.socketIO = socketIO;
     next();
   };
 };

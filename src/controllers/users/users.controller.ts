@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { NoteService, UserService } from '../../services';
+import { EVENTS } from '../../constants';
 import { paginate } from '../../utils';
 
 /**
@@ -58,6 +59,8 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
       name,
     });
 
+    req.socketIO.to(userId).emit(EVENTS.NOTIFICATION, { message: 'Info updated by admin' });
+
     res.jsend.success(undefined, 204);
   } catch (error) {
     next(error);
@@ -75,7 +78,7 @@ export const deleteUsersById = async (req: Request, res: Response, next: NextFun
     const { userId } = req.params;
 
     await userService.deleteUserById(userId);
-    await noteService.deleteUserNotes(userId);
+    await noteService.deleteNotes({ userId });
 
     res.jsend.success(undefined, 204);
   } catch (error) {

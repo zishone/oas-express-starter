@@ -68,7 +68,7 @@ export const userNotes = (): void => {
         createdOn: Date.now(),
       };
 
-      sandbox.stub(NoteService.prototype, 'createUserNote').onCall(0).rejects();
+      sandbox.stub(NoteService.prototype, 'createNote').onCall(0).rejects();
 
       const response = await request(app)
         .post('/api/v1/user/notes')
@@ -123,7 +123,7 @@ export const userNotes = (): void => {
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
-      sandbox.stub(NoteService.prototype, 'fetchUserNotes').onCall(0).rejects();
+      sandbox.stub(NoteService.prototype, 'fetchNotes').onCall(0).rejects();
 
       const response = await request(app)
         .get('/api/v1/user/notes')

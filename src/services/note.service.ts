@@ -12,27 +12,20 @@ export class NoteService {
     this.noteModel = new NoteModel(logger, mongo);
   }
 
-  public async createUserNote(userId: string, title: string, body: string): Promise<{ note: Note }> {
-    this.logger.debugFunctionCall('NoteService.createUserNote', arguments);
+  public async createNote(userId: string, title: string, body: string): Promise<{ note: Note }> {
+    this.logger.debugFunctionCall('NoteService.createNote', arguments);
     const newNote = this.noteModel.create(userId, title, body);
     const [id] = await this.noteModel.save(newNote);
     const note = await this.noteModel.fetchOne({ id });
     return { note };
   }
 
-  public async fetchUserNotes(
-    userId: string,
+  public async fetchNotes(
     filter: FilterQuery<Note> = {},
     options?: FindOneOptions<any>,
   ): Promise<{ noteCount: number; notes: Note[] }> {
-    this.logger.debugFunctionCall('NoteService.fetchUserNotes', arguments);
-    const cursor = await this.noteModel.fetch(
-      {
-        ...filter,
-        userId,
-      },
-      options,
-    );
+    this.logger.debugFunctionCall('NoteService.fetchNotes', arguments);
+    const cursor = await this.noteModel.fetch(filter, options);
     const noteCount = await cursor.count();
     const notes = await cursor.toArray();
     return {
@@ -41,51 +34,32 @@ export class NoteService {
     };
   }
 
-  public async fetchUserNoteById(userId: string, id: string, options?: FindOneOptions<any>): Promise<{ note: Note }> {
-    this.logger.debugFunctionCall('NoteService.fetchUserNoteById', arguments);
-    const note = await this.noteModel.fetchOne(
-      {
-        id,
-        userId,
-      },
-      options,
-    );
+  public async fetchNoteById(id: string, options?: FindOneOptions<any>): Promise<{ note: Note }> {
+    this.logger.debugFunctionCall('NoteService.fetchNoteById', arguments);
+    const note = await this.noteModel.fetchOne({ id }, options);
     return { note };
   }
 
-  public async updateUserNoteById(userId: string, id: string, note: Partial<Note>): Promise<void> {
-    this.logger.debugFunctionCall('NoteService.updateUserNoteById', arguments);
-    await this.noteModel.fetchOne({
-      id,
-      userId,
-    });
+  public async updateNoteById(id: string, note: Partial<Note>): Promise<void> {
+    this.logger.debugFunctionCall('NoteService.updateNoteById', arguments);
+    await this.noteModel.fetchOne({ id });
     await this.noteModel.update(
       {
         id,
-        userId,
         modifiedOn: Date.now(),
       },
       { $set: note },
     );
   }
 
-  public async deleteUserNoteById(userId: string, id: string): Promise<void> {
-    this.logger.debugFunctionCall('NoteService.deleteUserNoteById', arguments);
-    await this.noteModel.fetchOne({
-      id,
-      userId,
-    });
-    await this.noteModel.delete({
-      id,
-      userId,
-    });
+  public async deleteNoteById(id: string): Promise<void> {
+    this.logger.debugFunctionCall('NoteService.deleteNoteById', arguments);
+    await this.noteModel.fetchOne({ id });
+    await this.noteModel.delete({ id });
   }
 
-  public async deleteUserNotes(userId: string, filter: FilterQuery<Note> = {}): Promise<void> {
-    this.logger.debugFunctionCall('NoteService.deleteUserNotes', arguments);
-    await this.noteModel.delete({
-      ...filter,
-      userId,
-    });
+  public async deleteNotes(filter: FilterQuery<Note> = {}): Promise<void> {
+    this.logger.debugFunctionCall('NoteService.deleteNotes', arguments);
+    await this.noteModel.delete(filter);
   }
 }

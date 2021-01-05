@@ -1,3 +1,4 @@
+import { EVENTS, ROLES } from '../../constants';
 import { NextFunction, Request, Response } from 'express';
 import { UserService } from '../../services';
 
@@ -11,6 +12,8 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
     const { username, email, password, name } = req.body;
 
     const { user } = await userService.registerUser(username, email, password, name);
+
+    req.socketIO.to(ROLES.ADMIN).emit(EVENTS.NOTIFICATION, { message: 'New user registered' });
 
     res.jsend.success({ user }, 201);
   } catch (error) {

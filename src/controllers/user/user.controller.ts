@@ -8,10 +8,10 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
   try {
     const userService = new UserService(req.logger, req.mongo);
 
-    const { id } = req.user;
+    const { id: userId } = req.user;
     const { options } = req.mquery;
 
-    const { user } = await userService.fetchUserById(id, options);
+    const { user } = await userService.fetchUserById(userId, options);
 
     res.jsend.success({ user });
   } catch (error) {
@@ -26,10 +26,10 @@ export const patchUser = async (req: Request, res: Response, next: NextFunction)
   try {
     const userService = new UserService(req.logger, req.mongo);
 
-    const { id } = req.user;
+    const { id: userId } = req.user;
     const { username, email, name } = req.body;
 
-    await userService.updateUserById(id, {
+    await userService.updateUserById(userId, {
       username,
       email,
       name,
@@ -49,11 +49,11 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     const userService = new UserService(req.logger, req.mongo);
     const noteService = new NoteService(req.logger, req.mongo);
 
-    const { id } = req.user;
+    const { id: userId } = req.user;
     const { password } = req.body;
 
-    await userService.deleteUserByIdWithCredentials(id, password);
-    await noteService.deleteUserNotes(id);
+    await userService.deleteUserByIdWithCredentials(userId, password);
+    await noteService.deleteNotes({ userId });
 
     res.jsend.success(undefined, 204);
   } catch (error) {
@@ -68,10 +68,10 @@ export const putUserPassword = async (req: Request, res: Response, next: NextFun
   try {
     const userService = new UserService(req.logger, req.mongo);
 
-    const { id } = req.user;
+    const { id: userId } = req.user;
     const { currentPassword, newPassword } = req.body;
 
-    await userService.updateUserPasswordById(id, currentPassword, newPassword);
+    await userService.updateUserPasswordById(userId, currentPassword, newPassword);
 
     res.jsend.success(undefined, 204);
   } catch (error) {
