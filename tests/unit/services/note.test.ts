@@ -26,6 +26,7 @@ export default (): void => {
         userId: nanoid(12),
         title: nanoid(12),
         body: nanoid(12),
+        modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
 
@@ -74,6 +75,7 @@ export default (): void => {
         userId: nanoid(12),
         title: nanoid(12),
         body: nanoid(12),
+        modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
 
@@ -92,6 +94,7 @@ export default (): void => {
         userId: nanoid(12),
         title: nanoid(12),
         body: nanoid(12),
+        modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
 
@@ -111,6 +114,7 @@ export default (): void => {
         userId: nanoid(12),
         title: nanoid(12),
         body: nanoid(12),
+        modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
 
