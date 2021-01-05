@@ -53,7 +53,7 @@ export class NoteService {
     return { note };
   }
 
-  public async updateUserNoteById(userId: string, id: string, note: Note): Promise<void> {
+  public async updateUserNoteById(userId: string, id: string, note: Partial<Note>): Promise<void> {
     this.logger.debugFunctionCall('NoteService.updateUserNoteById', arguments);
     await this.noteModel.fetchOne({
       id,

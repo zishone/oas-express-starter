@@ -45,6 +45,6 @@ app.on(
     }
   },
 );
-new App(logger, mongo, app).configure();
+new App(app, logger, mongo).configure();
 
-export { logger, mongo, app };
+export { app, logger, mongo };
