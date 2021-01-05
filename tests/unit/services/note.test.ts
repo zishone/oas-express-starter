@@ -98,12 +98,13 @@ export default (): void => {
         createdOn: Date.now(),
       };
 
-      sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
-      sandbox.stub(NoteModel.prototype, 'update').onCall(0).resolves();
+      const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
+      const updateStub = sandbox.stub(NoteModel.prototype, 'update').onCall(0).resolves();
 
       await noteService.updateUserNoteById(testNote.userId, testNote.id, testNote);
 
-      expect(true).to.be.equal(true);
+      expect(fetchOneStub.calledOnce).to.be.equal(true);
+      expect(updateStub.calledOnce).to.be.equal(true);
     });
   });
 
@@ -118,12 +119,13 @@ export default (): void => {
         createdOn: Date.now(),
       };
 
-      sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
-      sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
+      const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
+      const deleteStub = sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
 
       await noteService.deleteUserNoteById(testNote.userId, testNote.id);
 
-      expect(true).to.be.equal(true);
+      expect(fetchOneStub.calledOnce).to.be.equal(true);
+      expect(deleteStub.calledOnce).to.be.equal(true);
     });
   });
 
@@ -131,11 +133,11 @@ export default (): void => {
     it('should delete a user note from the database given note id', async (): Promise<void> => {
       const testUserId = nanoid(12);
 
-      sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
+      const deleteStub = sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
 
       await noteService.deleteUserNotes(testUserId);
 
-      expect(true).to.be.equal(true);
+      expect(deleteStub.calledOnce).to.be.equal(true);
     });
   });
 };
