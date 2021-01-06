@@ -1,4 +1,4 @@
-export { socketIOMiddleware } from './socket-io.middleware';
+export { socketMiddleware } from './socket.middleware';
 export { errorMiddleware } from './error.middleware';
 export { mongoMiddleware } from './mongo.middleware';
 export { passportMiddleware } from './passport.middleware';

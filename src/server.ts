@@ -19,7 +19,7 @@ const mongo = new Mongo(logger, config.DB_URI, config.DB_NAME);
 
 app.on(
   'ready',
-  async (server): Promise<void> => {
+  async (server: express.Application): Promise<void> => {
     try {
       switch (config.ENV) {
         case ENVIRONMENTS.DEVELOPMENT:
@@ -37,6 +37,7 @@ app.on(
           break;
       }
       server.listen({ port: config.APP_PORT }, (): void => {
+        config.APP_PORT = server.address().port;
         logger.info('Server listening', { port: config.APP_PORT });
       });
     } catch (error) {

@@ -4,10 +4,14 @@ import { logger, mongo } from '../../../src/server';
 import { user, userPassword } from './user/user.test';
 import { userNotes, userNotesById } from './user/notes.test';
 import { users, usersById } from './users/users.test';
+import chaiHttp from 'chai-http';
 import { health } from './health/health.test';
 import { login } from './login/login.test';
 import { migrate } from '../../../src/utils';
 import { register } from './register/register.test';
+import { use } from 'chai';
+
+use(chaiHttp);
 
 describe('routes', (): void => {
   beforeEach(

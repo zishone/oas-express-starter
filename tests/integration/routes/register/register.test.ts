@@ -1,12 +1,9 @@
 import { app, logger, mongo } from '../../../../src/server';
 import { describe, it } from 'mocha';
-import { expect, request, use } from 'chai';
+import { expect, request } from 'chai';
 import { ROLES } from '../../../../src/constants';
 import { UserModel } from '../../../../src/models';
-import chaiHttp from 'chai-http';
 import { nanoid } from 'nanoid';
-
-use(chaiHttp);
 
 export const register = (): void => {
   describe('POST', (): void => {

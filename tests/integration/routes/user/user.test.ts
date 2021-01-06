@@ -1,17 +1,14 @@
 import { app, logger, mongo } from '../../../../src/server';
 import { describe, it } from 'mocha';
-import { expect, request, use } from 'chai';
+import { expect, request } from 'chai';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import { ROLES } from '../../../../src/constants';
 import { UserModel } from '../../../../src/models';
 import { UserService } from '../../../../src/services';
-import chaiHttp from 'chai-http';
 import { config } from '../../../../src/config';
 import { createSandbox } from 'sinon';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';
-
-use(chaiHttp);
 
 export const user = (): void => {
   const sandbox = createSandbox();
@@ -31,10 +28,13 @@ export const user = (): void => {
         createdOn: Date.now(),
       };
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUser);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
-      const response = await request(app).get('/api/v1/user').set('Authorization', `Bearer ${testAccessToken}`).send();
+      const response = await request(app)
+        .get('/api/v1/user')
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
+        .send();
 
       expect(response.status).to.be.equal(200);
     });
@@ -66,12 +66,15 @@ export const user = (): void => {
         createdOn: Date.now(),
       };
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUser);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       sandbox.stub(UserService.prototype, 'fetchUserById').onCall(0).rejects();
 
-      const response = await request(app).get('/api/v1/user').set('Authorization', `Bearer ${testAccessToken}`).send();
+      const response = await request(app)
+        .get('/api/v1/user')
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
+        .send();
 
       expect(response.status).to.be.equal(500);
     });
@@ -90,12 +93,12 @@ export const user = (): void => {
       };
 
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUser);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       const response = await request(app)
         .patch('/api/v1/user')
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
         .send({ username: testNewUsername });
 
       expect(response.status).to.be.equal(204);
@@ -112,12 +115,12 @@ export const user = (): void => {
       };
 
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUser);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       const response = await request(app)
         .patch('/api/v1/user')
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
         .send({});
 
       expect(response.status).to.be.equal(400);
@@ -144,12 +147,12 @@ export const user = (): void => {
       ];
 
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUsers);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUsers);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       const response = await request(app)
         .patch('/api/v1/user')
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
         .send({ username: testUsers[1].username });
 
       expect(response.status).to.be.equal(403);
@@ -170,12 +173,12 @@ export const user = (): void => {
         createdOn: Date.now(),
       };
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUser);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       const response = await request(app)
         .delete('/api/v1/user')
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
         .send({ password: testPassword });
 
       expect(response.status).to.be.equal(204);
@@ -193,12 +196,12 @@ export const user = (): void => {
         createdOn: Date.now(),
       };
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUser);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       const response = await request(app)
         .delete('/api/v1/user')
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
         .send({ password: testInvalidPassword });
 
       expect(response.status).to.be.equal(403);
@@ -222,12 +225,12 @@ export const userPassword = (): void => {
         createdOn: Date.now(),
       };
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUser);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       const response = await request(app)
         .put('/api/v1/user/password')
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
         .send({
           currentPassword: testPassword,
           newPassword: testNewPassword,
@@ -249,12 +252,12 @@ export const userPassword = (): void => {
         createdOn: Date.now(),
       };
       const userModel = new UserModel(logger, mongo);
-      const [testId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const [testUserId] = await userModel.save(testUser);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       const response = await request(app)
         .put('/api/v1/user/password')
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
         .send({
           currentPassword: testInvalidPassword,
           newPassword: testNewPassword,

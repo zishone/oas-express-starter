@@ -7,7 +7,7 @@ import { config } from '../config';
 import http from 'http';
 import { verify } from 'jsonwebtoken';
 
-export class SocketIO {
+export class Socket {
   private server: Server;
   private userModel: UserModel;
   private clientCount: number;

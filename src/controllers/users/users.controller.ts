@@ -25,7 +25,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
 };
 
 /**
- * GET /api/v1/users/{id}
+ * GET /api/v1/users/{userId}
  */
 export const getUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -43,7 +43,7 @@ export const getUsersById = async (req: Request, res: Response, next: NextFuncti
 };
 
 /**
- * PATCH /api/v1/users/{id}
+ * PATCH /api/v1/users/{userId}
  */
 export const patchUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -59,7 +59,7 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
       name,
     });
 
-    req.socketIO.to(userId).emit(EVENTS.NOTIFICATION, { message: 'Info updated by admin' });
+    req.io.to(userId).emit(EVENTS.NOTIFICATION, { message: 'Info updated by admin' });
 
     res.jsend.success(undefined, 204);
   } catch (error) {
@@ -68,7 +68,7 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
 };
 
 /**
- * DELETE /api/v1/users/{id}
+ * DELETE /api/v1/users/{userId}
  */
 export const deleteUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

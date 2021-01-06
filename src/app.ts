@@ -1,13 +1,13 @@
 import { Application, Request, json, urlencoded } from 'express';
 import { Logger, log } from '@zishone/logan';
-import { Mongo, SocketIO } from './helpers';
+import { Mongo, Socket } from './helpers';
 import { Server, createServer } from 'http';
 import {
   errorMiddleware,
   mongoMiddleware,
   passportMiddleware,
   requestIdMiddleware,
-  socketIOMiddleware,
+  socketMiddleware,
 } from './middlewares';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
@@ -22,7 +22,7 @@ export class App {
   private logger: Logger;
   private mongo: Mongo;
   private server: Server;
-  private socketIO: SocketIO;
+  private socket: Socket;
 
   constructor(app: Application, logger: Logger, mongo: Mongo) {
     this.app = app;
@@ -31,21 +31,21 @@ export class App {
     this.server = createServer(this.app);
   }
 
-  public async configure() {
-    await this.createSocketIO();
+  public async configure(): Promise<void> {
+    await this.createSocket();
     await this.composeMiddlewares();
     await this.constructOas();
     this.app.emit('ready', this.server);
   }
 
-  private async createSocketIO(): Promise<void> {
-    this.socketIO = new SocketIO(this.logger, this.server, this.mongo);
+  private async createSocket(): Promise<void> {
+    this.socket = new Socket(this.logger, this.server, this.mongo);
   }
 
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
     this.app.use(mongoMiddleware(this.mongo));
-    this.app.use(socketIOMiddleware(this.socketIO));
+    this.app.use(socketMiddleware(this.socket));
     this.app.use(log(this.logger));
     this.app.use(jsend());
     this.app.use(json());

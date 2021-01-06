@@ -1,12 +1,17 @@
 import 'express';
-import { Mongo, SocketIO } from '../../helpers';
+import { Mongo, Socket } from '../../helpers';
+import { AddressInfo } from 'net';
 import { User } from '../../models';
 
 declare module 'express' {
+  interface Application {
+    address?(): AddressInfo;
+  }
+
   interface Request {
     id: string;
     mongo: Mongo;
-    socketIO: SocketIO;
+    io: Socket;
     user: User;
   }
 }

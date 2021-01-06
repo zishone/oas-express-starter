@@ -1,16 +1,13 @@
 import { NoteModel, UserModel } from '../../../../src/models';
 import { app, logger, mongo } from '../../../../src/server';
 import { describe, it } from 'mocha';
-import { expect, request, use } from 'chai';
+import { expect, request } from 'chai';
 import { NoteService } from '../../../../src/services';
 import { ROLES } from '../../../../src/constants';
-import chaiHttp from 'chai-http';
 import { config } from '../../../../src/config';
 import { createSandbox } from 'sinon';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';
-
-use(chaiHttp);
 
 export const userNotes = (): void => {
   const sandbox = createSandbox();
@@ -157,10 +154,10 @@ export const userNotesById = (): void => {
         createdOn: Date.now(),
       };
       const noteModel = new NoteModel(logger, mongo);
-      const [testId] = await noteModel.save(testNote);
+      const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
-        .get(`/api/v1/user/notes/${testId}`)
+        .get(`/api/v1/user/notes/${testNoteId}`)
         .set('Authorization', `Bearer ${testAccessToken}`)
         .send();
 
@@ -179,10 +176,10 @@ export const userNotesById = (): void => {
       const userModel = new UserModel(logger, mongo);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testId = nanoid(12);
+      const testNoteId = nanoid(12);
 
       const response = await request(app)
-        .get(`/api/v1/user/notes/${testId}`)
+        .get(`/api/v1/user/notes/${testNoteId}`)
         .set('Authorization', `Bearer ${testAccessToken}`)
         .send();
 
@@ -212,10 +209,10 @@ export const userNotesById = (): void => {
         createdOn: Date.now(),
       };
       const noteModel = new NoteModel(logger, mongo);
-      const [testId] = await noteModel.save(testNote);
+      const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
-        .patch(`/api/v1/user/notes/${testId}`)
+        .patch(`/api/v1/user/notes/${testNoteId}`)
         .set('Authorization', `Bearer ${testAccessToken}`)
         .send({ body: testNewBody });
 
@@ -235,10 +232,10 @@ export const userNotesById = (): void => {
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewBody = nanoid(12);
-      const testId = nanoid(12);
+      const testNoteId = nanoid(12);
 
       const response = await request(app)
-        .patch(`/api/v1/user/notes/${testId}`)
+        .patch(`/api/v1/user/notes/${testNoteId}`)
         .set('Authorization', `Bearer ${testAccessToken}`)
         .send({ body: testNewBody });
 
@@ -267,10 +264,10 @@ export const userNotesById = (): void => {
         createdOn: Date.now(),
       };
       const noteModel = new NoteModel(logger, mongo);
-      const [testId] = await noteModel.save(testNote);
+      const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
-        .delete(`/api/v1/user/notes/${testId}`)
+        .delete(`/api/v1/user/notes/${testNoteId}`)
         .set('Authorization', `Bearer ${testAccessToken}`)
         .send();
 
@@ -289,10 +286,10 @@ export const userNotesById = (): void => {
       const userModel = new UserModel(logger, mongo);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testId = nanoid(12);
+      const testNoteId = nanoid(12);
 
       const response = await request(app)
-        .delete(`/api/v1/user/notes/${testId}`)
+        .delete(`/api/v1/user/notes/${testNoteId}`)
         .set('Authorization', `Bearer ${testAccessToken}`)
         .send();
 

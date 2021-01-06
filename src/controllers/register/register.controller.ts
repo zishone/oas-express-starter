@@ -13,7 +13,7 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
 
     const { user } = await userService.registerUser(username, email, password, name);
 
-    req.socketIO.to(ROLES.ADMIN).emit(EVENTS.NOTIFICATION, { message: 'New user registered' });
+    req.io.to(ROLES.ADMIN).emit(EVENTS.NOTIFICATION, { message: 'New user registered' });
 
     res.jsend.success({ user }, 201);
   } catch (error) {

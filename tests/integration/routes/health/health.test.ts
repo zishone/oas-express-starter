@@ -1,11 +1,8 @@
 import { describe, it } from 'mocha';
-import { expect, request, use } from 'chai';
+import { expect, request } from 'chai';
 import { Mongo } from '../../../../src/helpers';
 import { app } from '../../../../src/server';
-import chaiHttp from 'chai-http';
 import { createSandbox } from 'sinon';
-
-use(chaiHttp);
 
 export const health = (): void => {
   const sandbox = createSandbox();
