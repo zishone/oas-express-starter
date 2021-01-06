@@ -1,16 +1,13 @@
 import { app, logger, mongo } from '../../../../src/server';
 import { describe, it } from 'mocha';
-import { expect, request, use } from 'chai';
+import { expect, request } from 'chai';
 import { ROLES } from '../../../../src/constants';
 import { UserModel } from '../../../../src/models';
 import { UserService } from '../../../../src/services';
-import chaiHttp from 'chai-http';
 import { config } from '../../../../src/config';
 import { createSandbox } from 'sinon';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';
-
-use(chaiHttp);
 
 export const users = (): void => {
   const sandbox = createSandbox();
@@ -31,7 +28,7 @@ export const users = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testUser = {
         username: nanoid(12),
         email: nanoid(12),
@@ -42,7 +39,10 @@ export const users = (): void => {
       };
       await userModel.save(testUser);
 
-      const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${testAccessToken}`).send();
+      const response = await request(app)
+        .get('/api/v1/users')
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
+        .send();
 
       expect(response.status).to.be.equal(200);
     });
@@ -58,7 +58,7 @@ export const users = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testUser = {
         username: nanoid(12),
         email: nanoid(12),
@@ -69,7 +69,10 @@ export const users = (): void => {
       };
       await userModel.save(testUser);
 
-      const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${testAccessToken}`).send();
+      const response = await request(app)
+        .get('/api/v1/users')
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
+        .send();
 
       expect(response.status).to.be.equal(200);
     });
@@ -85,7 +88,7 @@ export const users = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testUser = {
         username: nanoid(12),
         email: nanoid(12),
@@ -96,7 +99,10 @@ export const users = (): void => {
       };
       await userModel.save(testUser);
 
-      const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${testAccessToken}`).send();
+      const response = await request(app)
+        .get('/api/v1/users')
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
+        .send();
 
       expect(response.status).to.be.equal(200);
     });
@@ -112,11 +118,14 @@ export const users = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
       sandbox.stub(UserService.prototype, 'fetchUsers').onCall(0).rejects();
 
-      const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${testAccessToken}`).send();
+      const response = await request(app)
+        .get('/api/v1/users')
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
+        .send();
 
       expect(response.status).to.be.equal(500);
     });
@@ -136,7 +145,7 @@ export const usersById = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testUser = {
         username: nanoid(12),
         email: nanoid(12),
@@ -145,11 +154,11 @@ export const usersById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const [testId] = await userModel.save(testUser);
+      const [testUserId] = await userModel.save(testUser);
 
       const response = await request(app)
-        .get(`/api/v1/users/${testId}`)
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .get(`/api/v1/users/${testUserId}`)
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
         .send();
 
       expect(response.status).to.be.equal(200);
@@ -166,7 +175,7 @@ export const usersById = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testUser = {
         username: nanoid(12),
         email: nanoid(12),
@@ -175,11 +184,11 @@ export const usersById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const [testId] = await userModel.save(testUser);
+      const [testUserId] = await userModel.save(testUser);
 
       const response = await request(app)
-        .get(`/api/v1/users/${testId}`)
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .get(`/api/v1/users/${testUserId}`)
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
         .send();
 
       expect(response.status).to.be.equal(403);
@@ -196,12 +205,12 @@ export const usersById = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testId = nanoid(12);
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testUserId = nanoid(12);
 
       const response = await request(app)
-        .get(`/api/v1/users/${testId}`)
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .get(`/api/v1/users/${testUserId}`)
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
         .send();
 
       expect(response.status).to.be.equal(404);
@@ -220,7 +229,7 @@ export const usersById = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewUsername = nanoid(12);
       const testUser = {
         username: nanoid(12),
@@ -230,11 +239,11 @@ export const usersById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const [testId] = await userModel.save(testUser);
+      const [testUserId] = await userModel.save(testUser);
 
       const response = await request(app)
-        .patch(`/api/v1/users/${testId}`)
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .patch(`/api/v1/users/${testUserId}`)
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
         .send({ username: testNewUsername });
 
       expect(response.status).to.be.equal(204);
@@ -251,13 +260,13 @@ export const usersById = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewUsername = nanoid(12);
-      const testId = nanoid(12);
+      const testUserId = nanoid(12);
 
       const response = await request(app)
-        .patch(`/api/v1/users/${testId}`)
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .patch(`/api/v1/users/${testUserId}`)
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
         .send({ username: testNewUsername });
 
       expect(response.status).to.be.equal(404);
@@ -276,7 +285,7 @@ export const usersById = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testUser = {
         username: nanoid(12),
         email: nanoid(12),
@@ -285,11 +294,11 @@ export const usersById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const [testId] = await userModel.save(testUser);
+      const [testUserId] = await userModel.save(testUser);
 
       const response = await request(app)
-        .delete(`/api/v1/users/${testId}`)
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .delete(`/api/v1/users/${testUserId}`)
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
         .send();
 
       expect(response.status).to.be.equal(204);
@@ -306,12 +315,12 @@ export const usersById = (): void => {
       };
       const userModel = new UserModel(logger, mongo);
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testId = nanoid(12);
+      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testUserId = nanoid(12);
 
       const response = await request(app)
-        .delete(`/api/v1/users/${testId}`)
-        .set('Authorization', `Bearer ${testAccessToken}`)
+        .delete(`/api/v1/users/${testUserId}`)
+        .set('Authorization', `Bearer ${testAdminAccessToken}`)
         .send();
 
       expect(response.status).to.be.equal(404);

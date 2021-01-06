@@ -63,15 +63,16 @@ export default (): void => {
 
   describe('fetch', (): void => {
     it('should return list of entries in database', async (): Promise<void> => {
+      const findSpy = sandbox.spy();
       mongoMock.expects('getDb').resolves({
         collection: (): { [key: string]: any } => ({
-          find: (): any => {},
+          find: findSpy,
         }),
       } as any);
 
       await model.fetch();
 
-      expect(true).to.be.equal(true);
+      expect(findSpy.calledOnce).to.be.equal(true);
     });
 
     it('should fail to return list of entries when database error happens', async (): Promise<void> => {
@@ -143,15 +144,16 @@ export default (): void => {
     it('should aggregate list of entries in database', async (): Promise<void> => {
       const testPipeline = [{}];
 
+      const aggregateSpy = sandbox.spy();
       mongoMock.expects('getDb').resolves({
         collection: (): { [key: string]: any } => ({
-          aggregate: (): any => {},
+          aggregate: aggregateSpy,
         }),
       } as any);
 
       await model.aggregate<any>(testPipeline);
 
-      expect(true).to.be.equal(true);
+      expect(aggregateSpy.calledOnce).to.be.equal(true);
     });
 
     it('should fail to aggregate list of entries when database error happens', async (): Promise<void> => {
@@ -291,15 +293,16 @@ export default (): void => {
         $unset: {},
       };
 
+      const updateManySpy = sandbox.spy();
       mongoMock.expects('getDb').resolves({
         collection: (): { [key: string]: any } => ({
-          updateMany: async (): Promise<void> => null,
+          updateMany: updateManySpy,
         }),
       } as any);
 
       await model.update(testFilter, testUpdate);
 
-      expect(true).to.be.equal(true);
+      expect(updateManySpy.calledOnce).to.be.equal(true);
     });
 
     it('should fail to update entries when update object was given', async (): Promise<void> => {
@@ -372,15 +375,16 @@ export default (): void => {
     it('should delete entries from database', async (): Promise<void> => {
       const testFilter = {};
 
+      const deleteManySpy = sandbox.spy();
       mongoMock.expects('getDb').resolves({
         collection: (): { [key: string]: any } => ({
-          deleteMany: async (): Promise<any> => {},
+          deleteMany: deleteManySpy,
         }),
       } as any);
 
       await model.delete(testFilter);
 
-      expect(true).to.be.equal(true);
+      expect(deleteManySpy.calledOnce).to.be.equal(true);
     });
 
     it('should fail to delete entries when database error happens', async (): Promise<void> => {

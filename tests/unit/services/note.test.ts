@@ -19,13 +19,14 @@ export default (): void => {
     sandbox.restore();
   });
 
-  describe('createUserNote', (): void => {
-    it('should create new user note entry in database', async (): Promise<void> => {
+  describe('createNote', (): void => {
+    it('should create new note entry in database', async (): Promise<void> => {
       const testNote = {
         id: nanoid(12),
         userId: nanoid(12),
         title: nanoid(12),
         body: nanoid(12),
+        modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
 
@@ -33,14 +34,14 @@ export default (): void => {
       sandbox.stub(NoteModel.prototype, 'save').onCall(0).resolves([testNote.id]);
       sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
 
-      const { note } = await noteService.createUserNote(testNote.userId, testNote.title, testNote.body);
+      const { note } = await noteService.createNote(testNote.userId, testNote.title, testNote.body);
 
       expect(note).to.deep.equal(testNote);
     });
   });
 
-  describe('fetchUserNotes', (): void => {
-    it('should return user notes list fetched from the database', async (): Promise<void> => {
+  describe('fetchNotes', (): void => {
+    it('should return notes list fetched from the database', async (): Promise<void> => {
       const testUserId = nanoid(12);
       const testNotes = [
         {
@@ -60,78 +61,81 @@ export default (): void => {
           toArray: async (): Promise<any[]> => testNotes,
         } as any);
 
-      const { noteCount, notes } = await noteService.fetchUserNotes(testUserId);
+      const { noteCount, notes } = await noteService.fetchNotes();
 
       expect(noteCount).to.deep.equal(testNotes.length);
       expect(notes).to.deep.equal(testNotes);
     });
   });
 
-  describe('fetchUserNoteById', (): void => {
-    it('should return a user note fetched from the database given note id', async (): Promise<void> => {
+  describe('fetchNoteById', (): void => {
+    it('should return a note fetched from the database given note id', async (): Promise<void> => {
       const testNote = {
         id: nanoid(12),
         userId: nanoid(12),
         title: nanoid(12),
         body: nanoid(12),
+        modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
 
       sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
 
-      const { note } = await noteService.fetchUserNoteById(testNote.userId, testNote.id);
+      const { note } = await noteService.fetchNoteById(testNote.id);
 
       expect(note).to.deep.equal(testNote);
     });
   });
 
-  describe('updateUserNoteById', (): void => {
-    it('should update a user note in the database given note id', async (): Promise<void> => {
+  describe('updateNoteById', (): void => {
+    it('should update a note in the database given note id', async (): Promise<void> => {
       const testNote = {
         id: nanoid(12),
         userId: nanoid(12),
         title: nanoid(12),
         body: nanoid(12),
+        modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
 
-      sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
-      sandbox.stub(NoteModel.prototype, 'update').onCall(0).resolves();
+      const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
+      const updateStub = sandbox.stub(NoteModel.prototype, 'update').onCall(0).resolves();
 
-      await noteService.updateUserNoteById(testNote.userId, testNote.id, testNote);
+      await noteService.updateNoteById(testNote.id, testNote);
 
-      expect(true).to.be.equal(true);
+      expect(fetchOneStub.calledOnce).to.be.equal(true);
+      expect(updateStub.calledOnce).to.be.equal(true);
     });
   });
 
-  describe('deleteUserNoteById', (): void => {
-    it('should delete a user note from the database given note id', async (): Promise<void> => {
+  describe('deleteNoteById', (): void => {
+    it('should delete a note from the database given note id', async (): Promise<void> => {
       const testNote = {
         id: nanoid(12),
         userId: nanoid(12),
         title: nanoid(12),
         body: nanoid(12),
+        modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
 
-      sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
-      sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
+      const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
+      const deleteStub = sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
 
-      await noteService.deleteUserNoteById(testNote.userId, testNote.id);
+      await noteService.deleteNoteById(testNote.id);
 
-      expect(true).to.be.equal(true);
+      expect(fetchOneStub.calledOnce).to.be.equal(true);
+      expect(deleteStub.calledOnce).to.be.equal(true);
     });
   });
 
-  describe('deleteUserNotes', (): void => {
-    it('should delete a user note from the database given note id', async (): Promise<void> => {
-      const testUserId = nanoid(12);
+  describe('deleteNotes', (): void => {
+    it('should delete a note from the database given note id', async (): Promise<void> => {
+      const deleteStub = sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
 
-      sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
+      await noteService.deleteNotes();
 
-      await noteService.deleteUserNotes(testUserId);
-
-      expect(true).to.be.equal(true);
+      expect(deleteStub.calledOnce).to.be.equal(true);
     });
   });
 };

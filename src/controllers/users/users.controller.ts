@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { NoteService, UserService } from '../../services';
+import { EVENTS } from '../../constants';
 import { paginate } from '../../utils';
 
 /**
@@ -24,7 +25,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
 };
 
 /**
- * GET /api/v1/users/{id}
+ * GET /api/v1/users/{userId}
  */
 export const getUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -42,7 +43,7 @@ export const getUsersById = async (req: Request, res: Response, next: NextFuncti
 };
 
 /**
- * PATCH /api/v1/users/{id}
+ * PATCH /api/v1/users/{userId}
  */
 export const patchUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -58,6 +59,8 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
       name,
     });
 
+    req.io.to(userId).emit(EVENTS.NOTIFICATION, { message: 'Info updated by admin' });
+
     res.jsend.success(undefined, 204);
   } catch (error) {
     next(error);
@@ -65,7 +68,7 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
 };
 
 /**
- * DELETE /api/v1/users/{id}
+ * DELETE /api/v1/users/{userId}
  */
 export const deleteUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -75,7 +78,7 @@ export const deleteUsersById = async (req: Request, res: Response, next: NextFun
     const { userId } = req.params;
 
     await userService.deleteUserById(userId);
-    await noteService.deleteUserNotes(userId);
+    await noteService.deleteNotes({ userId });
 
     res.jsend.success(undefined, 204);
   } catch (error) {

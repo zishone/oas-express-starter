@@ -31,7 +31,7 @@ export class Model<Data> {
     this.collectionName = collectionName;
   }
 
-  private async validate(data: Data | Data[]): Promise<Data[]> {
+  private async validate(data: Partial<Data | Data[]>): Promise<Data[]> {
     this.logger.debugFunctionCall('Model.validate', arguments);
     const dataArray = Array.isArray(data) ? data : [data];
     const result = joi.array().items(this.schema).validate(dataArray);
@@ -107,15 +107,17 @@ export class Model<Data> {
     const ids: string[] = [];
     const db = await this.mongo.getDb();
     try {
-      const dataArrayMapped = dataArray.map((d: any): string => {
-        const id = nanoid(12);
-        delete d.id;
-        ids.push(id);
-        return {
-          id,
-          ...d,
-        };
-      });
+      const dataArrayMapped = dataArray.map(
+        (d: any): Data => {
+          const id = nanoid(12);
+          delete d.id;
+          ids.push(id);
+          return {
+            id,
+            ...d,
+          };
+        },
+      );
       await db.collection(this.collectionName).insertMany(dataArrayMapped, options);
       return ids;
     } catch (error) {

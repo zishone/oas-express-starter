@@ -12,13 +12,16 @@ export default (): void => {
   });
 
   it('should migrate database', async (): Promise<void> => {
-    const logger = { debug: (): void => null };
-    const mongo = { getDb: async (): Promise<void> => null };
+    const debugSpy = sandbox.spy();
+    const logger = { debug: debugSpy };
+    const getDbSpy = sandbox.spy();
+    const mongo = { getDb: getDbSpy };
 
     sandbox.stub(migration, 'up').onCall(0).resolves();
 
     await migrate(logger as any, mongo as any);
 
-    expect(true).to.be.equal(true);
+    expect(debugSpy.calledOnce).to.be.equal(true);
+    expect(getDbSpy.calledOnce).to.be.equal(true);
   });
 };

@@ -1,9 +1,14 @@
 import { Application, Request, json, urlencoded } from 'express';
 import { Logger, log } from '@zishone/logan';
+import { Mongo, Socket } from './helpers';
 import { Server, createServer } from 'http';
-import { errorMiddleware, mongoMiddleware, passportMiddleware, requestIdMiddleware } from './middlewares';
-import { Mongo } from './helpers';
-import { UserModel } from './models';
+import {
+  errorMiddleware,
+  mongoMiddleware,
+  passportMiddleware,
+  requestIdMiddleware,
+  socketMiddleware,
+} from './middlewares';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
@@ -17,30 +22,37 @@ export class App {
   private logger: Logger;
   private mongo: Mongo;
   private server: Server;
+  private socket: Socket;
 
-  constructor(logger: Logger, mongo: Mongo, app: Application) {
+  constructor(app: Application, logger: Logger, mongo: Mongo) {
+    this.app = app;
     this.logger = logger;
     this.mongo = mongo;
-    this.app = app;
     this.server = createServer(this.app);
   }
 
-  public async configure() {
+  public async configure(): Promise<void> {
+    await this.createSocket();
     await this.composeMiddlewares();
     await this.constructOas();
     this.app.emit('ready', this.server);
   }
 
+  private async createSocket(): Promise<void> {
+    this.socket = new Socket(this.logger, this.server, this.mongo);
+  }
+
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
-    this.app.use(jsend());
-    this.app.use(log(this.logger));
     this.app.use(mongoMiddleware(this.mongo));
+    this.app.use(socketMiddleware(this.socket));
+    this.app.use(log(this.logger));
+    this.app.use(jsend());
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
-    this.app.use(passport.initialize());
     this.app.use(mquery());
+    this.app.use(passport.initialize());
   }
 
   private async constructOas(): Promise<void> {
@@ -53,8 +65,7 @@ export class App {
       securityHandlers: {
         loginAuth: async (req: Request): Promise<boolean> => {
           return await new Promise((resolve, reject): void => {
-            const userModel = new UserModel(this.logger, this.mongo);
-            passportMiddleware(userModel)(req, req.res, (error: any): void => {
+            passportMiddleware(this.logger, this.mongo)(req, req.res, (error: any): void => {
               if (error) {
                 reject(error);
               } else {

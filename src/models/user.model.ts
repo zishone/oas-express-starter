@@ -4,12 +4,12 @@ import joi from 'joi';
 
 export interface User {
   id?: string;
-  username?: string;
-  email?: string;
-  password?: string;
-  name?: string;
-  role?: string;
-  createdOn?: number;
+  username: string;
+  email: string;
+  password: string;
+  name: string;
+  role: string;
+  createdOn: number;
 }
 
 export class UserModel extends Model<User> {
@@ -21,7 +21,6 @@ export class UserModel extends Model<User> {
     password: joi.string(),
     name: joi.string(),
     role: joi.string(),
-    modifiedOn: joi.number(),
     createdOn: joi.number(),
   });
 

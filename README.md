@@ -1,7 +1,7 @@
 # oas-express-starter
 [![Build](https://github.com/zishone/oas-express-starter/workflows/ci/badge.svg)](https://github.com/zishone/oas-express-starter/actions?query=workflow%3Aci) [![Coverage](https://codecov.io/gh/zishone/oas-express-starter/branch/master/graph/badge.svg)](https://codecov.io/gh/zishone/oas-express-starter) [![License](https://img.shields.io/github/license/zishone/oas-express-starter)](https://github.com/zishone/oas-express-starter/blob/master/LICENSE)
 
-A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript.
+A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript with MongoDB and SocketIO.
 
 ## Quick Start
 * Clone the repository
@@ -47,6 +47,22 @@ CONFIG_LOGIN_TTL=2592000            # Time to live of login in seconds
 ## Swagger UI
 Should be available on route `/apidocs` when NODE_ENV is set to `development`.
 
+## Socket IO
+Client must be authenticated to connect:
+```javascript
+const socket = require('socket.io-client')
+const io = socket.connect('http://localhost:3000', { query: { token:'<token>' } });
+io.on('connect', () => {
+  // Do stuff
+});
+io.on('<customEvent>', () => {
+  // Do stuff
+})
+io.on('connect_error', (err) => {
+  // Do stuff with err
+})
+```
+
 ## NPM Scripts
 * `npm run` **`lint`**
   * To check for lint issues.
@@ -76,8 +92,8 @@ Should be available on route `/apidocs` when NODE_ENV is set to `development`.
   * To build docker image of the service. Uses the name and version in `package.json` to tag the image as `<name>:v<version>`.
 * `make` **`up`**
   * To start container of the service and also mongodb. Logs and mongodb data will be available at `./.data`, it is mounted as a volume in those containers.
-* `make` **`develop`**
-  * To run start the service inside a container. No need to rebuild because this mounts the whole repository's directory as a volume then executes `npm run start`.
+* `make` **`run`**
+  * To run start the service inside a container and watch for changes. No need to rebuild because this mounts the whole repository's directory as a volume then executes `npm run watch`.
 * `make` **`test`**
   * To run unit test inside a container. Coverage report will be available in `./.data/tests/unit`.
 * `make` **`test-integration`**

@@ -12,7 +12,7 @@ export const postUserNotes = async (req: Request, res: Response, next: NextFunct
     const { id: userId } = req.user;
     const { title, body } = req.body;
 
-    const { note } = await noteService.createUserNote(userId, title, body);
+    const { note } = await noteService.createNote(userId, title, body);
 
     res.jsend.success({ note }, 201);
   } catch (error) {
@@ -30,7 +30,13 @@ export const getUserNotes = async (req: Request, res: Response, next: NextFuncti
     const { filter, options } = req.mquery;
     const { id: userId } = req.user;
 
-    const { noteCount, notes } = await noteService.fetchUserNotes(userId, filter, options);
+    const { noteCount, notes } = await noteService.fetchNotes(
+      {
+        ...filter,
+        userId,
+      },
+      options,
+    );
     const pagination = paginate(noteCount, options.limit);
 
     res.jsend.success({
@@ -43,17 +49,16 @@ export const getUserNotes = async (req: Request, res: Response, next: NextFuncti
 };
 
 /**
- * GET /api/v1/user/notes/{id}
+ * GET /api/v1/user/notes/{noteId}
  */
 export const getUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const noteService = new NoteService(req.logger, req.mongo);
 
     const { noteId } = req.params;
-    const { id: userId } = req.user;
     const { options } = req.mquery;
 
-    const { note } = await noteService.fetchUserNoteById(userId, noteId, options);
+    const { note } = await noteService.fetchNoteById(noteId, options);
 
     res.jsend.success({ note });
   } catch (error) {
@@ -62,17 +67,16 @@ export const getUserNotesById = async (req: Request, res: Response, next: NextFu
 };
 
 /**
- * PATCH /api/v1/user/notes/{id}
+ * PATCH /api/v1/user/notes/{noteId}
  */
 export const patchUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const noteService = new NoteService(req.logger, req.mongo);
 
     const { noteId } = req.params;
-    const { id: userId } = req.user;
     const { title, body } = req.body;
 
-    await noteService.updateUserNoteById(userId, noteId, {
+    await noteService.updateNoteById(noteId, {
       title,
       body,
     });
@@ -84,16 +88,15 @@ export const patchUserNotesById = async (req: Request, res: Response, next: Next
 };
 
 /**
- * DELETE /api/v1/user/notes/{id}
+ * DELETE /api/v1/user/notes/{noteId}
  */
 export const deleteUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const noteService = new NoteService(req.logger, req.mongo);
 
     const { noteId } = req.params;
-    const { id: userId } = req.user;
 
-    await noteService.deleteUserNoteById(userId, noteId);
+    await noteService.deleteNoteById(noteId);
 
     res.jsend.success(undefined, 204);
   } catch (error) {

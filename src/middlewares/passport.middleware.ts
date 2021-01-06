@@ -2,11 +2,14 @@ import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { User, UserModel } from '../models';
 import { ERROR_CODES } from '../constants';
+import { Logger } from '@zishone/logan';
+import { Mongo } from '../helpers';
 import { config } from '../config';
 import httpError from 'http-errors';
 import passport from 'passport';
 
-export const passportMiddleware = (userModel: UserModel): RequestHandler => {
+export const passportMiddleware = (logger: Logger, mongo: Mongo): RequestHandler => {
+  const userModel = new UserModel(logger, mongo);
   const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.LOGIN_SECRET,
@@ -30,7 +33,7 @@ export const passportMiddleware = (userModel: UserModel): RequestHandler => {
     done(null, user);
   });
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    passport.authenticate('jwt', { session: false }, (error: Error, user: User, info: any): void => {
+    passport.authenticate('jwt', { session: false }, (error: any, user: User, info: any): void => {
       try {
         if (error) {
           throw error;
@@ -38,9 +41,9 @@ export const passportMiddleware = (userModel: UserModel): RequestHandler => {
         if (!user) {
           throw new Error();
         } else {
-          req.logIn(user, (err: Error): void => {
-            if (err) {
-              throw err;
+          req.logIn(user, (error: any): void => {
+            if (error) {
+              throw error;
             }
             next();
           });

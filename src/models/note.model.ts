@@ -4,11 +4,11 @@ import joi from 'joi';
 
 export interface Note {
   id?: string;
-  userId?: string;
-  title?: string;
-  body?: string;
-  modifiedOn?: number;
-  createdOn?: number;
+  userId: string;
+  title: string;
+  body: string;
+  modifiedOn: number;
+  createdOn: number;
 }
 
 export class NoteModel extends Model<Note> {

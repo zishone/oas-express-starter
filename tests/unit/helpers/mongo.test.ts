@@ -31,7 +31,7 @@ export default (): void => {
       await mongo.getDb();
       await mongo.getDb();
 
-      expect(true).to.be.equal(true);
+      expect(commandSpy.calledOnce).to.be.equal(true);
     });
   });
 

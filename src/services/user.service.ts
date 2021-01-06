@@ -61,7 +61,7 @@ export class UserService {
   public async fetchUsers(
     filter: FilterQuery<User> = {},
     options: FindOneOptions<any> = {},
-  ): Promise<{ userCount: number; users: User[] }> {
+  ): Promise<{ userCount: number; users: Partial<User>[] }> {
     this.logger.debugFunctionCall('UserService.fetchUsers', arguments);
     const cursor = await this.userModel.fetch(filter, options);
     const userCount = await cursor.count();
@@ -75,7 +75,7 @@ export class UserService {
     };
   }
 
-  public async updateUserById(id: string, user: User): Promise<void> {
+  public async updateUserById(id: string, user: Partial<User>): Promise<void> {
     this.logger.debugFunctionCall('UserService.updateUserById', arguments);
     await this.userModel.fetchOne({ id });
     await this.userModel.update({ id }, { $set: user });
