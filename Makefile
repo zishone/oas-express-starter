@@ -17,6 +17,7 @@ up: build
 run:
 	docker-compose -f docker-compose.test.yml run \
 		--no-deps \
+		-p ${APP_PORT}:${APP_PORT} \
 		service \
 		npm run watch
 

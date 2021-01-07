@@ -75,6 +75,7 @@
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
     "mocha": "^8.2.1",
+    "nodemon": "^2.0.7",
     "nyc": "^15.1.0",
     "openapi-types": "^7.0.1",
     "prettier": "^2.2.1",
