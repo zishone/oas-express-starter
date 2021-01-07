@@ -7,10 +7,7 @@ import { nanoid } from 'nanoid';
 
 export const connectError = (): void => {
   it('should emit connect_error when token is invalid', async (): Promise<void> => {
-    const io = connect(`http://localhost:${config.APP_PORT}`, {
-      query: { token: nanoid(12) },
-      transports: ['websocket'],
-    } as any);
+    const io = connect(`http://localhost:${config.APP_PORT}`, { query: { token: nanoid(12) } });
 
     let error: any;
     io.on(EVENTS.CONNECT_ERROR, (data: any): void => {

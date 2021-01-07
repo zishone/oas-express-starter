@@ -22,10 +22,7 @@ export const connect = (): void => {
     const [testUserId] = await userModel.save(testUser);
     const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
-    const io = socket.connect(`http://localhost:${config.APP_PORT}`, {
-      query: { token: testUserAccessToken },
-      transports: ['websocket'],
-    } as any);
+    const io = socket.connect(`http://localhost:${config.APP_PORT}`, { query: { token: testUserAccessToken } });
 
     let isConnected = false;
     io.on(EVENTS.CONNECT, (): void => {

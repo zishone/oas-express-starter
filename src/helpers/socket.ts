@@ -25,39 +25,34 @@ export class Socket {
         next();
       } catch (error) {
         error.data = {
-          status: 'fail',
-          data: {
-            details: [
-              {
-                errorCode: ERROR_CODES.UNAUTHENTICATED,
-                message: 'Authentication failed.',
-              },
-            ],
-          },
+          errorCode: ERROR_CODES.UNAUTHENTICATED,
+          details: [
+            {
+              message: 'Authentication failed.',
+            },
+          ],
         };
         next(error);
       }
     });
     this.server.on('connection', (extendedSocket: ExtendedSocket): void => {
-      if (extendedSocket.user) {
-        const { id, role } = extendedSocket.user;
-        this.clientCount++;
-        logger.debug('Socket client connected', {
+      const { id, role } = extendedSocket.user;
+      this.clientCount++;
+      logger.debug('Socket client connected', {
+        'user.id': id,
+        'user.role': role,
+        'client.count': this.clientCount,
+      });
+      extendedSocket.join(id);
+      extendedSocket.join(role);
+      extendedSocket.on('disconnect', (): void => {
+        this.clientCount--;
+        logger.debug('Socket client disconnected', {
           'user.id': id,
           'user.role': role,
           'client.count': this.clientCount,
         });
-        extendedSocket.join(id);
-        extendedSocket.join(role);
-        extendedSocket.on('disconnect', (): void => {
-          this.clientCount--;
-          logger.debug('Socket client disconnected', {
-            'user.id': id,
-            'user.role': role,
-            'client.count': this.clientCount,
-          });
-        });
-      }
+      });
     });
   }
 
