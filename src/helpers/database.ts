@@ -1,14 +1,20 @@
-import { Db, MongoClient, MongoClientCommonOption, MongoClientOptions } from 'mongodb';
+import {
+  AggregationCursor,
+  CollectionAggregationOptions as AggregationOptions,
+  CommonOptions,
+  MongoCountPreferences as CountOptions,
+  Cursor,
+  Db,
+  FindOneOptions as FetchOptions,
+  FilterQuery as Filter,
+  MongoClient,
+  CollectionInsertManyOptions as SaveOptions,
+  UpdateQuery as Update,
+  UpdateManyOptions as UpdateOptions,
+} from 'mongodb';
 import { ERROR_CODES } from '../constants';
 import { Logger } from '@zishone/logan';
 import httpError from 'http-errors';
-
-export interface DatabaseConfig {
-  mongoUri: string;
-  dbName: string;
-  clientOptions?: MongoClientOptions;
-  dbOptions?: MongoClientCommonOption;
-}
 
 export class Database {
   private logger: Logger;
@@ -23,7 +29,7 @@ export class Database {
   }
 
   public async getConnection(): Promise<Db> {
-    this.logger.debugFunctionCall('Mongo.getConnection', arguments);
+    this.logger.debugFunctionCall('Database.getConnection', arguments);
     try {
       if (!this.client) {
         throw new Error();
@@ -56,3 +62,16 @@ export class Database {
     }
   }
 }
+
+export {
+  AggregationCursor,
+  AggregationOptions,
+  CommonOptions,
+  CountOptions,
+  Cursor,
+  FetchOptions,
+  Filter,
+  SaveOptions,
+  Update,
+  UpdateOptions,
+};

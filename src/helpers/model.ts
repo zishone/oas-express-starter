@@ -1,23 +1,22 @@
 import {
   AggregationCursor,
-  CollectionAggregationOptions,
-  CollectionInsertManyOptions,
+  AggregationOptions,
   CommonOptions,
+  CountOptions,
   Cursor,
-  FilterQuery,
-  FindOneOptions,
-  MongoCountPreferences,
-  UpdateManyOptions,
-  UpdateQuery,
-} from 'mongodb';
-import { Database } from '.';
+  Database,
+  FetchOptions,
+  Filter,
+  SaveOptions,
+  Update,
+  UpdateOptions,
+} from '.';
 import { ERROR_CODES } from '../constants';
 import { Logger } from '@zishone/logan';
 import { dotnotate } from '@zishone/dotnotate';
 import httpError from 'http-errors';
 import joi from 'joi';
 import { nanoid } from 'nanoid';
-
 export class Model<Data> {
   protected logger: Logger;
   private database: Database;
@@ -44,7 +43,7 @@ export class Model<Data> {
     return result.value;
   }
 
-  public async count(filter: FilterQuery<Data> = {}, options: MongoCountPreferences = {}): Promise<number> {
+  public async count(filter: Filter<Data> = {}, options: CountOptions = {}): Promise<number> {
     this.logger.debugFunctionCall('Model.count', arguments);
     const connection = await this.database.getConnection();
     try {
@@ -54,7 +53,7 @@ export class Model<Data> {
     }
   }
 
-  public async fetch(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Cursor<Data>> {
+  public async fetch(filter: Filter<Data> = {}, options: FetchOptions<any> = {}): Promise<Cursor<Data>> {
     this.logger.debugFunctionCall('Model.fetch', arguments);
     const connection = await this.database.getConnection();
     try {
@@ -69,7 +68,7 @@ export class Model<Data> {
     }
   }
 
-  public async fetchOne(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Data> {
+  public async fetchOne(filter: Filter<Data> = {}, options: FetchOptions<any> = {}): Promise<Data> {
     this.logger.debugFunctionCall('Model.fetchOne', arguments);
     const connection = await this.database.getConnection();
     try {
@@ -89,7 +88,7 @@ export class Model<Data> {
 
   public async aggregate<AggregationData>(
     pipeline: object[],
-    options: CollectionAggregationOptions = {},
+    options: AggregationOptions = {},
   ): Promise<AggregationCursor<AggregationData>> {
     this.logger.debugFunctionCall('Model.aggregate', arguments);
     const connection = await this.database.getConnection();
@@ -101,7 +100,7 @@ export class Model<Data> {
     }
   }
 
-  public async save(data: Data | Data[], options: CollectionInsertManyOptions = {}): Promise<string[]> {
+  public async save(data: Data | Data[], options: SaveOptions = {}): Promise<string[]> {
     this.logger.debugFunctionCall('Model.save', arguments);
     const dataArray = await this.validate(data);
     const ids: string[] = [];
@@ -125,11 +124,7 @@ export class Model<Data> {
     }
   }
 
-  public async update(
-    filter: FilterQuery<Data>,
-    update: UpdateQuery<any>,
-    options: UpdateManyOptions = {},
-  ): Promise<void> {
+  public async update(filter: Filter<Data>, update: Update<any>, options: UpdateOptions = {}): Promise<void> {
     this.logger.debugFunctionCall('Model.update', arguments);
     const connection = await this.database.getConnection();
     try {
@@ -145,7 +140,7 @@ export class Model<Data> {
     }
   }
 
-  public async delete(filter: FilterQuery<Data>, options: CommonOptions = {}): Promise<void> {
+  public async delete(filter: Filter<Data>, options: CommonOptions = {}): Promise<void> {
     this.logger.debugFunctionCall('Model.delete', arguments);
     const connection = await this.database.getConnection();
     try {

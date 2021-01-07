@@ -1,2 +1,2 @@
-export { NoteService } from './note.service';
-export { UserService } from './user.service';
+export * from './note.service';
+export * from './user.service';

@@ -1,2 +1,2 @@
-export { migrate } from './migrate';
-export { paginate } from './paginate';
+export * from './migrate';
+export * from './paginate';

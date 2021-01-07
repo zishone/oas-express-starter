@@ -1,3 +1,3 @@
-export { Database } from './database';
-export { Model } from './model';
-export { Socket } from './socket';
+export * from './database';
+export * from './model';
+export * from './socket';

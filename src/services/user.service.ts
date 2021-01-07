@@ -1,8 +1,7 @@
+import { Database, FetchOptions, Filter } from '../helpers';
 import { ERROR_CODES, ROLES } from '../constants';
-import { FilterQuery, FindOneOptions } from 'mongodb';
 import { User, UserModel } from '../models';
 import { genSaltSync, hashSync } from 'bcryptjs';
-import { Database } from '../helpers';
 import { Logger } from '@zishone/logan';
 import { compareSync } from 'bcryptjs';
 import { config } from '../config';
@@ -51,7 +50,7 @@ export class UserService {
     return { accessToken };
   }
 
-  public async fetchUserById(id: string, options?: FindOneOptions<any>): Promise<{ user: User }> {
+  public async fetchUserById(id: string, options?: FetchOptions<any>): Promise<{ user: User }> {
     this.logger.debugFunctionCall('UserService.fetchUserById', arguments);
     const user = await this.userModel.fetchOne({ id }, options);
     delete user.password;
@@ -59,8 +58,8 @@ export class UserService {
   }
 
   public async fetchUsers(
-    filter: FilterQuery<User> = {},
-    options: FindOneOptions<any> = {},
+    filter: Filter<User> = {},
+    options: FetchOptions<any> = {},
   ): Promise<{ userCount: number; users: Partial<User>[] }> {
     this.logger.debugFunctionCall('UserService.fetchUsers', arguments);
     const cursor = await this.userModel.fetch(filter, options);

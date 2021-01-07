@@ -1,6 +1,5 @@
-import { FilterQuery, FindOneOptions } from 'mongodb';
+import { Database, FetchOptions, Filter } from '../helpers';
 import { Note, NoteModel } from '../models';
-import { Database } from '../helpers';
 import { Logger } from '@zishone/logan';
 
 export class NoteService {
@@ -21,8 +20,8 @@ export class NoteService {
   }
 
   public async fetchNotes(
-    filter: FilterQuery<Note> = {},
-    options?: FindOneOptions<any>,
+    filter: Filter<Note> = {},
+    options?: FetchOptions<any>,
   ): Promise<{ noteCount: number; notes: Note[] }> {
     this.logger.debugFunctionCall('NoteService.fetchNotes', arguments);
     const cursor = await this.noteModel.fetch(filter, options);
@@ -34,7 +33,7 @@ export class NoteService {
     };
   }
 
-  public async fetchNoteById(id: string, options?: FindOneOptions<any>): Promise<{ note: Note }> {
+  public async fetchNoteById(id: string, options?: FetchOptions<any>): Promise<{ note: Note }> {
     this.logger.debugFunctionCall('NoteService.fetchNoteById', arguments);
     const note = await this.noteModel.fetchOne({ id }, options);
     return { note };
@@ -58,7 +57,7 @@ export class NoteService {
     await this.noteModel.delete({ id });
   }
 
-  public async deleteNotes(filter: FilterQuery<Note> = {}): Promise<void> {
+  public async deleteNotes(filter: Filter<Note> = {}): Promise<void> {
     this.logger.debugFunctionCall('NoteService.deleteNotes', arguments);
     await this.noteModel.delete(filter);
   }
