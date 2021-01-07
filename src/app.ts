@@ -43,8 +43,8 @@ export class App {
   }
 
   private async composeMiddlewares(): Promise<void> {
-    this.app.use(databaseMiddleware(this.database));
     this.app.use(requestIdMiddleware());
+    this.app.use(databaseMiddleware(this.database));
     this.app.use(socketMiddleware(this.socket));
     this.app.use(log(this.logger));
     this.app.use(jsend());
