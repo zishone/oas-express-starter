@@ -140,41 +140,6 @@ export default (): void => {
     });
   });
 
-  describe('aggregate<any>', (): void => {
-    it('should aggregate list of entries in database', async (): Promise<void> => {
-      const testPipeline = [{}];
-
-      const aggregateSpy = sandbox.spy();
-      dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
-          aggregate: aggregateSpy,
-        }),
-      } as any);
-
-      await model.aggregate<any>(testPipeline);
-
-      expect(aggregateSpy.calledOnce).to.be.equal(true);
-    });
-
-    it('should fail to aggregate list of entries when database error happens', async (): Promise<void> => {
-      const testPipeline = [{}];
-
-      dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
-          aggregate: (): any => {
-            throw new Error();
-          },
-        }),
-      } as any);
-
-      try {
-        await model.aggregate<any>(testPipeline);
-      } catch (error) {
-        expect(error).to.exist;
-      }
-    });
-  });
-
   describe('save', (): void => {
     it('should save an entry in the database', async (): Promise<void> => {
       const testData = {};

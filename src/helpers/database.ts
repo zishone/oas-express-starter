@@ -1,6 +1,4 @@
 import {
-  AggregationCursor,
-  CollectionAggregationOptions as AggregationOptions,
   CommonOptions,
   MongoCountPreferences as CountOptions,
   Cursor,
@@ -63,15 +61,4 @@ export class Database {
   }
 }
 
-export {
-  AggregationCursor,
-  AggregationOptions,
-  CommonOptions,
-  CountOptions,
-  Cursor,
-  FetchOptions,
-  Filter,
-  SaveOptions,
-  Update,
-  UpdateOptions,
-};
+export { CommonOptions, CountOptions, Cursor, FetchOptions, Filter, SaveOptions, Update, UpdateOptions };

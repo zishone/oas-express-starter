@@ -1,6 +1,4 @@
 import {
-  AggregationCursor,
-  AggregationOptions,
   CommonOptions,
   CountOptions,
   Cursor,
@@ -81,20 +79,6 @@ export class Model<Data> {
         throw httpError(404, 'Data not found', { errorCode: ERROR_CODES.NOT_FOUND });
       }
       return data;
-    } catch (error) {
-      throw this.database.error(error);
-    }
-  }
-
-  public async aggregate<AggregationData>(
-    pipeline: object[],
-    options: AggregationOptions = {},
-  ): Promise<AggregationCursor<AggregationData>> {
-    this.logger.debugFunctionCall('Model.aggregate', arguments);
-    const connection = await this.database.getConnection();
-    try {
-      const cursor = connection.collection(this.collectionName).aggregate(pipeline, options);
-      return cursor;
     } catch (error) {
       throw this.database.error(error);
     }
