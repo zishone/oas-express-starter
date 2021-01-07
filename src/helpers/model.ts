@@ -10,9 +10,9 @@ import {
   UpdateManyOptions,
   UpdateQuery,
 } from 'mongodb';
+import { Database } from '.';
 import { ERROR_CODES } from '../constants';
 import { Logger } from '@zishone/logan';
-import { Mongo } from '.';
 import { dotnotate } from '@zishone/dotnotate';
 import httpError from 'http-errors';
 import joi from 'joi';
@@ -20,13 +20,13 @@ import { nanoid } from 'nanoid';
 
 export class Model<Data> {
   protected logger: Logger;
-  private mongo: Mongo;
+  private database: Database;
   private schema: joi.Schema;
   private collectionName: string;
 
-  constructor(logger: Logger, mongo: Mongo, schema: joi.Schema, collectionName: string) {
+  constructor(logger: Logger, database: Database, schema: joi.Schema, collectionName: string) {
     this.logger = logger;
-    this.mongo = mongo;
+    this.database = database;
     this.schema = schema;
     this.collectionName = collectionName;
   }
@@ -46,44 +46,44 @@ export class Model<Data> {
 
   public async count(filter: FilterQuery<Data> = {}, options: MongoCountPreferences = {}): Promise<number> {
     this.logger.debugFunctionCall('Model.count', arguments);
-    const db = await this.mongo.getDb();
+    const connection = await this.database.getConnection();
     try {
-      return await db.collection(this.collectionName).countDocuments(filter, options);
+      return await connection.collection(this.collectionName).countDocuments(filter, options);
     } catch (error) {
-      throw this.mongo.error(error);
+      throw this.database.error(error);
     }
   }
 
   public async fetch(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Cursor<Data>> {
     this.logger.debugFunctionCall('Model.fetch', arguments);
-    const db = await this.mongo.getDb();
+    const connection = await this.database.getConnection();
     try {
       options.projection = {
         _id: 0,
         ...(options.projection || {}),
       };
-      const cursor = db.collection(this.collectionName).find(filter, options);
+      const cursor = connection.collection(this.collectionName).find(filter, options);
       return cursor;
     } catch (error) {
-      throw this.mongo.error(error);
+      throw this.database.error(error);
     }
   }
 
   public async fetchOne(filter: FilterQuery<Data> = {}, options: FindOneOptions<any> = {}): Promise<Data> {
     this.logger.debugFunctionCall('Model.fetchOne', arguments);
-    const db = await this.mongo.getDb();
+    const connection = await this.database.getConnection();
     try {
       options.projection = {
         _id: 0,
         ...(options.projection || {}),
       };
-      const data = await db.collection(this.collectionName).findOne(filter, options);
+      const data = await connection.collection(this.collectionName).findOne(filter, options);
       if (!data) {
         throw httpError(404, 'Data not found', { errorCode: ERROR_CODES.NOT_FOUND });
       }
       return data;
     } catch (error) {
-      throw this.mongo.error(error);
+      throw this.database.error(error);
     }
   }
 
@@ -92,12 +92,12 @@ export class Model<Data> {
     options: CollectionAggregationOptions = {},
   ): Promise<AggregationCursor<AggregationData>> {
     this.logger.debugFunctionCall('Model.aggregate', arguments);
-    const db = await this.mongo.getDb();
+    const connection = await this.database.getConnection();
     try {
-      const cursor = db.collection(this.collectionName).aggregate(pipeline, options);
+      const cursor = connection.collection(this.collectionName).aggregate(pipeline, options);
       return cursor;
     } catch (error) {
-      throw this.mongo.error(error);
+      throw this.database.error(error);
     }
   }
 
@@ -105,7 +105,7 @@ export class Model<Data> {
     this.logger.debugFunctionCall('Model.save', arguments);
     const dataArray = await this.validate(data);
     const ids: string[] = [];
-    const db = await this.mongo.getDb();
+    const connection = await this.database.getConnection();
     try {
       const dataArrayMapped = dataArray.map(
         (d: any): Data => {
@@ -118,10 +118,10 @@ export class Model<Data> {
           };
         },
       );
-      await db.collection(this.collectionName).insertMany(dataArrayMapped, options);
+      await connection.collection(this.collectionName).insertMany(dataArrayMapped, options);
       return ids;
     } catch (error) {
-      throw this.mongo.error(error);
+      throw this.database.error(error);
     }
   }
 
@@ -131,7 +131,7 @@ export class Model<Data> {
     options: UpdateManyOptions = {},
   ): Promise<void> {
     this.logger.debugFunctionCall('Model.update', arguments);
-    const db = await this.mongo.getDb();
+    const connection = await this.database.getConnection();
     try {
       if (update.$set) {
         update.$set = dotnotate(update.$set);
@@ -139,19 +139,19 @@ export class Model<Data> {
       if (update.$unset) {
         update.$unset = dotnotate(update.$unset);
       }
-      await db.collection(this.collectionName).updateMany(filter, JSON.parse(JSON.stringify(update)), options);
+      await connection.collection(this.collectionName).updateMany(filter, JSON.parse(JSON.stringify(update)), options);
     } catch (error) {
-      throw this.mongo.error(error);
+      throw this.database.error(error);
     }
   }
 
   public async delete(filter: FilterQuery<Data>, options: CommonOptions = {}): Promise<void> {
     this.logger.debugFunctionCall('Model.delete', arguments);
-    const db = await this.mongo.getDb();
+    const connection = await this.database.getConnection();
     try {
-      await db.collection(this.collectionName).deleteMany(filter, options);
+      await connection.collection(this.collectionName).deleteMany(filter, options);
     } catch (error) {
-      throw this.mongo.error(error);
+      throw this.database.error(error);
     }
   }
 }

@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { Mongo } from '../../../../src/helpers';
+import { Database } from '../../../../src/helpers';
 import { app } from '../../../../src/server';
 import { createSandbox } from 'sinon';
 
@@ -19,7 +19,7 @@ export const health = (): void => {
     });
 
     it('should respond 500 WHEN database connection check failed', async (): Promise<void> => {
-      sandbox.stub(Mongo.prototype, 'getDb').onCall(0).rejects();
+      sandbox.stub(Database.prototype, 'getConnection').onCall(0).rejects();
 
       const response = await request(app).get('/health');
 

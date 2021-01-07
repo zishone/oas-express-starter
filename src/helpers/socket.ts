@@ -1,7 +1,7 @@
 import { ExtendedSocket, Server } from 'socket.io';
+import { Database } from '.';
 import { ERROR_CODES } from '../constants';
 import { Logger } from '@zishone/logan';
-import { Mongo } from '.';
 import { UserModel } from '../models';
 import { config } from '../config';
 import http from 'http';
@@ -12,29 +12,31 @@ export class Socket {
   private userModel: UserModel;
   private clientCount: number;
 
-  constructor(logger: Logger, server: http.Server, mongo: Mongo) {
+  constructor(logger: Logger, server: http.Server, database: Database) {
     this.server = new Server(server);
-    this.userModel = new UserModel(logger, mongo);
+    this.userModel = new UserModel(logger, database);
     this.clientCount = 0;
-    this.server.use(async (extendedSocket: ExtendedSocket, next: (error?: any) => void) => {
-      try {
-        const { id } = verify((extendedSocket.handshake.query as { token: string }).token, config.LOGIN_SECRET) as {
-          id: string;
-        };
-        extendedSocket.user = await this.userModel.fetchOne({ id }, { projection: { password: 0 } });
-        next();
-      } catch (error) {
-        error.data = {
-          errorCode: ERROR_CODES.UNAUTHENTICATED,
-          details: [
-            {
-              message: 'Authentication failed.',
-            },
-          ],
-        };
-        next(error);
-      }
-    });
+    this.server.use(
+      async (extendedSocket: ExtendedSocket, next: (error?: any) => void): Promise<void> => {
+        try {
+          const { id } = verify((extendedSocket.handshake.query as { token: string }).token, config.LOGIN_SECRET) as {
+            id: string;
+          };
+          extendedSocket.user = await this.userModel.fetchOne({ id }, { projection: { password: 0 } });
+          next();
+        } catch (error) {
+          error.data = {
+            errorCode: ERROR_CODES.UNAUTHENTICATED,
+            details: [
+              {
+                message: 'Authentication failed.',
+              },
+            ],
+          };
+          next(error);
+        }
+      },
+    );
     this.server.on('connection', (extendedSocket: ExtendedSocket): void => {
       const { id, role } = extendedSocket.user;
       this.clientCount++;

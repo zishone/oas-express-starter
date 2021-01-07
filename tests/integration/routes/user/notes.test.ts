@@ -1,5 +1,5 @@
 import { NoteModel, UserModel } from '../../../../src/models';
-import { app, logger, mongo } from '../../../../src/server';
+import { app, database, logger } from '../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
 import { NoteService } from '../../../../src/services';
@@ -26,7 +26,7 @@ export const userNotes = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNote = {
@@ -54,7 +54,7 @@ export const userNotes = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNote = {
@@ -86,7 +86,7 @@ export const userNotes = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNote = {
@@ -96,7 +96,7 @@ export const userNotes = (): void => {
         modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
-      const noteModel = new NoteModel(logger, mongo);
+      const noteModel = new NoteModel(logger, database);
       await noteModel.save(testNote);
 
       const response = await request(app)
@@ -116,7 +116,7 @@ export const userNotes = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -143,7 +143,7 @@ export const userNotesById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNote = {
@@ -153,7 +153,7 @@ export const userNotesById = (): void => {
         modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
-      const noteModel = new NoteModel(logger, mongo);
+      const noteModel = new NoteModel(logger, database);
       const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
@@ -173,7 +173,7 @@ export const userNotesById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNoteId = nanoid(12);
@@ -197,7 +197,7 @@ export const userNotesById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewBody = nanoid(12);
@@ -208,7 +208,7 @@ export const userNotesById = (): void => {
         modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
-      const noteModel = new NoteModel(logger, mongo);
+      const noteModel = new NoteModel(logger, database);
       const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
@@ -228,7 +228,7 @@ export const userNotesById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewBody = nanoid(12);
@@ -253,7 +253,7 @@ export const userNotesById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNote = {
@@ -263,7 +263,7 @@ export const userNotesById = (): void => {
         modifiedOn: Date.now(),
         createdOn: Date.now(),
       };
-      const noteModel = new NoteModel(logger, mongo);
+      const noteModel = new NoteModel(logger, database);
       const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
@@ -283,7 +283,7 @@ export const userNotesById = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNoteId = nanoid(12);

@@ -8,7 +8,7 @@ import { paginate } from '../../utils';
  */
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.mongo);
+    const userService = new UserService(req.logger, req.database);
 
     const { filter, options } = req.mquery;
 
@@ -29,7 +29,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
  */
 export const getUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.mongo);
+    const userService = new UserService(req.logger, req.database);
 
     const { userId } = req.params;
     const { options } = req.mquery;
@@ -47,7 +47,7 @@ export const getUsersById = async (req: Request, res: Response, next: NextFuncti
  */
 export const patchUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.mongo);
+    const userService = new UserService(req.logger, req.database);
 
     const { userId } = req.params;
     const { username, email, password, name } = req.body;
@@ -72,8 +72,8 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
  */
 export const deleteUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.mongo);
-    const noteService = new NoteService(req.logger, req.mongo);
+    const userService = new UserService(req.logger, req.database);
+    const noteService = new NoteService(req.logger, req.database);
 
     const { userId } = req.params;
 

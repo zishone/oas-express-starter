@@ -2,8 +2,8 @@ import { ERROR_CODES, ROLES } from '../constants';
 import { FilterQuery, FindOneOptions } from 'mongodb';
 import { User, UserModel } from '../models';
 import { genSaltSync, hashSync } from 'bcryptjs';
+import { Database } from '../helpers';
 import { Logger } from '@zishone/logan';
-import { Mongo } from '../helpers';
 import { compareSync } from 'bcryptjs';
 import { config } from '../config';
 import httpError from 'http-errors';
@@ -13,9 +13,9 @@ export class UserService {
   private logger: Logger;
   private userModel: UserModel;
 
-  constructor(logger: Logger, mongo: Mongo) {
+  constructor(logger: Logger, database: Database) {
     this.logger = logger;
-    this.userModel = new UserModel(logger, mongo);
+    this.userModel = new UserModel(logger, database);
   }
 
   public async registerUser(username: string, email: string, password: string, name: string): Promise<{ user: User }> {
@@ -34,7 +34,7 @@ export class UserService {
       .fetchOne({
         $or: [{ username: login }, { email: login }],
       })
-      .catch((error: any) => {
+      .catch((error: any): void => {
         if (error.status === 404) {
           throw httpError(401, 'Credentials invalid', {
             errorCode: ERROR_CODES.UNAUTHENTICATED,
@@ -43,11 +43,11 @@ export class UserService {
         }
         throw error;
       });
-    const isMatch = compareSync(password, user.password);
+    const isMatch = compareSync(password, (user as User).password);
     if (!isMatch) {
       throw httpError(401, 'Credentials invalid', { errorCode: ERROR_CODES.UNAUTHENTICATED });
     }
-    const accessToken = sign({ id: user.id }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+    const accessToken = sign({ id: (user as User).id }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
     return { accessToken };
   }
 

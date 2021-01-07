@@ -1,4 +1,4 @@
-import { Model, Mongo } from '../helpers';
+import { Database, Model } from '../helpers';
 import { Logger } from '@zishone/logan';
 import joi from 'joi';
 
@@ -24,8 +24,8 @@ export class UserModel extends Model<User> {
     createdOn: joi.number(),
   });
 
-  constructor(logger: Logger, mongo: Mongo) {
-    super(logger, mongo, UserModel.schema, UserModel.collectionName);
+  constructor(logger: Logger, database: Database) {
+    super(logger, database, UserModel.schema, UserModel.collectionName);
   }
 
   public create(role: string, username: string, email: string, saltedPassword: string, name: string): User {

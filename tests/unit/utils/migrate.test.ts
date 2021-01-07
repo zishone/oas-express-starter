@@ -15,11 +15,11 @@ export default (): void => {
     const debugSpy = sandbox.spy();
     const logger = { debug: debugSpy };
     const getDbSpy = sandbox.spy();
-    const mongo = { getDb: getDbSpy };
+    const database = { getConnection: getDbSpy };
 
     sandbox.stub(migration, 'up').onCall(0).resolves();
 
-    await migrate(logger as any, mongo as any);
+    await migrate(logger as any, database as any);
 
     expect(debugSpy.calledOnce).to.be.equal(true);
     expect(getDbSpy.calledOnce).to.be.equal(true);

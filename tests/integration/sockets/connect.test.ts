@@ -1,5 +1,5 @@
 import { EVENTS, ROLES } from '../../../src/constants';
-import { logger, mongo } from '../../../src/server';
+import { database, logger } from '../../../src/server';
 import { UserModel } from '../../../src/models';
 import { config } from '../../../src/config';
 import { expect } from 'chai';
@@ -18,7 +18,7 @@ export const connect = (): void => {
       role: ROLES.USER,
       createdOn: Date.now(),
     };
-    const userModel = new UserModel(logger, mongo);
+    const userModel = new UserModel(logger, database);
     const [testUserId] = await userModel.save(testUser);
     const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -29,7 +29,7 @@ export const connect = (): void => {
       isConnected = true;
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 100));
 
     io.disconnect();
 

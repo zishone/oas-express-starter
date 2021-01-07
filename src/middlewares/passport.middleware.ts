@@ -1,15 +1,15 @@
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { User, UserModel } from '../models';
+import { Database } from '../helpers';
 import { ERROR_CODES } from '../constants';
 import { Logger } from '@zishone/logan';
-import { Mongo } from '../helpers';
 import { config } from '../config';
 import httpError from 'http-errors';
 import passport from 'passport';
 
-export const passportMiddleware = (logger: Logger, mongo: Mongo): RequestHandler => {
-  const userModel = new UserModel(logger, mongo);
+export const passportMiddleware = (logger: Logger, database: Database): RequestHandler => {
+  const userModel = new UserModel(logger, database);
   const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.LOGIN_SECRET,

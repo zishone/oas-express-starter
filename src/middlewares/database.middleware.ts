@@ -1,9 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { Mongo } from '../helpers';
+import { Database } from '../helpers';
 
-export const mongoMiddleware = (mongo: Mongo): RequestHandler => {
+export const databaseMiddleware = (database: Database): RequestHandler => {
   return (req: Request, _res: Response, next: NextFunction): void => {
-    req.mongo = mongo;
+    req.database = database;
     next();
   };
 };

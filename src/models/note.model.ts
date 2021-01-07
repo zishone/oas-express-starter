@@ -1,4 +1,4 @@
-import { Model, Mongo } from '../helpers';
+import { Database, Model } from '../helpers';
 import { Logger } from '@zishone/logan';
 import joi from 'joi';
 
@@ -22,8 +22,8 @@ export class NoteModel extends Model<Note> {
     createdOn: joi.number(),
   });
 
-  constructor(logger: Logger, mongo: Mongo) {
-    super(logger, mongo, NoteModel.schema, NoteModel.collectionName);
+  constructor(logger: Logger, database: Database) {
+    super(logger, database, NoteModel.schema, NoteModel.collectionName);
   }
 
   public create(userId: string, title: string, body: string): Note {

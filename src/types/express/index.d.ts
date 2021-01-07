@@ -1,5 +1,5 @@
 import 'express';
-import { Mongo, Socket } from '../../helpers';
+import { Database, Socket } from '../../helpers';
 import { AddressInfo } from 'net';
 import { User } from '../../models';
 
@@ -10,7 +10,7 @@ declare module 'express' {
 
   interface Request {
     id: string;
-    mongo: Mongo;
+    database: Database;
     io: Socket;
     user: User;
   }

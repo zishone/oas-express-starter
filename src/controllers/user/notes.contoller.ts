@@ -7,7 +7,7 @@ import { paginate } from '../../utils';
  */
 export const postUserNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.mongo);
+    const noteService = new NoteService(req.logger, req.database);
 
     const { id: userId } = req.user;
     const { title, body } = req.body;
@@ -25,7 +25,7 @@ export const postUserNotes = async (req: Request, res: Response, next: NextFunct
  */
 export const getUserNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.mongo);
+    const noteService = new NoteService(req.logger, req.database);
 
     const { filter, options } = req.mquery;
     const { id: userId } = req.user;
@@ -53,7 +53,7 @@ export const getUserNotes = async (req: Request, res: Response, next: NextFuncti
  */
 export const getUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.mongo);
+    const noteService = new NoteService(req.logger, req.database);
 
     const { noteId } = req.params;
     const { options } = req.mquery;
@@ -71,7 +71,7 @@ export const getUserNotesById = async (req: Request, res: Response, next: NextFu
  */
 export const patchUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.mongo);
+    const noteService = new NoteService(req.logger, req.database);
 
     const { noteId } = req.params;
     const { title, body } = req.body;
@@ -92,7 +92,7 @@ export const patchUserNotesById = async (req: Request, res: Response, next: Next
  */
 export const deleteUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.mongo);
+    const noteService = new NoteService(req.logger, req.database);
 
     const { noteId } = req.params;
 

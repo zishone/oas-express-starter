@@ -11,8 +11,8 @@ export default (): void => {
 
   beforeEach((): void => {
     const logger = { debugFunctionCall: (): void => null };
-    const mongo = { getDb: async (): Promise<void> => null };
-    userModel = new UserModel(logger as any, mongo as any);
+    const database = { getConnection: async (): Promise<void> => null };
+    userModel = new UserModel(logger as any, database as any);
   });
 
   afterEach((): void => {

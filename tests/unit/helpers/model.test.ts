@@ -9,20 +9,20 @@ import joi from 'joi';
 export default (): void => {
   const sandbox = createSandbox();
   let model: Model<any>;
-  let mongoMock: SinonMock;
+  let dbMock: SinonMock;
 
   beforeEach((): void => {
     const logger = { debugFunctionCall: (): void => null };
-    const mongo = {
-      getDb: async (): Promise<void> => null,
-      error: () => {
+    const database = {
+      getConnection: async (): Promise<void> => null,
+      error: (): void => {
         throw new Error();
       },
     };
     const schema = {};
     const testCollectionName = COLLECTIONS.USERS;
-    mongoMock = sandbox.mock(mongo);
-    model = new Model<any>(logger as any, mongo as any, schema as any, testCollectionName);
+    dbMock = sandbox.mock(database);
+    model = new Model<any>(logger as any, database as any, schema as any, testCollectionName);
   });
 
   afterEach((): void => {
@@ -33,7 +33,7 @@ export default (): void => {
     it('should return count of entries in database', async (): Promise<void> => {
       const testCount = 1;
 
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           countDocuments: async (): Promise<number> => testCount,
         }),
@@ -45,7 +45,7 @@ export default (): void => {
     });
 
     it('should fail to return count when database error happens', async (): Promise<void> => {
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           countDocuments: async (): Promise<number> => {
             throw new Error();
@@ -64,7 +64,7 @@ export default (): void => {
   describe('fetch', (): void => {
     it('should return list of entries in database', async (): Promise<void> => {
       const findSpy = sandbox.spy();
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           find: findSpy,
         }),
@@ -76,7 +76,7 @@ export default (): void => {
     });
 
     it('should fail to return list of entries when database error happens', async (): Promise<void> => {
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           find: (): any => {
             throw new Error();
@@ -96,7 +96,7 @@ export default (): void => {
     it('should return an entry from the database', async (): Promise<void> => {
       const testData = {};
 
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           findOne: async (): Promise<any> => testData,
         }),
@@ -108,7 +108,7 @@ export default (): void => {
     });
 
     it('should fail to return an entry when database error happens', async (): Promise<void> => {
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           findOne: async (): Promise<any> => {
             throw new Error();
@@ -124,12 +124,12 @@ export default (): void => {
     });
 
     it('should fail to return an entry when data was not found', async (): Promise<void> => {
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           findOne: async (): Promise<any> => null,
         }),
       } as any);
-      mongoMock.expects('error').throws(httpError(404, { errorCode: ERROR_CODES.NOT_FOUND }));
+      dbMock.expects('error').throws(httpError(404, { errorCode: ERROR_CODES.NOT_FOUND }));
 
       try {
         await model.fetchOne();
@@ -145,7 +145,7 @@ export default (): void => {
       const testPipeline = [{}];
 
       const aggregateSpy = sandbox.spy();
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           aggregate: aggregateSpy,
         }),
@@ -159,7 +159,7 @@ export default (): void => {
     it('should fail to aggregate list of entries when database error happens', async (): Promise<void> => {
       const testPipeline = [{}];
 
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           aggregate: (): any => {
             throw new Error();
@@ -185,7 +185,7 @@ export default (): void => {
         .returns({
           items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: [testData] }) }),
         } as any);
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           insertMany: async (): Promise<void> => null,
         }),
@@ -205,7 +205,7 @@ export default (): void => {
         .returns({
           items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: testData }) }),
         } as any);
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           insertMany: async (): Promise<void> => null,
         }),
@@ -225,7 +225,7 @@ export default (): void => {
         .returns({
           items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: [testData] }) }),
         } as any);
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           insertMany: async (): Promise<any> => {
             throw new Error();
@@ -249,14 +249,14 @@ export default (): void => {
         .returns({
           items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: [testData] }) }),
         } as any);
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           insertMany: async (): Promise<any> => {
             throw { code: 11000 };
           },
         }),
       } as any);
-      mongoMock.expects('error').throws(httpError(403, { errorCode: ERROR_CODES.DUPLICATE }));
+      dbMock.expects('error').throws(httpError(403, { errorCode: ERROR_CODES.DUPLICATE }));
 
       try {
         await model.save(testData);
@@ -294,7 +294,7 @@ export default (): void => {
       };
 
       const updateManySpy = sandbox.spy();
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           updateMany: updateManySpy,
         }),
@@ -309,7 +309,7 @@ export default (): void => {
       const testFilter = {};
       const testUpdate = {};
 
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           updateMany: async (): Promise<any> => {
             throw new Error();
@@ -331,7 +331,7 @@ export default (): void => {
         $unset: {},
       };
 
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           updateMany: async (): Promise<any> => {
             throw { code: 16840 };
@@ -353,14 +353,14 @@ export default (): void => {
         $unset: {},
       };
 
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           updateMany: async (): Promise<any> => {
             throw { code: 11000 };
           },
         }),
       } as any);
-      mongoMock.expects('error').throws(httpError(403, { errorCode: ERROR_CODES.DUPLICATE }));
+      dbMock.expects('error').throws(httpError(403, { errorCode: ERROR_CODES.DUPLICATE }));
 
       try {
         await model.update(testFilter, testUpdate);
@@ -376,7 +376,7 @@ export default (): void => {
       const testFilter = {};
 
       const deleteManySpy = sandbox.spy();
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           deleteMany: deleteManySpy,
         }),
@@ -390,7 +390,7 @@ export default (): void => {
     it('should fail to delete entries when database error happens', async (): Promise<void> => {
       const testFilter = {};
 
-      mongoMock.expects('getDb').resolves({
+      dbMock.expects('getConnection').resolves({
         collection: (): { [key: string]: any } => ({
           deleteMany: async (): Promise<any> => {
             throw new Error();

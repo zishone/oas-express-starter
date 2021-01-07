@@ -1,16 +1,16 @@
 import { COLLECTIONS } from '../constants';
+import { Database } from '../helpers';
 import { Logger } from '@zishone/logan';
-import { Mongo } from '../helpers';
 import { config } from '../config';
 import { join } from 'path';
 import migration from 'migrate-mongo';
 
-export const migrate = async (logger: Logger, mongo: Mongo): Promise<void> => {
+export const migrate = async (logger: Logger, database: Database): Promise<void> => {
   migration.config.set({
     migrationsDir: join('db', 'migrations'),
     changelogCollectionName: COLLECTIONS.MIGRATIONS,
   });
-  const db = await mongo.getDb();
-  await migration.up(db);
-  logger.debug('Database migrated', { 'db.name': config.DB_NAME });
+  const connection = await database.getConnection();
+  await migration.up(connection);
+  logger.debug('Database migrated', { 'database.name': config.DB_NAME });
 };

@@ -1,15 +1,15 @@
 import { FilterQuery, FindOneOptions } from 'mongodb';
 import { Note, NoteModel } from '../models';
+import { Database } from '../helpers';
 import { Logger } from '@zishone/logan';
-import { Mongo } from '../helpers';
 
 export class NoteService {
   private logger: Logger;
   private noteModel: NoteModel;
 
-  constructor(logger: Logger, mongo: Mongo) {
+  constructor(logger: Logger, database: Database) {
     this.logger = logger;
-    this.noteModel = new NoteModel(logger, mongo);
+    this.noteModel = new NoteModel(logger, database);
   }
 
   public async createNote(userId: string, title: string, body: string): Promise<{ note: Note }> {

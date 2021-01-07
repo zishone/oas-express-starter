@@ -12,8 +12,8 @@ export default (): void => {
   beforeEach((): void => {
     const logger = { debugFunctionCall: (): void => null };
     const server = {};
-    const mongo = {};
-    socket = new Socket(logger as any, server as any, mongo as any);
+    const database = {};
+    socket = new Socket(logger as any, server as any, database as any);
   });
 
   afterEach((): void => {

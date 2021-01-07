@@ -1,4 +1,4 @@
-import { app, logger, mongo } from '../../../../src/server';
+import { app, database, logger } from '../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
 import { genSaltSync, hashSync } from 'bcryptjs';
@@ -27,7 +27,7 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -48,7 +48,7 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       await userModel.save(testUser);
 
       const response = await request(app).get('/api/v1/user').send();
@@ -65,7 +65,7 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -92,7 +92,7 @@ export const user = (): void => {
         createdOn: Date.now(),
       };
 
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -114,7 +114,7 @@ export const user = (): void => {
         createdOn: Date.now(),
       };
 
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -146,7 +146,7 @@ export const user = (): void => {
         },
       ];
 
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUsers);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -172,7 +172,7 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -195,7 +195,7 @@ export const user = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -224,7 +224,7 @@ export const userPassword = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -251,7 +251,7 @@ export const userPassword = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 

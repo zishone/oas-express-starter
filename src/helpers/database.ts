@@ -3,14 +3,14 @@ import { ERROR_CODES } from '../constants';
 import { Logger } from '@zishone/logan';
 import httpError from 'http-errors';
 
-export interface MongoConfig {
+export interface DatabaseConfig {
   mongoUri: string;
   dbName: string;
   clientOptions?: MongoClientOptions;
   dbOptions?: MongoClientCommonOption;
 }
 
-export class Mongo {
+export class Database {
   private logger: Logger;
   private dbUri: string;
   private dbName: string;
@@ -22,8 +22,8 @@ export class Mongo {
     this.dbName = dbName;
   }
 
-  public async getDb(): Promise<Db> {
-    this.logger.debugFunctionCall('Mongo.getDb', arguments);
+  public async getConnection(): Promise<Db> {
+    this.logger.debugFunctionCall('Mongo.getConnection', arguments);
     try {
       if (!this.client) {
         throw new Error();
@@ -39,7 +39,7 @@ export class Mongo {
   }
 
   public error(error: any) {
-    this.logger.debugFunctionCall('Mongo.error', arguments);
+    this.logger.debugFunctionCall('Database.error', arguments);
     switch (error.code) {
       case 11000:
         throw httpError(403, 'Data already exists', {

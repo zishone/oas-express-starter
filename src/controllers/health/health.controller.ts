@@ -6,7 +6,7 @@ import { config } from '../../config';
  */
 export const getHealth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    await req.mongo.getDb();
+    await req.database.getConnection();
 
     res.jsend.success({
       name: config.APP_NAME,

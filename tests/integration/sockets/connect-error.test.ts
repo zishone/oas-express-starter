@@ -14,7 +14,7 @@ export const connectError = (): void => {
       error = data;
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 100));
 
     expect(error).to.exist;
   });

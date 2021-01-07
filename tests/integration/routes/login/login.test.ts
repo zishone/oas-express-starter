@@ -1,4 +1,4 @@
-import { app, logger, mongo } from '../../../../src/server';
+import { app, database, logger } from '../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
 import { genSaltSync, hashSync } from 'bcryptjs';
@@ -20,7 +20,7 @@ export const login = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       await userModel.save(testUser);
 
       const response = await request(app).post('/api/v1/login').send({
@@ -54,7 +54,7 @@ export const login = (): void => {
         role: ROLES.USER,
         createdOn: Date.now(),
       };
-      const userModel = new UserModel(logger, mongo);
+      const userModel = new UserModel(logger, database);
       await userModel.save(testUser);
 
       const response = await request(app).post('/api/v1/login').send({

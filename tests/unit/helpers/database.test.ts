@@ -1,26 +1,26 @@
 import { SinonSpy, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
-import { Mongo } from '../../../src/helpers';
+import { Database } from '../../../src/helpers';
 import { MongoClient } from 'mongodb';
 import { expect } from 'chai';
 import { nanoid } from 'nanoid';
 
 export default (): void => {
   const sandbox = createSandbox();
-  let mongo: Mongo;
+  let database: Database;
 
   beforeEach((): void => {
     const logger = { debugFunctionCall: (): void => null };
     const testDb = nanoid(12);
     const testUri = nanoid(12);
-    mongo = new Mongo(logger as any, testUri, testDb);
+    database = new Database(logger as any, testUri, testDb);
   });
 
   afterEach((): void => {
     sandbox.restore();
   });
 
-  describe('getDb', (): void => {
+  describe('getConnection', (): void => {
     it('should connect to database successfully', async (): Promise<void> => {
       const commandSpy = sandbox.spy();
       sandbox
@@ -28,8 +28,8 @@ export default (): void => {
         .onCall(0)
         .resolves({ db: (): { command: SinonSpy } => ({ command: commandSpy }) });
 
-      await mongo.getDb();
-      await mongo.getDb();
+      await database.getConnection();
+      await database.getConnection();
 
       expect(commandSpy.calledOnce).to.be.equal(true);
     });
@@ -40,7 +40,7 @@ export default (): void => {
       const testError = { code: 11000 };
 
       try {
-        mongo.error(testError);
+        database.error(testError);
       } catch (error) {
         expect(error.status).to.be.equal(403);
       }
@@ -50,7 +50,7 @@ export default (): void => {
       const testError = { code: 9 };
 
       try {
-        mongo.error(testError);
+        database.error(testError);
       } catch (error) {
         expect(error.status).to.be.equal(400);
       }
@@ -60,7 +60,7 @@ export default (): void => {
       const testError = new Error();
 
       try {
-        mongo.error(testError);
+        database.error(testError);
       } catch (error) {
         expect(error).to.exist;
       }

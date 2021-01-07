@@ -1,10 +1,10 @@
 import { Application, Request, json, urlencoded } from 'express';
+import { Database, Socket } from './helpers';
 import { Logger, log } from '@zishone/logan';
-import { Mongo, Socket } from './helpers';
 import { Server, createServer } from 'http';
 import {
+  databaseMiddleware,
   errorMiddleware,
-  mongoMiddleware,
   passportMiddleware,
   requestIdMiddleware,
   socketMiddleware,
@@ -20,14 +20,14 @@ import { spec } from './openapi';
 export class App {
   private app: Application;
   private logger: Logger;
-  private mongo: Mongo;
+  private database: Database;
   private server: Server;
   private socket: Socket;
 
-  constructor(app: Application, logger: Logger, mongo: Mongo) {
+  constructor(app: Application, logger: Logger, database: Database) {
     this.app = app;
     this.logger = logger;
-    this.mongo = mongo;
+    this.database = database;
     this.server = createServer(this.app);
   }
 
@@ -39,12 +39,12 @@ export class App {
   }
 
   private async createSocket(): Promise<void> {
-    this.socket = new Socket(this.logger, this.server, this.mongo);
+    this.socket = new Socket(this.logger, this.server, this.database);
   }
 
   private async composeMiddlewares(): Promise<void> {
+    this.app.use(databaseMiddleware(this.database));
     this.app.use(requestIdMiddleware());
-    this.app.use(mongoMiddleware(this.mongo));
     this.app.use(socketMiddleware(this.socket));
     this.app.use(log(this.logger));
     this.app.use(jsend());
@@ -65,7 +65,7 @@ export class App {
       securityHandlers: {
         loginAuth: async (req: Request): Promise<boolean> => {
           return await new Promise((resolve, reject): void => {
-            passportMiddleware(this.logger, this.mongo)(req, req.res, (error: any): void => {
+            passportMiddleware(this.logger, this.database)(req, req.res, (error: any): void => {
               if (error) {
                 reject(error);
               } else {

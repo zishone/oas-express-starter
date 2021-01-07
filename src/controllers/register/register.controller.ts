@@ -7,7 +7,7 @@ import { UserService } from '../../services';
  */
 export const postRegister = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.mongo);
+    const userService = new UserService(req.logger, req.database);
 
     const { username, email, password, name } = req.body;
 
