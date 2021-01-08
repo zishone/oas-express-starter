@@ -3,7 +3,7 @@ import { Database } from '.';
 import { ERROR_CODES } from '../constants';
 import { Logger } from '@zishone/logan';
 import { UserModel } from '../models';
-import { config } from '../config';
+import { config } from '../configs';
 import http from 'http';
 import { verify } from 'jsonwebtoken';
 

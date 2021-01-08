@@ -103,7 +103,7 @@ io.on('connect_error', (err) => {
 | Name                      | Description                                                                                                                                                                   |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **db/migrations**         | Contains database migrations.                                                                                                                                                 |
-| **src/config**            | Contains configuration files and the config builder from environment variables.                                                                                               |
+| **src/configs**            | Contains configuration files and the config builder from environment variables.                                                                                               |
 | **src/constants**         | Contains constant definitions.                                                                                                                                                |
 | **src/controllers**       | Contains controllers to handle various http requests.                                                                                                                         |
 | **src/helpers**           | Contains resuable helper classes.                                                                                                                                             |

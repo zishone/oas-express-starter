@@ -1,5 +1,5 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { config } from '../config';
+import { config } from '../configs';
 import { parameters } from './parameters';
 import { paths } from './paths';
 import { responses } from './responses';

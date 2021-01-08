@@ -1,7 +1,7 @@
 import { COLLECTIONS } from '../constants';
 import { Database } from '../helpers';
 import { Logger } from '@zishone/logan';
-import { config } from '../config';
+import { config } from '../configs';
 import { join } from 'path';
 import migration from 'migrate-mongo';
 

@@ -4,7 +4,7 @@ import { User, UserModel } from '../models';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import { Logger } from '@zishone/logan';
 import { compareSync } from 'bcryptjs';
-import { config } from '../config';
+import { config } from '../configs';
 import httpError from 'http-errors';
 import { sign } from 'jsonwebtoken';
 

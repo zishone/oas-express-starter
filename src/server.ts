@@ -3,7 +3,7 @@ import { App } from './app';
 import { Database } from './helpers';
 import { ENVIRONMENTS } from './constants';
 import { Logger } from '@zishone/logan';
-import { config } from './config';
+import { config } from './configs';
 import express from 'express';
 import { migrate } from './utils';
 import { spec } from './openapi';

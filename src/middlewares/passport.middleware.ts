@@ -4,7 +4,7 @@ import { User, UserModel } from '../models';
 import { Database } from '../helpers';
 import { ERROR_CODES } from '../constants';
 import { Logger } from '@zishone/logan';
-import { config } from '../config';
+import { config } from '../configs';
 import httpError from 'http-errors';
 import passport from 'passport';
 
