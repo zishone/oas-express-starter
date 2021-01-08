@@ -1,10 +1,13 @@
-import { user, userPassword } from './user/user';
-import { userNotes, userNotesById } from './user/notes';
-import { users, usersById } from './users/users';
 import { OpenAPIV3 } from 'openapi-types';
-import { health } from './health/health';
-import { login } from './login/login';
-import { register } from './register/register';
+import { health } from './health';
+import { login } from './api/v1/login';
+import { register } from './api/v1/register';
+import { user } from './api/v1/user';
+import { userNotes } from './api/v1/user/notes';
+import { userNotesById } from './api/v1/user/notes/note-id';
+import { userPassword } from './api/v1/user/password';
+import { users } from './api/v1/users';
+import { usersById } from './api/v1/users/user-id';
 
 export const paths: OpenAPIV3.PathsObject = {
   '/health': health,
