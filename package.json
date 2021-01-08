@@ -7,9 +7,9 @@
   "scripts": {
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
-    "test": "TS_NODE_FILES=true mocha --file tests/unit/index.ts tests/unit/**/*.test.ts",
+    "test": "mocha --file tests/unit/index.ts tests/unit/**/*.test.ts",
     "test:coverage": "nyc --report-dir .data/tests/unit/coverage --temp-dir .data/tests/unit/.nyc_output npm run test",
-    "test-integration": "TS_NODE_FILES=true mocha --file tests/integration/index.ts tests/integration/**/*.test.ts",
+    "test-integration": "mocha --file tests/integration/index.ts tests/integration/**/*.test.ts",
     "test-integration:coverage": "nyc --report-dir .data/tests/integration/coverage --temp-dir .data/tests/integration/.nyc_output npm run test-integration",
     "build": "tsc",
     "build:watch": "tsc --watch",

@@ -17,5 +17,8 @@
   },
   "include": [
     "src/**/*"
-  ]
+  ],
+  "ts-node": {
+    "files": true
+  }
 }

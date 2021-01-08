@@ -29,17 +29,13 @@ export class App {
     this.logger = logger;
     this.database = database;
     this.server = createServer(this.app);
+    this.socket = new Socket(this.logger, this.server, this.database);
   }
 
   public async configure(): Promise<void> {
-    await this.createSocket();
     await this.composeMiddlewares();
     await this.constructOas();
     this.app.emit('ready', this.server);
-  }
-
-  private async createSocket(): Promise<void> {
-    this.socket = new Socket(this.logger, this.server, this.database);
   }
 
   private async composeMiddlewares(): Promise<void> {
