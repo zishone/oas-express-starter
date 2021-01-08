@@ -1,7 +1,7 @@
 import { EVENTS, ROLES } from '../../../src/constants';
 import { database, logger } from '../../../src/server';
 import { UserModel } from '../../../src/models';
-import { config } from '../../../src/config';
+import { config } from '../../../src/configs';
 import { expect } from 'chai';
 import { it } from 'mocha';
 import { nanoid } from 'nanoid';

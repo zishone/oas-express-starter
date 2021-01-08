@@ -1,5 +1,5 @@
 import { EVENTS } from '../../../src/constants';
-import { config } from '../../../src/config';
+import { config } from '../../../src/configs';
 import { connect } from 'socket.io-client';
 import { expect } from 'chai';
 import { it } from 'mocha';
