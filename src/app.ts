@@ -1,14 +1,8 @@
 import { Application, Request, json, urlencoded } from 'express';
-import { Database, Socket } from './helpers';
 import { Logger, log } from '@zishone/logan';
 import { Server, createServer } from 'http';
-import {
-  databaseMiddleware,
-  errorMiddleware,
-  passportMiddleware,
-  requestIdMiddleware,
-  socketMiddleware,
-} from './middlewares';
+import { databaseMiddleware, errorMiddleware, passportMiddleware, requestIdMiddleware } from './middlewares';
+import { Database } from './helpers';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
@@ -22,14 +16,12 @@ export class App {
   private logger: Logger;
   private database: Database;
   private server: Server;
-  private socket: Socket;
 
   constructor(app: Application, logger: Logger, database: Database) {
     this.app = app;
     this.logger = logger;
     this.database = database;
     this.server = createServer(this.app);
-    this.socket = new Socket(this.logger, this.server, this.database);
   }
 
   public async configure(): Promise<void> {
@@ -41,7 +33,6 @@ export class App {
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
     this.app.use(databaseMiddleware(this.database));
-    this.app.use(socketMiddleware(this.socket));
     this.app.use(log(this.logger));
     this.app.use(jsend());
     this.app.use(json());

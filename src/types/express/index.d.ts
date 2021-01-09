@@ -1,6 +1,6 @@
 import 'express';
-import { Database, Socket } from '../../helpers';
 import { AddressInfo } from 'net';
+import { Database } from '../../helpers';
 import { User } from '../../models';
 
 declare module 'express' {
@@ -11,7 +11,6 @@ declare module 'express' {
   interface Request {
     id: string;
     database: Database;
-    io: Socket;
     user: User;
   }
 }

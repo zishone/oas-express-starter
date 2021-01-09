@@ -1,7 +1,7 @@
 # oas-express-starter
 [![Build](https://github.com/zishone/oas-express-starter/workflows/ci/badge.svg)](https://github.com/zishone/oas-express-starter/actions?query=workflow%3Aci) [![Coverage](https://codecov.io/gh/zishone/oas-express-starter/branch/master/graph/badge.svg)](https://codecov.io/gh/zishone/oas-express-starter) [![License](https://img.shields.io/github/license/zishone/oas-express-starter)](https://github.com/zishone/oas-express-starter/blob/master/LICENSE)
 
-A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript with MongoDB and SocketIO.
+A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript with MongoDB.
 
 ## Quick Start
 * Clone the repository
@@ -46,22 +46,6 @@ CONFIG_LOGIN_TTL=2592000            # Time to live of login in seconds
 
 ## Swagger UI
 Should be available on route `/apidocs` when NODE_ENV is set to `development`.
-
-## Socket IO
-Client must be authenticated to connect:
-```javascript
-const socket = require('socket.io-client')
-const io = socket.connect('http://localhost:3000', { query: { token:'<token>' } });
-io.on('connect', () => {
-  // Do stuff
-});
-io.on('<customEvent>', () => {
-  // Do stuff
-})
-io.on('connect_error', (err) => {
-  // Do stuff with err
-})
-```
 
 ## NPM Scripts
 * `npm run` **`lint`**

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { NoteService, UserService } from '../../../../services';
-import { EVENTS } from '../../../../constants';
 
 /**
  * GET /api/v1/users/{userId}
@@ -36,8 +35,6 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
       password,
       name,
     });
-
-    req.io.to(userId).emit(EVENTS.NOTIFICATION, { message: 'Info updated by admin' });
 
     res.jsend.success(undefined, 204);
   } catch (error) {
