@@ -91,7 +91,7 @@ Should be available on route `/apidocs` when NODE_ENV is set to `development`.
 | **src/constants**         | Contains constant definitions.                                                                                                                                                |
 | **src/controllers**       | Contains controllers to handle various http requests.                                                                                                                         |
 | **src/helpers**           | Contains resuable helper classes.                                                                                                                                             |
-| **src/middlewares**       | Contains custom middlewares.                                                                                                                                                  |
+| **src/middlewares**       | Contains middlewares.                                                                                                                                                         |
 | **src/models**            | Contains models for the schema definitions and database access per entity.                                                                                                    |
 | **src/openapi**           | Contains OpenAPI 3.0 specification in JSON format.                                                                                                                            |
 | **src/services**          | Contains services, this is where ther business logic lives.                                                                                                                   |
