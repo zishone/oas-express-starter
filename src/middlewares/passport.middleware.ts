@@ -29,9 +29,9 @@ export const passportMiddleware = (logger: Logger, database: Database): RequestH
   passport.serializeUser((user, done): void => {
     done(null, user);
   });
-  passport.deserializeUser((user, done): void => {
-    done(null, user);
-  });
+  // passport.deserializeUser((user, done): void => {
+  //   done(null, user);
+  // });
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     passport.authenticate('jwt', { session: false }, (error: any, user: User, info: any): void => {
       try {
@@ -39,15 +39,9 @@ export const passportMiddleware = (logger: Logger, database: Database): RequestH
           throw error;
         }
         if (!user) {
-          throw new Error();
-        } else {
-          req.logIn(user, (error: any): void => {
-            if (error) {
-              throw error;
-            }
-            next();
-          });
+          throw new Error('User not found');
         }
+        req.logIn(user, next);
       } catch (error) {
         next(
           httpError(401, 'Authentication failed', {

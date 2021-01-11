@@ -23,6 +23,48 @@ export default (): void => {
     sandbox.restore();
   });
 
+  describe('validatePassword', (): void => {
+    it('should validate password of user of the given id', async (): Promise<void> => {
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
+
+      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(true);
+
+      const isMatch = await userService.validatePassword(testUser.id, testUser.password);
+
+      expect(isMatch).to.be.equal(true);
+    });
+
+    it('should fail when given password is invalid', async (): Promise<void> => {
+      const testUser = {
+        id: nanoid(12),
+        username: nanoid(12),
+        email: nanoid(12),
+        password: nanoid(12),
+        name: nanoid(12),
+        role: ROLES.USER,
+        createdOn: Date.now(),
+      };
+
+      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(false);
+
+      try {
+        await userService.validatePassword(testUser.id, testUser.password);
+      } catch (error) {
+        expect(error).to.exist;
+      }
+    });
+  });
+
   describe('registerUser', (): void => {
     it('should register new user to the database', async (): Promise<void> => {
       const testPassword = nanoid(12);
@@ -64,7 +106,7 @@ export default (): void => {
       };
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
-      sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(true);
+      sandbox.stub(UserService.prototype, 'validatePassword').onCall(0).resolves(true);
       sandbox
         .stub(jsonwebtoken, 'sign')
         .onCall(0)
@@ -115,7 +157,7 @@ export default (): void => {
       };
 
       sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
-      sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(false);
+      sandbox.stub(UserService.prototype, 'validatePassword').onCall(0).rejects({ status: 403 });
 
       try {
         await userService.authenticateUser(testUser.username, testPassword);
@@ -190,17 +232,13 @@ export default (): void => {
       const fetchOneStub = sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
       const updateStub = sandbox.stub(UserModel.prototype, 'update').onCall(0).resolves();
 
-      await userService.updateUserById(testUser.id, testUser);
+      await userService.updateUserById(testUser.id, { username: testUser.username });
 
       expect(fetchOneStub.calledOnce).to.be.equal(true);
       expect(updateStub.calledOnce).to.be.equal(true);
     });
-  });
 
-  describe('updateUserPasswordById', (): void => {
-    it('should update user password in the database given user id', async (): Promise<void> => {
-      const testPassword = nanoid(12);
-      const testNewPassword = nanoid(12);
+    it('should update hash user password when password is being updated', async (): Promise<void> => {
       const testSalt = nanoid(12);
       const testUser = {
         id: nanoid(12),
@@ -213,45 +251,14 @@ export default (): void => {
       };
 
       const fetchOneStub = sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
-      const compareSyncStub = sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(true);
-      const genSaltSyncStub = sandbox.stub(bcryptjs, 'genSaltSync').onCall(0).returns(testSalt);
-      const hashSyncStub = sandbox.stub(bcryptjs, 'hashSync').onCall(0).returns(testUser.password);
+      sandbox.stub(bcryptjs, 'genSaltSync').onCall(0).returns(testSalt);
+      sandbox.stub(bcryptjs, 'hashSync').onCall(0).returns(testUser.password);
       const updateStub = sandbox.stub(UserModel.prototype, 'update').onCall(0).resolves();
 
-      await userService.updateUserPasswordById(testUser.id, testPassword, testNewPassword);
+      await userService.updateUserById(testUser.id, { password: testUser.password });
 
       expect(fetchOneStub.calledOnce).to.be.equal(true);
-      expect(compareSyncStub.calledOnce).to.be.equal(true);
-      expect(genSaltSyncStub.calledOnce).to.be.equal(true);
-      expect(hashSyncStub.calledOnce).to.be.equal(true);
       expect(updateStub.calledOnce).to.be.equal(true);
-    });
-
-    it('should fail to update user password when current password does not match', async (): Promise<void> => {
-      const testPassword = nanoid(12);
-      const testNewPassword = nanoid(12);
-      const testUser = {
-        id: nanoid(12),
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
-
-      const fetchOneStub = sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
-      const compareSyncStub = sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(false);
-
-      try {
-        await userService.updateUserPasswordById(testUser.id, testPassword, testNewPassword);
-      } catch (error) {
-        expect(error.status).to.be.equal(403);
-        expect(error.errorCode).to.be.equal(ERROR_CODES.NOT_ALLOWED);
-      }
-
-      expect(fetchOneStub.calledOnce).to.be.equal(true);
-      expect(compareSyncStub.calledOnce).to.be.equal(true);
     });
   });
 
@@ -274,57 +281,6 @@ export default (): void => {
 
       expect(fetchOneStub.calledOnce).to.be.equal(true);
       expect(deleteStub.calledOnce).to.be.equal(true);
-    });
-  });
-
-  describe('deleteUserByIdWithCredentials', (): void => {
-    it('should delete a user from the database given user id and password', async (): Promise<void> => {
-      const testPassword = nanoid(12);
-      const testUser = {
-        id: nanoid(12),
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
-
-      const fetchOneStub = sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
-      const compareSyncStub = sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(true);
-      const deleteStub = sandbox.stub(UserModel.prototype, 'delete').onCall(0).resolves();
-
-      await userService.deleteUserByIdWithCredentials(testUser.id, testPassword);
-
-      expect(fetchOneStub.calledOnce).to.be.equal(true);
-      expect(compareSyncStub.calledOnce).to.be.equal(true);
-      expect(deleteStub.calledOnce).to.be.equal(true);
-    });
-
-    it('should fail to delete a user when password does not match', async (): Promise<void> => {
-      const testPassword = nanoid(12);
-      const testUser = {
-        id: nanoid(12),
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
-
-      const fetchOneStub = sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
-      const compareSyncStub = sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(false);
-
-      try {
-        await userService.deleteUserByIdWithCredentials(testUser.id, testPassword);
-      } catch (error) {
-        expect(error.status).to.be.equal(403);
-        expect(error.errorCode).to.be.equal(ERROR_CODES.NOT_ALLOWED);
-      }
-
-      expect(fetchOneStub.calledOnce).to.be.equal(true);
-      expect(compareSyncStub.calledOnce).to.be.equal(true);
     });
   });
 };

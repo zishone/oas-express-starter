@@ -52,7 +52,8 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     const { id: userId } = req.user;
     const { password } = req.body;
 
-    await userService.deleteUserByIdWithCredentials(userId, password);
+    await userService.validatePassword(userId, password);
+    await userService.deleteUserById(userId);
     await noteService.deleteNotes({ userId });
 
     res.jsend.success(undefined, 204);

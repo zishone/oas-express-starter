@@ -60,6 +60,18 @@ export const user = (): void => {
       expect(response.status).to.be.equal(401);
     });
 
+    it('should respond 401 WHEN user does not exist', async (): Promise<void> => {
+      const testUserId = nanoid(12);
+      const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+
+      const response = await request(app)
+        .get('/api/v1/user')
+        .set('Authorization', `Bearer ${testUserAccessToken}`)
+        .send();
+
+      expect(response.status).to.be.equal(401);
+    });
+
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
       const testUser = {
         username: nanoid(12),

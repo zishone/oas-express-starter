@@ -16,17 +16,17 @@ export const errorMiddleware = (): ErrorRequestHandler => {
     if (error.status < 500) {
       res.jsend.fail(
         {
-          errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
-          message: error.message || 'Error unknown',
+          errorCode: error.errorCode,
+          message: error.message,
           details: Array.isArray(error.details) ? error.details : [error.details],
         },
         error.status,
       );
       return;
     }
-    res.jsend.error(error.message || 'Error unknown', error.status, error.code, {
-      errorCode: error.errorCode || ERROR_CODES.UNKNOWN_ERROR,
-      details: Array.isArray(error.details) ? error.details : [error.details],
+    res.jsend.error(error.message, error.status, error.code, {
+      errorCode: ERROR_CODES.UNKNOWN_ERROR,
+      details: [error],
     });
   };
 };

@@ -11,7 +11,8 @@ export const putUserPassword = async (req: Request, res: Response, next: NextFun
     const { id: userId } = req.user;
     const { currentPassword, newPassword } = req.body;
 
-    await userService.updateUserPasswordById(userId, currentPassword, newPassword);
+    await userService.validatePassword(userId, currentPassword);
+    await userService.updateUserById(userId, { password: newPassword });
 
     res.jsend.success(undefined, 204);
   } catch (error) {
