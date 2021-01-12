@@ -1,4 +1,5 @@
-import * as models from '../../models';
+import * as models from '../../../models';
+import { Model } from '../../../helpers';
 import { OpenAPIV3 } from 'openapi-types';
 import { Schema } from 'joi';
 import { generic } from './generic';
@@ -18,5 +19,8 @@ export const schemas: { [schemaName: string]: OpenAPIV3.ReferenceObject | OpenAP
 };
 
 for (const modelName in models) {
-  schemas[modelName] = j2s((models as { [modelName: string]: { schema: Schema } })[modelName].schema).swagger;
+  const model = (models as { [modelName: string]: { prototype: object; schema: Schema } })[modelName];
+  if (model.prototype instanceof Model) {
+    schemas[modelName] = j2s(model.schema).swagger;
+  }
 }
