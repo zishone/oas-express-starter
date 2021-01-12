@@ -7,12 +7,10 @@ export APP_VERSION=$(shell node -p "require('./package.json').version")
 export APP_PORT=${CONFIG_APP_PORT}
 
 build:
-	docker-compose build \
-		service
+	docker-compose build
 
 up: build
-	docker-compose up \
-		service
+	docker-compose up
 
 run:
 	docker-compose -f docker-compose.test.yml run \
