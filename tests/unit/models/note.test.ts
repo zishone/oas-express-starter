@@ -24,7 +24,7 @@ export default (): void => {
       const testTitle = nanoid(12);
       const testBody = nanoid(12);
 
-      const { userId, title, body, createdOn } = noteModel.create(testUserId, testTitle, testBody);
+      const { userId, title, body } = noteModel.create(testUserId, testTitle, testBody);
 
       expect({
         userId,
@@ -35,7 +35,6 @@ export default (): void => {
         title: testTitle,
         body: testBody,
       });
-      expect(createdOn).to.be.a('number');
     });
   });
 };

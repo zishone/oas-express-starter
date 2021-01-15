@@ -1,5 +1,5 @@
+import { Note, NoteModel } from '../../../src/models';
 import { describe, it } from 'mocha';
-import { NoteModel } from '../../../src/models';
 import { NoteService } from '../../../src/services';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
@@ -21,14 +21,11 @@ export default (): void => {
 
   describe('createNote', (): void => {
     it('should create new note entry in database', async (): Promise<void> => {
-      const testNote = {
-        id: nanoid(12),
-        userId: nanoid(12),
-        title: nanoid(12),
-        body: nanoid(12),
-        modifiedOn: Date.now(),
-        createdOn: Date.now(),
-      };
+      const testNote = new Note();
+      testNote.id = nanoid(12);
+      testNote.userId = nanoid(12);
+      testNote.title = nanoid(12);
+      testNote.body = nanoid(12);
 
       sandbox.stub(NoteModel.prototype, 'create').onCall(0).returns(testNote);
       sandbox.stub(NoteModel.prototype, 'save').onCall(0).resolves([testNote.id]);
@@ -42,16 +39,8 @@ export default (): void => {
 
   describe('fetchNotes', (): void => {
     it('should return notes list fetched from the database', async (): Promise<void> => {
-      const testUserId = nanoid(12);
-      const testNotes = [
-        {
-          id: nanoid(12),
-          userId: testUserId,
-          title: nanoid(12),
-          body: nanoid(12),
-          createdOn: Date.now(),
-        },
-      ];
+      const testNote = new Note();
+      const testNotes = [testNote];
 
       sandbox
         .stub(NoteModel.prototype, 'fetch')
@@ -70,14 +59,8 @@ export default (): void => {
 
   describe('fetchNoteById', (): void => {
     it('should return a note fetched from the database given note id', async (): Promise<void> => {
-      const testNote = {
-        id: nanoid(12),
-        userId: nanoid(12),
-        title: nanoid(12),
-        body: nanoid(12),
-        modifiedOn: Date.now(),
-        createdOn: Date.now(),
-      };
+      const testNote = new Note();
+      testNote.id = nanoid(12);
 
       sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
 
@@ -89,14 +72,8 @@ export default (): void => {
 
   describe('updateNoteById', (): void => {
     it('should update a note in the database given note id', async (): Promise<void> => {
-      const testNote = {
-        id: nanoid(12),
-        userId: nanoid(12),
-        title: nanoid(12),
-        body: nanoid(12),
-        modifiedOn: Date.now(),
-        createdOn: Date.now(),
-      };
+      const testNote = new Note();
+      testNote.id = nanoid(12);
 
       const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
       const updateStub = sandbox.stub(NoteModel.prototype, 'update').onCall(0).resolves();
@@ -110,14 +87,8 @@ export default (): void => {
 
   describe('deleteNoteById', (): void => {
     it('should delete a note from the database given note id', async (): Promise<void> => {
-      const testNote = {
-        id: nanoid(12),
-        userId: nanoid(12),
-        title: nanoid(12),
-        body: nanoid(12),
-        modifiedOn: Date.now(),
-        createdOn: Date.now(),
-      };
+      const testNote = new Note();
+      testNote.id = nanoid(12);
 
       const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
       const deleteStub = sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();

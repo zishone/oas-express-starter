@@ -12,14 +12,8 @@ use(chaiHttp);
 export const register = (): void => {
   describe('POST', (): void => {
     it('should respond 201', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
+      const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
       const response = await request(app).post('/api/v1/register').send(testUser);
 
@@ -27,16 +21,8 @@ export const register = (): void => {
     });
 
     it('should respond 403 WHEN user already exists', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
-
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       await userModel.save(testUser);
 
       const response = await request(app).post('/api/v1/register').send(testUser);

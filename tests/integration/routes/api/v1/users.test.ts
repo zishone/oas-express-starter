@@ -22,25 +22,11 @@ export const users = (): void => {
 
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       await userModel.save(testUser);
 
       const response = await request(app)
@@ -52,25 +38,11 @@ export const users = (): void => {
     });
 
     it('should respond 200 WHEN sorted asc', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       await userModel.save(testUser);
 
       const response = await request(app)
@@ -82,25 +54,11 @@ export const users = (): void => {
     });
 
     it('should respond 200 WHEN sorted desc', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       await userModel.save(testUser);
 
       const response = await request(app)
@@ -112,15 +70,8 @@ export const users = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 

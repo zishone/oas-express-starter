@@ -23,6 +23,10 @@ export class Data {
 
   @IsOptional()
   @IsNumber()
+  modifiedOn: number;
+
+  @IsOptional()
+  @IsNumber()
   createdOn: number;
 }
 
@@ -129,7 +133,12 @@ export class Model<T = Data> {
     const connection = await this.database.getConnection();
     try {
       if (update.$set) {
-        update.$set = dotnotate(update.$set);
+        update.$set = {
+          ...dotnotate(update.$set),
+          modifiedOn: Date.now(),
+        };
+      } else {
+        update.$set = { modifiedOn: Date.now() };
       }
       if (update.$unset) {
         update.$unset = dotnotate(update.$unset);
