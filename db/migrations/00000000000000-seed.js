@@ -19,19 +19,21 @@ module.exports = {
           id: 'aaaaaaaaaaaa',
           username: 'admin',
           email: 'admin@example.com',
-          password: '$2a$12$mKfWXLjhcswHNqAa8mTchO2ouzAUZcaD.579.4z/undGVV4WG.lNu',
+          password: '$2a$12$mKfWXLjhcswHNqAa8mTchO2ouzAUZcaD.579.4z/undGVV4WG.lNu', // PLAIN TEXT: password
           name: 'Admin',
           role: 'admin',
-          createdOn: + Date.now(),
+          modifiedOn: 0,
+          createdOn: Date.now(),
         },
         {
           id: 'bbbbbbbbbbbb',
           username: 'user',
           email: 'user@example.com',
-          password: '$2a$12$mKfWXLjhcswHNqAa8mTchO2ouzAUZcaD.579.4z/undGVV4WG.lNu',
+          password: '$2a$12$mKfWXLjhcswHNqAa8mTchO2ouzAUZcaD.579.4z/undGVV4WG.lNu', // PLAIN TEXT: password
           name: 'User',
           role: 'user',
-          createdOn: + Date.now(),
+          modifiedOn: 0,
+          createdOn: Date.now(),
         }
       ]);
     await db
