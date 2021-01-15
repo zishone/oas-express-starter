@@ -6,16 +6,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     operationId: 'getUserNotesById',
     description: "Gets authenticated user's note",
     security: [{ loginAuth: [] }],
-    parameters: [
-      {
-        name: 'noteId',
-        in: 'path',
-        schema: { type: 'string' },
-        description: "Note's unique identifier",
-        required: true,
-      },
-      { $ref: '#/components/parameters/fields' },
-    ],
+    parameters: [{ $ref: '#/components/parameters/noteId' }, { $ref: '#/components/parameters/fields' }],
     responses: {
       ['200']: {
         description: 'Success',
@@ -24,13 +15,10 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
             schema: {
               type: 'object',
               properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
+                status: { $ref: '#/components/schemas/success' },
                 data: {
                   type: 'object',
-                  properties: { note: { $ref: '#/components/schemas/NoteModel' } },
+                  properties: { note: { $ref: '#/components/schemas/Note' } },
                 },
               },
             },
@@ -49,15 +37,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     operationId: 'patchUserNotesById',
     description: "Updates authenticated user's note",
     security: [{ loginAuth: [] }],
-    parameters: [
-      {
-        name: 'noteId',
-        in: 'path',
-        schema: { type: 'string' },
-        description: "Note's unique identifier",
-        required: true,
-      },
-    ],
+    parameters: [{ $ref: '#/components/parameters/noteId' }],
     requestBody: {
       content: {
         ['application/json']: {
@@ -80,12 +60,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
           ['application/json']: {
             schema: {
               type: 'object',
-              properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
-              },
+              properties: { status: { $ref: '#/components/schemas/success' } },
             },
           },
         },
@@ -102,15 +77,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
     operationId: 'deleteUserNotesById',
     description: "Deletes authenticated user's note",
     security: [{ loginAuth: [] }],
-    parameters: [
-      {
-        name: 'noteId',
-        in: 'path',
-        schema: { type: 'string' },
-        description: "Note's unique identifier",
-        required: true,
-      },
-    ],
+    parameters: [{ $ref: '#/components/parameters/noteId' }],
     responses: {
       ['204']: {
         description: 'Success',
@@ -118,12 +85,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
           ['application/json']: {
             schema: {
               type: 'object',
-              properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
-              },
+              properties: { status: { $ref: '#/components/schemas/success' } },
             },
           },
         },

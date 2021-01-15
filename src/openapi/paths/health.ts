@@ -13,10 +13,7 @@ export const health: OpenAPIV3.PathItemObject = {
             schema: {
               type: 'object',
               properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
+                status: { $ref: '#/components/schemas/success' },
                 data: {
                   type: 'object',
                   properties: {

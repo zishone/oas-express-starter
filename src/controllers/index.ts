@@ -1,7 +1,7 @@
 import { deleteUser, getUser, patchUser } from './api/v1/user.controller';
-import { deleteUserNotesById, getUserNotesById, patchUserNotesById } from './api/v1/user/notes/note-id.contoller';
-import { deleteUsersById, getUsersById, patchUsersById } from './api/v1/users/user-id.controller';
-import { getUserNotes, postUserNotes } from './api/v1/user/notes.contoller';
+import { deleteUserNotesById, getUserNotesById, patchUserNotesById } from './api/v1/user-notes-note-id.contoller';
+import { deleteUsersById, getUsersById, patchUsersById } from './api/v1/users-user-id.controller';
+import { getUserNotes, postUserNotes } from './api/v1/user-notes.contoller';
 import { Chain } from '@zishone/chaindler';
 import { ROLES } from '../constants';
 import { RequestHandler } from 'express';
@@ -9,7 +9,7 @@ import { getHealth } from './health.controller';
 import { getUsers } from './api/v1/users.controller';
 import { postLogin } from './api/v1/login.controller';
 import { postRegister } from './api/v1/register.controller';
-import { putUserPassword } from './api/v1/user/password.controller';
+import { putUserPassword } from './api/v1/user-password.controller';
 import { roleMiddleware } from '../middlewares';
 
 export const controllers: { [controllerName: string]: RequestHandler } = {

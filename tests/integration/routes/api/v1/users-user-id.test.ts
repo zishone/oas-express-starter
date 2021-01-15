@@ -1,10 +1,10 @@
-import { app, database, logger } from '../../../../../../src/server';
+import { app, database, logger } from '../../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { ROLES } from '../../../../../../src/constants';
-import { UserModel } from '../../../../../../src/models';
+import { ROLES } from '../../../../../src/constants';
+import { UserModel } from '../../../../../src/models';
 import chaiHttp from 'chai-http';
-import { config } from '../../../../../../src/configs';
+import { config } from '../../../../../src/configs';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';
 import { use } from 'chai';

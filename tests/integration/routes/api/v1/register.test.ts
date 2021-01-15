@@ -13,7 +13,6 @@ export const register = (): void => {
   describe('POST', (): void => {
     it('should respond 201', async (): Promise<void> => {
       const testUser = {
-        id: nanoid(12),
         username: nanoid(12),
         email: nanoid(12),
         password: nanoid(12),
@@ -29,7 +28,6 @@ export const register = (): void => {
 
     it('should respond 403 WHEN user already exists', async (): Promise<void> => {
       const testUser = {
-        id: nanoid(12),
         username: nanoid(12),
         email: nanoid(12),
         password: nanoid(12),

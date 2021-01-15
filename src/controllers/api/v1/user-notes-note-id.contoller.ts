@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { NoteService } from '../../../../../services';
+import { NoteService } from '../../../services';
 
 /**
  * GET /api/v1/user/notes/{noteId}

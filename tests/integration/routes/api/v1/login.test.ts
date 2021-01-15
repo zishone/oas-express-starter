@@ -16,7 +16,6 @@ export const login = (): void => {
       const testPassword = nanoid(12);
       const testSalt = genSaltSync(12);
       const testUser = {
-        id: nanoid(12),
         username: nanoid(12),
         email: nanoid(12),
         password: hashSync(testPassword, testSalt),
@@ -50,7 +49,6 @@ export const login = (): void => {
     it('should respond 401 WHEN password is invalid', async (): Promise<void> => {
       const testInvalidPassword = nanoid(12);
       const testUser = {
-        id: nanoid(12),
         username: nanoid(12),
         email: nanoid(12),
         password: nanoid(12),

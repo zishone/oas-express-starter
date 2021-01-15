@@ -28,12 +28,7 @@ export const userPassword: OpenAPIV3.PathItemObject = {
           ['application/json']: {
             schema: {
               type: 'object',
-              properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
-              },
+              properties: { status: { $ref: '#/components/schemas/success' } },
             },
           },
         },

@@ -1,11 +1,11 @@
-import { NoteModel, UserModel } from '../../../../../../src/models';
-import { app, database, logger } from '../../../../../../src/server';
+import { NoteModel, UserModel } from '../../../../../src/models';
+import { app, database, logger } from '../../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { NoteService } from '../../../../../../src/services';
-import { ROLES } from '../../../../../../src/constants';
+import { NoteService } from '../../../../../src/services';
+import { ROLES } from '../../../../../src/constants';
 import chaiHttp from 'chai-http';
-import { config } from '../../../../../../src/configs';
+import { config } from '../../../../../src/configs';
 import { createSandbox } from 'sinon';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';

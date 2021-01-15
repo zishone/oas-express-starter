@@ -32,13 +32,10 @@ export const userNotes: OpenAPIV3.PathItemObject = {
             schema: {
               type: 'object',
               properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
+                status: { $ref: '#/components/schemas/success' },
                 data: {
                   type: 'object',
-                  properties: { note: { $ref: '#/components/schemas/NoteModel' } },
+                  properties: { note: { $ref: '#/components/schemas/Note' } },
                 },
               },
             },
@@ -73,17 +70,14 @@ export const userNotes: OpenAPIV3.PathItemObject = {
             schema: {
               type: 'object',
               properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
+                status: { $ref: '#/components/schemas/success' },
                 data: {
                   type: 'object',
                   properties: {
                     pagination: { $ref: '#/components/schemas/pagination' },
                     notes: {
                       type: 'array',
-                      items: { $ref: '#/components/schemas/NoteModel' },
+                      items: { $ref: '#/components/schemas/Note' },
                     },
                   },
                 },

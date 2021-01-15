@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserService } from '../../../../services';
+import { UserService } from '../../../services';
 
 /**
  * PUT /api/v1/user/password

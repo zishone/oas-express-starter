@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { NoteService } from '../../../../services';
-import { paginate } from '../../../../utils';
+import { NoteService } from '../../../services';
+import { paginate } from '../../../utils';
 
 /**
  * POST /api/v1/user/notes

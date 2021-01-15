@@ -30,13 +30,10 @@ export const register: OpenAPIV3.PathItemObject = {
             schema: {
               type: 'object',
               properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
+                status: { $ref: '#/components/schemas/success' },
                 data: {
                   type: 'object',
-                  properties: { user: { $ref: '#/components/schemas/UserModel' } },
+                  properties: { user: { $ref: '#/components/schemas/User' } },
                 },
               },
             },

@@ -1,10 +1,11 @@
+import * as cv from 'class-validator';
 import { COLLECTIONS, ERROR_CODES } from '../../../src/constants';
+import { Cursor, Model } from '../../../src/helpers';
 import { SinonMock, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
-import { Model } from '../../../src/helpers';
 import { expect } from 'chai';
 import httpError from 'http-errors';
-import joi from 'joi';
+import { nanoid } from 'nanoid';
 
 export default (): void => {
   const sandbox = createSandbox();
@@ -19,10 +20,9 @@ export default (): void => {
         throw new Error();
       },
     };
-    const schema = {};
     const testCollectionName = COLLECTIONS.USERS;
     dbMock = sandbox.mock(database);
-    model = new Model<any>(logger as any, database as any, schema as any, testCollectionName);
+    model = new Model<any>(logger as any, database as any, testCollectionName);
   });
 
   afterEach((): void => {
@@ -34,7 +34,7 @@ export default (): void => {
       const testCount = 1;
 
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           countDocuments: async (): Promise<number> => testCount,
         }),
       } as any);
@@ -46,7 +46,7 @@ export default (): void => {
 
     it('should fail to return count when database error happens', async (): Promise<void> => {
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           countDocuments: async (): Promise<number> => {
             throw new Error();
           },
@@ -65,7 +65,7 @@ export default (): void => {
     it('should return list of entries in database', async (): Promise<void> => {
       const findSpy = sandbox.spy();
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           find: findSpy,
         }),
       } as any);
@@ -77,8 +77,8 @@ export default (): void => {
 
     it('should fail to return list of entries when database error happens', async (): Promise<void> => {
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
-          find: (): any => {
+        collection: (): { [key: string]: Function } => ({
+          find: (): Cursor => {
             throw new Error();
           },
         }),
@@ -94,10 +94,10 @@ export default (): void => {
 
   describe('fetchOne', (): void => {
     it('should return an entry from the database', async (): Promise<void> => {
-      const testData = {};
+      const testData = { id: nanoid(12) };
 
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           findOne: async (): Promise<any> => testData,
         }),
       } as any);
@@ -109,7 +109,7 @@ export default (): void => {
 
     it('should fail to return an entry when database error happens', async (): Promise<void> => {
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           findOne: async (): Promise<any> => {
             throw new Error();
           },
@@ -125,7 +125,7 @@ export default (): void => {
 
     it('should fail to return an entry when data was not found', async (): Promise<void> => {
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           findOne: async (): Promise<any> => null,
         }),
       } as any);
@@ -142,16 +142,11 @@ export default (): void => {
 
   describe('save', (): void => {
     it('should save an entry in the database', async (): Promise<void> => {
-      const testData = {};
+      const testData = { id: nanoid(12) };
 
-      sandbox
-        .stub(joi, 'array')
-        .onCall(0)
-        .returns({
-          items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: [testData] }) }),
-        } as any);
+      sandbox.stub(cv, 'validateOrReject').onCall(0).resolves();
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           insertMany: async (): Promise<void> => null,
         }),
       } as any);
@@ -162,16 +157,11 @@ export default (): void => {
     });
 
     it('should save multiple entries in the database', async (): Promise<void> => {
-      const testData = [{}];
+      const testData = [{ id: nanoid(12) }];
 
-      sandbox
-        .stub(joi, 'array')
-        .onCall(0)
-        .returns({
-          items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: testData }) }),
-        } as any);
+      sandbox.stub(cv, 'validateOrReject').resolves();
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           insertMany: async (): Promise<void> => null,
         }),
       } as any);
@@ -182,16 +172,11 @@ export default (): void => {
     });
 
     it('should fail to save an entry when database error happens', async (): Promise<void> => {
-      const testData = {};
+      const testData = { id: nanoid(12) };
 
-      sandbox
-        .stub(joi, 'array')
-        .onCall(0)
-        .returns({
-          items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: [testData] }) }),
-        } as any);
+      sandbox.stub(cv, 'validateOrReject').onCall(0).resolves();
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           insertMany: async (): Promise<any> => {
             throw new Error();
           },
@@ -206,16 +191,11 @@ export default (): void => {
     });
 
     it('should fail to save an entry when data has duplicate', async (): Promise<void> => {
-      const testData = {};
+      const testData = { id: nanoid(12) };
 
-      sandbox
-        .stub(joi, 'array')
-        .onCall(0)
-        .returns({
-          items: (): { validate: () => void } => ({ validate: (): { value: any } => ({ value: [testData] }) }),
-        } as any);
+      sandbox.stub(cv, 'validateOrReject').onCall(0).resolves();
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           insertMany: async (): Promise<any> => {
             throw { code: 11000 };
           },
@@ -232,14 +212,9 @@ export default (): void => {
     });
 
     it('should fail to save an entry when data validation fails', async (): Promise<void> => {
-      const testData = {};
+      const testData = { id: nanoid(12) };
 
-      sandbox
-        .stub(joi, 'array')
-        .onCall(0)
-        .returns({
-          items: (): { validate: () => void } => ({ validate: (): { error: any } => ({ error: new Error() }) }),
-        } as any);
+      sandbox.stub(cv, 'validateOrReject').onCall(0).rejects(new Error());
 
       try {
         await model.save(testData);
@@ -260,7 +235,7 @@ export default (): void => {
 
       const updateManySpy = sandbox.spy();
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           updateMany: updateManySpy,
         }),
       } as any);
@@ -275,7 +250,7 @@ export default (): void => {
       const testUpdate = {};
 
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           updateMany: async (): Promise<any> => {
             throw new Error();
           },
@@ -297,7 +272,7 @@ export default (): void => {
       };
 
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           updateMany: async (): Promise<any> => {
             throw { code: 16840 };
           },
@@ -319,7 +294,7 @@ export default (): void => {
       };
 
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           updateMany: async (): Promise<any> => {
             throw { code: 11000 };
           },
@@ -342,7 +317,7 @@ export default (): void => {
 
       const deleteManySpy = sandbox.spy();
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           deleteMany: deleteManySpy,
         }),
       } as any);
@@ -356,7 +331,7 @@ export default (): void => {
       const testFilter = {};
 
       dbMock.expects('getConnection').resolves({
-        collection: (): { [key: string]: any } => ({
+        collection: (): { [key: string]: Function } => ({
           deleteMany: async (): Promise<any> => {
             throw new Error();
           },

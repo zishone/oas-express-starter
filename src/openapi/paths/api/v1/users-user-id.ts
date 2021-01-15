@@ -6,16 +6,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     operationId: 'getUsersById',
     description: "Gets a user's info",
     security: [{ loginAuth: [] }],
-    parameters: [
-      {
-        name: 'userId',
-        in: 'path',
-        schema: { type: 'string' },
-        description: "User's unique identifier",
-        required: true,
-      },
-      { $ref: '#/components/parameters/fields' },
-    ],
+    parameters: [{ $ref: '#/components/parameters/userId' }, { $ref: '#/components/parameters/fields' }],
     responses: {
       ['200']: {
         description: 'Success',
@@ -24,13 +15,10 @@ export const usersById: OpenAPIV3.PathItemObject = {
             schema: {
               type: 'object',
               properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
+                status: { $ref: '#/components/schemas/success' },
                 data: {
                   type: 'object',
-                  properties: { user: { $ref: '#/components/schemas/UserModel' } },
+                  properties: { user: { $ref: '#/components/schemas/User' } },
                 },
               },
             },
@@ -49,15 +37,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     operationId: 'patchUsersById',
     description: "Updates a user's info",
     security: [{ loginAuth: [] }],
-    parameters: [
-      {
-        name: 'userId',
-        in: 'path',
-        schema: { type: 'string' },
-        description: "User's unique identifier",
-        required: true,
-      },
-    ],
+    parameters: [{ $ref: '#/components/parameters/userId' }],
     requestBody: {
       content: {
         ['application/json']: {
@@ -82,12 +62,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
           ['application/json']: {
             schema: {
               type: 'object',
-              properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
-              },
+              properties: { status: { $ref: '#/components/schemas/success' } },
             },
           },
         },
@@ -104,15 +79,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
     operationId: 'deleteUsersById',
     description: 'Deletes a user',
     security: [{ loginAuth: [] }],
-    parameters: [
-      {
-        name: 'userId',
-        in: 'path',
-        schema: { type: 'string' },
-        description: "User's unique identifier",
-        required: true,
-      },
-    ],
+    parameters: [{ $ref: '#/components/parameters/userId' }],
     responses: {
       ['204']: {
         description: 'Success',
@@ -120,12 +87,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
           ['application/json']: {
             schema: {
               type: 'object',
-              properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
-              },
+              properties: { status: { $ref: '#/components/schemas/success' } },
             },
           },
         },

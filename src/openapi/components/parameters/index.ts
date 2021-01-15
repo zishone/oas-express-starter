@@ -1,7 +1,12 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { openapi } from '@zishone/monique';
-
-const { fields, filter, limit, page, skip, sort } = openapi.components.parameters;
+import { fields } from './fields';
+import { filter } from './filter';
+import { limit } from './limit';
+import { noteId } from './note-id';
+import { page } from './page';
+import { skip } from './skip';
+import { sort } from './sort';
+import { userId } from './user-id';
 
 export const parameters: { [parameterName: string]: OpenAPIV3.ParameterObject } = {
   filter,
@@ -10,4 +15,7 @@ export const parameters: { [parameterName: string]: OpenAPIV3.ParameterObject } 
   page,
   skip,
   limit,
+
+  userId,
+  noteId,
 };

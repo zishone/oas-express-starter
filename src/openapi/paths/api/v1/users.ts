@@ -22,17 +22,14 @@ export const users: OpenAPIV3.PathItemObject = {
             schema: {
               type: 'object',
               properties: {
-                status: {
-                  type: 'string',
-                  enum: ['success'],
-                },
+                status: { $ref: '#/components/schemas/success' },
                 data: {
                   type: 'object',
                   properties: {
                     pagination: { $ref: '#/components/schemas/pagination' },
                     users: {
                       type: 'array',
-                      items: { $ref: '#/components/schemas/UserModel' },
+                      items: { $ref: '#/components/schemas/User' },
                     },
                   },
                 },

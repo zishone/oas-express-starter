@@ -1,42 +1,46 @@
-import { Database, Model } from '../helpers';
+import { Data, Database, Model } from '../helpers';
+import { IsOptional, IsString } from 'class-validator';
 import { Logger } from '@zishone/logan';
-import joi from 'joi';
 
-export interface User {
-  id?: string;
+export class User extends Data {
+  @IsOptional()
+  @IsString()
   username: string;
+
+  @IsOptional()
+  @IsString()
   email: string;
+
+  @IsOptional()
+  @IsString()
   password: string;
+
+  @IsOptional()
+  @IsString()
   name: string;
+
+  @IsOptional()
+  @IsString()
   role: string;
-  createdOn: number;
 }
 
 export class UserModel extends Model<User> {
   static collectionName: string = 'users';
-  static schema: joi.Schema = joi.object().keys({
-    id: joi.string(),
-    username: joi.string(),
-    email: joi.string(),
-    password: joi.string(),
-    name: joi.string(),
-    role: joi.string(),
-    createdOn: joi.number(),
-  });
 
   constructor(logger: Logger, database: Database) {
-    super(logger, database, UserModel.schema, UserModel.collectionName);
+    super(logger, database, UserModel.collectionName);
   }
 
   public create(role: string, username: string, email: string, saltedPassword: string, name: string): User {
     this.logger.debugFunctionCall('UserModel.create', arguments);
     const user = {
+      id: '',
       username,
       email,
       password: saltedPassword,
       name,
       role,
-      createdOn: Date.now(),
+      createdOn: 0,
     };
     return user;
   }

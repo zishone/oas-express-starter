@@ -1,39 +1,41 @@
-import { Database, Model } from '../helpers';
+import { Data, Database, Model } from '../helpers';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { Logger } from '@zishone/logan';
-import joi from 'joi';
 
-export interface Note {
-  id?: string;
+export class Note extends Data {
+  @IsOptional()
+  @IsString()
   userId: string;
+
+  @IsOptional()
+  @IsString()
   title: string;
+
+  @IsOptional()
+  @IsString()
   body: string;
+
+  @IsOptional()
+  @IsNumber()
   modifiedOn: number;
-  createdOn: number;
 }
 
 export class NoteModel extends Model<Note> {
   static collectionName: string = 'notes';
-  static schema: joi.Schema = joi.object().keys({
-    id: joi.string(),
-    userId: joi.string(),
-    title: joi.string(),
-    body: joi.string(),
-    modifiedOn: joi.number(),
-    createdOn: joi.number(),
-  });
 
   constructor(logger: Logger, database: Database) {
-    super(logger, database, NoteModel.schema, NoteModel.collectionName);
+    super(logger, database, NoteModel.collectionName);
   }
 
   public create(userId: string, title: string, body: string): Note {
     this.logger.debugFunctionCall('NoteModel.create', arguments);
     const note = {
+      id: '',
       userId,
       title,
       body,
       modifiedOn: 0,
-      createdOn: Date.now(),
+      createdOn: 0,
     };
     return note;
   }
