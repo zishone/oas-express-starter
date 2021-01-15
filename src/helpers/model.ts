@@ -102,7 +102,7 @@ export class Model<T = Data> {
     }
   }
 
-  public async save(data: Partial<T> | Partial<T>[], options: SaveOptions = {}): Promise<string[]> {
+  public async save(data: T | T[], options: SaveOptions = {}): Promise<string[]> {
     this.logger.debugFunctionCall('Model.save', arguments);
     const dataArray = await this.validate(data);
     const connection = await this.database.getConnection();
@@ -116,6 +116,7 @@ export class Model<T = Data> {
             return {
               ...d,
               id,
+              modifiedOn: 0,
               createdOn: Date.now(),
             };
           },
