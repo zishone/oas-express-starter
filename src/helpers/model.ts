@@ -41,7 +41,7 @@ export class Model<T = Data> {
     try {
       this.logger.debugFunctionCall('Model.validate', arguments);
       if (Array.isArray(data)) {
-        await Promise.all(data.map((d: T): Promise<void> => validateOrReject(d)));
+        await Promise.all(data.map((d: object): Promise<void> => validateOrReject(d)));
         return data;
       } else {
         await validateOrReject(data);
