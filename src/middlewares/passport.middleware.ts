@@ -33,7 +33,7 @@ export const passportMiddleware = (logger: Logger, database: Database): RequestH
   //   done(null, user);
   // });
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    passport.authenticate('jwt', { session: false }, (error: any, user: User, info: any): void => {
+    passport.authenticate('jwt', { session: false }, (error: any, user: User, info: object): void => {
       try {
         if (error) {
           throw error;
