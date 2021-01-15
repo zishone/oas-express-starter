@@ -1,4 +1,4 @@
-import { NoteModel, UserModel } from '../../../../../src/models';
+import { Note, NoteModel, User, UserModel } from '../../../../../src/models';
 import { app, database, logger } from '../../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
@@ -15,11 +15,11 @@ export const userNotesById = (): void => {
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
       const userModel = new UserModel(logger, database);
-      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const noteModel = new NoteModel(logger, database);
-      const testNote = noteModel.create(testUserId, nanoid(12), nanoid(12));
+      const testNote = new Note(testUserId, nanoid(12), nanoid(12));
       const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
@@ -32,7 +32,7 @@ export const userNotesById = (): void => {
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
       const userModel = new UserModel(logger, database);
-      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNoteId = nanoid(12);
@@ -49,12 +49,12 @@ export const userNotesById = (): void => {
   describe('PATCH', (): void => {
     it('should respond 204', async (): Promise<void> => {
       const userModel = new UserModel(logger, database);
-      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewBody = nanoid(12);
       const noteModel = new NoteModel(logger, database);
-      const testNote = noteModel.create(testUserId, nanoid(12), nanoid(12));
+      const testNote = new Note(testUserId, nanoid(12), nanoid(12));
       const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
@@ -67,7 +67,7 @@ export const userNotesById = (): void => {
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
       const userModel = new UserModel(logger, database);
-      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewBody = nanoid(12);
@@ -85,11 +85,11 @@ export const userNotesById = (): void => {
   describe('DELETE', (): void => {
     it('should respond 204', async (): Promise<void> => {
       const userModel = new UserModel(logger, database);
-      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const noteModel = new NoteModel(logger, database);
-      const testNote = noteModel.create(testUserId, nanoid(12), nanoid(12));
+      const testNote = new Note(testUserId, nanoid(12), nanoid(12));
       const [testNoteId] = await noteModel.save(testNote);
 
       const response = await request(app)
@@ -102,7 +102,7 @@ export const userNotesById = (): void => {
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
       const userModel = new UserModel(logger, database);
-      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNoteId = nanoid(12);

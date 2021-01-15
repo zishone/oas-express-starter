@@ -1,5 +1,6 @@
 import { Data, Database, Model } from '../helpers';
 import { IsOptional, IsString } from 'class-validator';
+import { COLLECTIONS } from '../constants';
 import { Logger } from '@zishone/logan';
 
 export class Note extends Data {
@@ -14,21 +15,16 @@ export class Note extends Data {
   @IsOptional()
   @IsString()
   body: string;
-}
 
-export class NoteModel extends Model<Note> {
-  static collectionName: string = 'notes';
-
-  constructor(logger: Logger, database: Database) {
-    super(logger, database, NoteModel.collectionName);
+  constructor(userId: string, title: string, body: string) {
+    super();
+    this.userId = userId;
+    this.title = title;
+    this.body = body;
   }
-
-  public create(userId: string, title: string, body: string): Note {
-    this.logger.debugFunctionCall('NoteModel.create', arguments);
-    const note = new Note();
-    note.userId = userId;
-    note.title = title;
-    note.body = body;
-    return note;
+}
+export class NoteModel extends Model<Note> {
+  constructor(logger: Logger, database: Database) {
+    super(logger, database, COLLECTIONS.NOTES);
   }
 }

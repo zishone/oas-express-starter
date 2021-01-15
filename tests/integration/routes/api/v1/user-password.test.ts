@@ -1,9 +1,9 @@
+import { User, UserModel } from '../../../../../src/models';
 import { app, database, logger } from '../../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import { ROLES } from '../../../../../src/constants';
-import { UserModel } from '../../../../../src/models';
 import chaiHttp from 'chai-http';
 import { config } from '../../../../../src/configs';
 import { nanoid } from 'nanoid';
@@ -19,13 +19,7 @@ export const userPassword = (): void => {
       const testNewPassword = nanoid(12);
       const testSalt = genSaltSync(12);
       const userModel = new UserModel(logger, database);
-      const testUser = userModel.create(
-        ROLES.USER,
-        nanoid(12),
-        nanoid(12),
-        hashSync(testPassword, testSalt),
-        nanoid(12),
-      );
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), hashSync(testPassword, testSalt), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -44,7 +38,7 @@ export const userPassword = (): void => {
       const testInvalidPassword = nanoid(12);
       const testNewPassword = nanoid(12);
       const userModel = new UserModel(logger, database);
-      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 

@@ -1,5 +1,6 @@
 import { Data, Database, Model } from '../helpers';
 import { IsOptional, IsString } from 'class-validator';
+import { COLLECTIONS } from '../constants';
 import { Logger } from '@zishone/logan';
 
 export class User extends Data {
@@ -22,23 +23,19 @@ export class User extends Data {
   @IsOptional()
   @IsString()
   role: string;
+
+  constructor(role: string, username: string, email: string, saltedPassword: string, name: string) {
+    super();
+    this.username = username;
+    this.email = email;
+    this.password = saltedPassword;
+    this.name = name;
+    this.role = role;
+  }
 }
 
 export class UserModel extends Model<User> {
-  static collectionName: string = 'users';
-
   constructor(logger: Logger, database: Database) {
-    super(logger, database, UserModel.collectionName);
-  }
-
-  public create(role: string, username: string, email: string, saltedPassword: string, name: string): User {
-    this.logger.debugFunctionCall('UserModel.create', arguments);
-    const user = new User();
-    user.username = username;
-    user.email = email;
-    user.password = saltedPassword;
-    user.name = name;
-    user.role = role;
-    return user;
+    super(logger, database, COLLECTIONS.USERS);
   }
 }

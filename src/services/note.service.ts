@@ -13,7 +13,7 @@ export class NoteService {
 
   public async createNote(userId: string, title: string, body: string): Promise<{ note: Note }> {
     this.logger.debugFunctionCall('NoteService.createNote', arguments);
-    const newNote = this.noteModel.create(userId, title, body);
+    const newNote = new Note(userId, title, body);
     const [id] = await this.noteModel.save(newNote);
     const note = await this.noteModel.fetchOne({ id });
     return { note };

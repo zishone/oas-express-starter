@@ -1,18 +1,11 @@
 import { describe, it } from 'mocha';
-import { NoteModel } from '../../../src/models';
+import { Note } from '../../../src/models';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { nanoid } from 'nanoid';
 
 export default (): void => {
   const sandbox = createSandbox();
-  let noteModel: NoteModel;
-
-  beforeEach((): void => {
-    const logger = { debugFunctionCall: (): void => null };
-    const database = { getConnection: async (): Promise<void> => null };
-    noteModel = new NoteModel(logger as any, database as any);
-  });
 
   afterEach((): void => {
     sandbox.restore();
@@ -24,7 +17,7 @@ export default (): void => {
       const testTitle = nanoid(12);
       const testBody = nanoid(12);
 
-      const { userId, title, body } = noteModel.create(testUserId, testTitle, testBody);
+      const { userId, title, body } = new Note(testUserId, testTitle, testBody);
 
       expect({
         userId,

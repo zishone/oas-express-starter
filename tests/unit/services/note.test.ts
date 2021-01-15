@@ -21,13 +21,8 @@ export default (): void => {
 
   describe('createNote', (): void => {
     it('should create new note entry in database', async (): Promise<void> => {
-      const testNote = new Note();
-      testNote.id = nanoid(12);
-      testNote.userId = nanoid(12);
-      testNote.title = nanoid(12);
-      testNote.body = nanoid(12);
+      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
 
-      sandbox.stub(NoteModel.prototype, 'create').onCall(0).returns(testNote);
       sandbox.stub(NoteModel.prototype, 'save').onCall(0).resolves([testNote.id]);
       sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
 
@@ -39,7 +34,7 @@ export default (): void => {
 
   describe('fetchNotes', (): void => {
     it('should return notes list fetched from the database', async (): Promise<void> => {
-      const testNote = new Note();
+      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
       const testNotes = [testNote];
 
       sandbox
@@ -59,8 +54,7 @@ export default (): void => {
 
   describe('fetchNoteById', (): void => {
     it('should return a note fetched from the database given note id', async (): Promise<void> => {
-      const testNote = new Note();
-      testNote.id = nanoid(12);
+      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
 
       sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
 
@@ -72,8 +66,7 @@ export default (): void => {
 
   describe('updateNoteById', (): void => {
     it('should update a note in the database given note id', async (): Promise<void> => {
-      const testNote = new Note();
-      testNote.id = nanoid(12);
+      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
 
       const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
       const updateStub = sandbox.stub(NoteModel.prototype, 'update').onCall(0).resolves();
@@ -87,8 +80,7 @@ export default (): void => {
 
   describe('deleteNoteById', (): void => {
     it('should delete a note from the database given note id', async (): Promise<void> => {
-      const testNote = new Note();
-      testNote.id = nanoid(12);
+      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
 
       const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
       const deleteStub = sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();

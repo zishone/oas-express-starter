@@ -31,7 +31,7 @@ export class UserService {
     this.logger.debugFunctionCall('UserService.registerUser', arguments);
     const salt = genSaltSync(12);
     const saltedPassword = hashSync(password, salt);
-    const newUser = this.userModel.create(ROLES.USER, username, email, saltedPassword, name);
+    const newUser = new User(ROLES.USER, username, email, saltedPassword, name);
     const [id] = await this.userModel.save(newUser);
     const user = await this.userModel.fetchOne({ id }, { projection: { password: 0 } });
     return { user };

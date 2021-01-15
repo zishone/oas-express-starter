@@ -1,19 +1,12 @@
 import { describe, it } from 'mocha';
 import { ROLES } from '../../../src/constants';
-import { UserModel } from '../../../src/models';
+import { User } from '../../../src/models';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { nanoid } from 'nanoid';
 
 export default (): void => {
   const sandbox = createSandbox();
-  let userModel: UserModel;
-
-  beforeEach((): void => {
-    const logger = { debugFunctionCall: (): void => null };
-    const database = { getConnection: async (): Promise<void> => null };
-    userModel = new UserModel(logger as any, database as any);
-  });
 
   afterEach((): void => {
     sandbox.restore();
@@ -26,7 +19,7 @@ export default (): void => {
       const testSaltedPassword = nanoid(12);
       const testName = nanoid(12);
 
-      const { username, email, password, name, role } = userModel.create(
+      const { username, email, password, name, role } = new User(
         ROLES.USER,
         testUsername,
         testEmail,
