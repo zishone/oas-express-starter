@@ -9,28 +9,15 @@ import {
   Update,
   UpdateOptions,
 } from '.';
-import { IsNumber, IsOptional, IsString, validateOrReject } from 'class-validator';
 import { ERROR_CODES } from '../constants';
+import { Entity } from '../entities';
 import { Logger } from '@zishone/logan';
 import { dotnotate } from '@zishone/dotnotate';
 import httpError from 'http-errors';
 import { nanoid } from 'nanoid';
+import { validateOrReject } from 'class-validator';
 
-export class Data {
-  @IsOptional()
-  @IsString()
-  id: string;
-
-  @IsOptional()
-  @IsNumber()
-  modifiedOn: number;
-
-  @IsOptional()
-  @IsNumber()
-  createdOn: number;
-}
-
-export class Model<T = Data> {
+export class Model<T extends Entity> {
   protected logger: Logger;
   private database: Database;
   private collectionName: string;
@@ -45,14 +32,14 @@ export class Model<T = Data> {
     try {
       this.logger.debugFunctionCall('Model.validate', arguments);
       if (Array.isArray(data)) {
-        await Promise.all(data.map((d: object): Promise<void> => validateOrReject(d)));
+        await Promise.all(data.map((d: T): Promise<void> => validateOrReject(d)));
         return data;
       } else {
         await validateOrReject(data);
         return [data];
       }
     } catch (error) {
-      throw httpError(400, 'Data invalid', {
+      throw httpError(400, 'Entity invalid', {
         errorCode: ERROR_CODES.INVALID,
         details: error,
       });
@@ -94,7 +81,7 @@ export class Model<T = Data> {
       };
       const data = await connection.collection(this.collectionName).findOne(filter, options);
       if (!data) {
-        throw httpError(404, 'Data not found', { errorCode: ERROR_CODES.NOT_FOUND });
+        throw httpError(404, 'Entity not found', { errorCode: ERROR_CODES.NOT_FOUND });
       }
       return data;
     } catch (error) {
@@ -111,7 +98,7 @@ export class Model<T = Data> {
       await connection.collection(this.collectionName).insertMany(
         dataArray.map(
           (d: T): T => {
-            const id = nanoid();
+            const id = nanoid(12);
             ids.push(id);
             return {
               ...d,

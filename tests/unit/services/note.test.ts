@@ -1,5 +1,6 @@
-import { Note, NoteModel } from '../../../src/models';
 import { describe, it } from 'mocha';
+import { Model } from '../../../src/helpers';
+import { Note } from '../../../src/entities';
 import { NoteService } from '../../../src/services';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
@@ -23,8 +24,8 @@ export default (): void => {
     it('should create new note entry in database', async (): Promise<void> => {
       const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
 
-      sandbox.stub(NoteModel.prototype, 'save').onCall(0).resolves([testNote.id]);
-      sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
+      sandbox.stub(Model.prototype, 'save').onCall(0).resolves([testNote.id]);
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testNote);
 
       const { note } = await noteService.createNote(testNote.userId, testNote.title, testNote.body);
 
@@ -38,7 +39,7 @@ export default (): void => {
       const testNotes = [testNote];
 
       sandbox
-        .stub(NoteModel.prototype, 'fetch')
+        .stub(Model.prototype, 'fetch')
         .onCall(0)
         .resolves({
           count: async (): Promise<number> => testNotes.length,
@@ -56,7 +57,7 @@ export default (): void => {
     it('should return a note fetched from the database given note id', async (): Promise<void> => {
       const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
 
-      sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testNote);
 
       const { note } = await noteService.fetchNoteById(testNote.id);
 
@@ -68,8 +69,8 @@ export default (): void => {
     it('should update a note in the database given note id', async (): Promise<void> => {
       const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
 
-      const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
-      const updateStub = sandbox.stub(NoteModel.prototype, 'update').onCall(0).resolves();
+      const fetchOneStub = sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testNote);
+      const updateStub = sandbox.stub(Model.prototype, 'update').onCall(0).resolves();
 
       await noteService.updateNoteById(testNote.id, testNote);
 
@@ -82,8 +83,8 @@ export default (): void => {
     it('should delete a note from the database given note id', async (): Promise<void> => {
       const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
 
-      const fetchOneStub = sandbox.stub(NoteModel.prototype, 'fetchOne').onCall(0).resolves(testNote);
-      const deleteStub = sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
+      const fetchOneStub = sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testNote);
+      const deleteStub = sandbox.stub(Model.prototype, 'delete').onCall(0).resolves();
 
       await noteService.deleteNoteById(testNote.id);
 
@@ -94,7 +95,7 @@ export default (): void => {
 
   describe('deleteNotes', (): void => {
     it('should delete a note from the database given note id', async (): Promise<void> => {
-      const deleteStub = sandbox.stub(NoteModel.prototype, 'delete').onCall(0).resolves();
+      const deleteStub = sandbox.stub(Model.prototype, 'delete').onCall(0).resolves();
 
       await noteService.deleteNotes();
 

@@ -1,9 +1,10 @@
-import { User, UserModel } from '../../../../../src/models';
+import { COLLECTIONS, ROLES } from '../../../../../src/constants';
 import { app, database, logger } from '../../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
 import { genSaltSync, hashSync } from 'bcryptjs';
-import { ROLES } from '../../../../../src/constants';
+import { Model } from '../../../../../src/helpers';
+import { User } from '../../../../../src/entities';
 import chaiHttp from 'chai-http';
 import { nanoid } from 'nanoid';
 import { use } from 'chai';
@@ -15,7 +16,7 @@ export const login = (): void => {
     it('should respond 200', async (): Promise<void> => {
       const testPassword = nanoid(12);
       const testSalt = genSaltSync(12);
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), hashSync(testPassword, testSalt), nanoid(12));
       await userModel.save(testUser);
 
@@ -41,7 +42,7 @@ export const login = (): void => {
 
     it('should respond 401 WHEN password is invalid', async (): Promise<void> => {
       const testInvalidPassword = nanoid(12);
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       await userModel.save(testUser);
 

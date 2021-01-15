@@ -1,5 +1,5 @@
 import { describe, it } from 'mocha';
-import { Note } from '../../../src/models';
+import { Note } from '../../../src/entities';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { nanoid } from 'nanoid';

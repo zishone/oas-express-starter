@@ -1,9 +1,7 @@
-import { Data, Database, Model } from '../helpers';
 import { IsOptional, IsString } from 'class-validator';
-import { COLLECTIONS } from '../constants';
-import { Logger } from '@zishone/logan';
+import { Entity } from '.';
 
-export class User extends Data {
+export class User extends Entity {
   @IsOptional()
   @IsString()
   username: string;
@@ -31,11 +29,5 @@ export class User extends Data {
     this.password = saltedPassword;
     this.name = name;
     this.role = role;
-  }
-}
-
-export class UserModel extends Model<User> {
-  constructor(logger: Logger, database: Database) {
-    super(logger, database, COLLECTIONS.USERS);
   }
 }

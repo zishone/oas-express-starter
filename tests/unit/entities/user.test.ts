@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { ROLES } from '../../../src/constants';
-import { User } from '../../../src/models';
+import { User } from '../../../src/entities';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { nanoid } from 'nanoid';

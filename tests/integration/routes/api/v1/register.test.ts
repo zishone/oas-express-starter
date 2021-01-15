@@ -1,8 +1,9 @@
-import { User, UserModel } from '../../../../../src/models';
+import { COLLECTIONS, ROLES } from '../../../../../src/constants';
 import { app, database, logger } from '../../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { ROLES } from '../../../../../src/constants';
+import { Model } from '../../../../../src/helpers';
+import { User } from '../../../../../src/entities';
 import chaiHttp from 'chai-http';
 import { nanoid } from 'nanoid';
 import { use } from 'chai';
@@ -20,7 +21,7 @@ export const register = (): void => {
     });
 
     it('should respond 403 WHEN user already exists', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       await userModel.save(testUser);
 

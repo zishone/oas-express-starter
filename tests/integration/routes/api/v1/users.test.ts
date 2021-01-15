@@ -1,8 +1,9 @@
-import { User, UserModel } from '../../../../../src/models';
+import { COLLECTIONS, ROLES } from '../../../../../src/constants';
 import { app, database, logger } from '../../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { ROLES } from '../../../../../src/constants';
+import { Model } from '../../../../../src/helpers';
+import { User } from '../../../../../src/entities';
 import { UserService } from '../../../../../src/services';
 import chaiHttp from 'chai-http';
 import { config } from '../../../../../src/configs';
@@ -22,7 +23,7 @@ export const users = (): void => {
 
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -38,7 +39,7 @@ export const users = (): void => {
     });
 
     it('should respond 200 WHEN sorted asc', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -54,7 +55,7 @@ export const users = (): void => {
     });
 
     it('should respond 200 WHEN sorted desc', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -70,7 +71,7 @@ export const users = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });

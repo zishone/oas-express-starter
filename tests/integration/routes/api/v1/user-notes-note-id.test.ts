@@ -1,8 +1,9 @@
-import { Note, NoteModel, User, UserModel } from '../../../../../src/models';
+import { COLLECTIONS, ROLES } from '../../../../../src/constants';
+import { Note, User } from '../../../../../src/entities';
 import { app, database, logger } from '../../../../../src/server';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { ROLES } from '../../../../../src/constants';
+import { Model } from '../../../../../src/helpers';
 import chaiHttp from 'chai-http';
 import { config } from '../../../../../src/configs';
 import { nanoid } from 'nanoid';
@@ -14,11 +15,11 @@ use(chaiHttp);
 export const userNotesById = (): void => {
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const noteModel = new NoteModel(logger, database);
+      const noteModel = new Model<Note>(logger, database, COLLECTIONS.NOTES);
       const testNote = new Note(testUserId, nanoid(12), nanoid(12));
       const [testNoteId] = await noteModel.save(testNote);
 
@@ -31,7 +32,7 @@ export const userNotesById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -48,12 +49,12 @@ export const userNotesById = (): void => {
 
   describe('PATCH', (): void => {
     it('should respond 204', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewBody = nanoid(12);
-      const noteModel = new NoteModel(logger, database);
+      const noteModel = new Model<Note>(logger, database, COLLECTIONS.NOTES);
       const testNote = new Note(testUserId, nanoid(12), nanoid(12));
       const [testNoteId] = await noteModel.save(testNote);
 
@@ -66,7 +67,7 @@ export const userNotesById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -84,11 +85,11 @@ export const userNotesById = (): void => {
 
   describe('DELETE', (): void => {
     it('should respond 204', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const noteModel = new NoteModel(logger, database);
+      const noteModel = new Model<Note>(logger, database, COLLECTIONS.NOTES);
       const testNote = new Note(testUserId, nanoid(12), nanoid(12));
       const [testNoteId] = await noteModel.save(testNote);
 
@@ -101,7 +102,7 @@ export const userNotesById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const userModel = new UserModel(logger, database);
+      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
