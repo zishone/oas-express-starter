@@ -12,7 +12,7 @@
     "test-integration": "mocha --file tests/integration/index.ts tests/integration/**/*.test.ts",
     "test-integration:coverage": "nyc --report-dir .data/tests/integration/coverage --temp-dir .data/tests/integration/.nyc_output npm run test-integration",
     "build": "tsc",
-    "build:watch": "tsc --watch",
+    "build:watch": "npm run build -- --watch",
     "start": "node dist/server.js",
     "start:watch": "nodemon dist/server.js",
     "watch": "concurrently -k \"npm run build:watch\"  \"npm run start:watch\""
