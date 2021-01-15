@@ -22,24 +22,12 @@ export const userNotes = (): void => {
 
   describe('POST', (): void => {
     it('should respond 201', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testNote = {
-        userId: testUserId,
-        title: nanoid(12),
-        body: nanoid(12),
-        modifiedOn: Date.now(),
-        createdOn: Date.now(),
-      };
+      const noteModel = new NoteModel(logger, database);
+      const testNote = noteModel.create(testUserId, nanoid(12), nanoid(12));
 
       const response = await request(app)
         .post('/api/v1/user/notes')
@@ -50,24 +38,12 @@ export const userNotes = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testNote = {
-        userId: testUserId,
-        title: nanoid(12),
-        body: nanoid(12),
-        modifiedOn: Date.now(),
-        createdOn: Date.now(),
-      };
+      const noteModel = new NoteModel(logger, database);
+      const testNote = noteModel.create(testUserId, nanoid(12), nanoid(12));
 
       sandbox.stub(NoteService.prototype, 'createNote').onCall(0).rejects();
 
@@ -82,25 +58,12 @@ export const userNotes = (): void => {
 
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testNote = {
-        userId: testUserId,
-        title: nanoid(12),
-        body: nanoid(12),
-        modifiedOn: Date.now(),
-        createdOn: Date.now(),
-      };
       const noteModel = new NoteModel(logger, database);
+      const testNote = noteModel.create(testUserId, nanoid(12), nanoid(12));
       await noteModel.save(testNote);
 
       const response = await request(app)
@@ -112,15 +75,8 @@ export const userNotes = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 

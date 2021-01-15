@@ -23,6 +23,10 @@ export class Data {
 
   @IsOptional()
   @IsNumber()
+  modifiedOn: number;
+
+  @IsOptional()
+  @IsNumber()
   createdOn: number;
 }
 
@@ -98,7 +102,7 @@ export class Model<T = Data> {
     }
   }
 
-  public async save(data: Partial<T> | Partial<T>[], options: SaveOptions = {}): Promise<string[]> {
+  public async save(data: T | T[], options: SaveOptions = {}): Promise<string[]> {
     this.logger.debugFunctionCall('Model.save', arguments);
     const dataArray = await this.validate(data);
     const connection = await this.database.getConnection();
@@ -112,6 +116,7 @@ export class Model<T = Data> {
             return {
               ...d,
               id,
+              modifiedOn: 0,
               createdOn: Date.now(),
             };
           },
@@ -129,7 +134,12 @@ export class Model<T = Data> {
     const connection = await this.database.getConnection();
     try {
       if (update.$set) {
-        update.$set = dotnotate(update.$set);
+        update.$set = {
+          ...dotnotate(update.$set),
+          modifiedOn: Date.now(),
+        };
+      } else {
+        update.$set = { modifiedOn: Date.now() };
       }
       if (update.$unset) {
         update.$unset = dotnotate(update.$unset);

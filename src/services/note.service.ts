@@ -42,13 +42,7 @@ export class NoteService {
   public async updateNoteById(id: string, note: Partial<Note>): Promise<void> {
     this.logger.debugFunctionCall('NoteService.updateNoteById', arguments);
     await this.noteModel.fetchOne({ id });
-    await this.noteModel.update(
-      {
-        id,
-        modifiedOn: Date.now(),
-      },
-      { $set: note },
-    );
+    await this.noteModel.update({ id }, { $set: note });
   }
 
   public async deleteNoteById(id: string): Promise<void> {

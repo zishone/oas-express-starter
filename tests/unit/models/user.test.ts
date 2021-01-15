@@ -26,7 +26,7 @@ export default (): void => {
       const testSaltedPassword = nanoid(12);
       const testName = nanoid(12);
 
-      const { username, email, password, name, role, createdOn } = userModel.create(
+      const { username, email, password, name, role } = userModel.create(
         ROLES.USER,
         testUsername,
         testEmail,
@@ -47,7 +47,6 @@ export default (): void => {
         name: testName,
         role: ROLES.USER,
       });
-      expect(createdOn).to.be.a('number');
     });
   });
 };

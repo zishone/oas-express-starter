@@ -33,15 +33,12 @@ export class UserModel extends Model<User> {
 
   public create(role: string, username: string, email: string, saltedPassword: string, name: string): User {
     this.logger.debugFunctionCall('UserModel.create', arguments);
-    const user = {
-      id: '',
-      username,
-      email,
-      password: saltedPassword,
-      name,
-      role,
-      createdOn: 0,
-    };
+    const user = new User();
+    user.username = username;
+    user.email = email;
+    user.password = saltedPassword;
+    user.name = name;
+    user.role = role;
     return user;
   }
 }

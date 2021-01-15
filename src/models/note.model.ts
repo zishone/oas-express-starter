@@ -1,5 +1,5 @@
 import { Data, Database, Model } from '../helpers';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { Logger } from '@zishone/logan';
 
 export class Note extends Data {
@@ -14,10 +14,6 @@ export class Note extends Data {
   @IsOptional()
   @IsString()
   body: string;
-
-  @IsOptional()
-  @IsNumber()
-  modifiedOn: number;
 }
 
 export class NoteModel extends Model<Note> {
@@ -29,14 +25,10 @@ export class NoteModel extends Model<Note> {
 
   public create(userId: string, title: string, body: string): Note {
     this.logger.debugFunctionCall('NoteModel.create', arguments);
-    const note = {
-      id: '',
-      userId,
-      title,
-      body,
-      modifiedOn: 0,
-      createdOn: 0,
-    };
+    const note = new Note();
+    note.userId = userId;
+    note.title = title;
+    note.body = body;
     return note;
   }
 }

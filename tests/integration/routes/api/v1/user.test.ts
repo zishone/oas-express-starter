@@ -23,15 +23,8 @@ export const user = (): void => {
 
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -44,15 +37,8 @@ export const user = (): void => {
     });
 
     it('should respond 401 WHEN accessToken was not sent', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       await userModel.save(testUser);
 
       const response = await request(app).get('/api/v1/user').send();
@@ -73,15 +59,8 @@ export const user = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -99,16 +78,8 @@ export const user = (): void => {
   describe('PATCH', (): void => {
     it('should respond 204', async (): Promise<void> => {
       const testNewUsername = nanoid(12);
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
-
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -121,16 +92,8 @@ export const user = (): void => {
     });
 
     it('should respond 400 WHEN update is empty', async (): Promise<void> => {
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
-
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -143,26 +106,11 @@ export const user = (): void => {
     });
 
     it('should respond 403 WHEN update results in a duplicate', async (): Promise<void> => {
-      const testUsers = [
-        {
-          username: nanoid(12),
-          email: nanoid(12),
-          password: nanoid(12),
-          name: nanoid(12),
-          role: ROLES.USER,
-          createdOn: Date.now(),
-        },
-        {
-          username: nanoid(12),
-          email: nanoid(12),
-          password: nanoid(12),
-          name: nanoid(12),
-          role: ROLES.USER,
-          createdOn: Date.now(),
-        },
-      ];
-
       const userModel = new UserModel(logger, database);
+      const testUsers = [
+        userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12)),
+        userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12)),
+      ];
       const [testUserId] = await userModel.save(testUsers);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -179,15 +127,14 @@ export const user = (): void => {
     it('should respond 204', async (): Promise<void> => {
       const testPassword = nanoid(12);
       const testSalt = genSaltSync(12);
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: hashSync(testPassword, testSalt),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(
+        ROLES.USER,
+        nanoid(12),
+        nanoid(12),
+        hashSync(testPassword, testSalt),
+        nanoid(12),
+      );
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 
@@ -201,15 +148,8 @@ export const user = (): void => {
 
     it('should respond 403 WHEN password is invalid', async (): Promise<void> => {
       const testInvalidPassword = nanoid(12);
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
 

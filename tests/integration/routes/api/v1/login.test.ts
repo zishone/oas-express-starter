@@ -15,15 +15,14 @@ export const login = (): void => {
     it('should respond 200', async (): Promise<void> => {
       const testPassword = nanoid(12);
       const testSalt = genSaltSync(12);
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: hashSync(testPassword, testSalt),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(
+        ROLES.USER,
+        nanoid(12),
+        nanoid(12),
+        hashSync(testPassword, testSalt),
+        nanoid(12),
+      );
       await userModel.save(testUser);
 
       const response = await request(app).post('/api/v1/login').send({
@@ -48,15 +47,8 @@ export const login = (): void => {
 
     it('should respond 401 WHEN password is invalid', async (): Promise<void> => {
       const testInvalidPassword = nanoid(12);
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       await userModel.save(testUser);
 
       const response = await request(app).post('/api/v1/login').send({

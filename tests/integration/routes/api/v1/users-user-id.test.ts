@@ -14,25 +14,11 @@ use(chaiHttp);
 export const usersById = (): void => {
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
 
       const response = await request(app)
@@ -44,25 +30,11 @@ export const usersById = (): void => {
     });
 
     it('should respond 403 WHEN role is unauthorized', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
 
       const response = await request(app)
@@ -74,15 +46,8 @@ export const usersById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testUserId = nanoid(12);
@@ -98,26 +63,12 @@ export const usersById = (): void => {
 
   describe('PATCH', (): void => {
     it('should respond 204', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewUsername = nanoid(12);
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
 
       const response = await request(app)
@@ -129,15 +80,8 @@ export const usersById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testNewUsername = nanoid(12);
@@ -154,25 +98,11 @@ export const usersById = (): void => {
 
   describe('DELETE', (): void => {
     it('should respond 204', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.USER,
-        createdOn: Date.now(),
-      };
+      const testUser = userModel.create(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
 
       const response = await request(app)
@@ -184,15 +114,8 @@ export const usersById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const testAdmin = {
-        username: nanoid(12),
-        email: nanoid(12),
-        password: nanoid(12),
-        name: nanoid(12),
-        role: ROLES.ADMIN,
-        createdOn: Date.now(),
-      };
       const userModel = new UserModel(logger, database);
+      const testAdmin = userModel.create(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
       const testUserId = nanoid(12);
