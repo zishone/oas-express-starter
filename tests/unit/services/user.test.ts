@@ -1,6 +1,7 @@
-import { User, UserModel } from '../../../src/models';
+import { ERROR_CODES, ROLES } from '../../../src/constants';
 import { describe, it } from 'mocha';
-import { ERROR_CODES } from '../../../src/constants';
+import { Model } from '../../../src/helpers';
+import { User } from '../../../src/entities';
 import { UserService } from '../../../src/services';
 import bcryptjs from 'bcryptjs';
 import { createSandbox } from 'sinon';
@@ -25,11 +26,9 @@ export default (): void => {
 
   describe('validatePassword', (): void => {
     it('should validate password of user of the given id', async (): Promise<void> => {
-      const testUser = new User();
-      testUser.id = nanoid(12);
-      testUser.password = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
-      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(true);
 
       const isMatch = await userService.validatePassword(testUser.id, testUser.password);
@@ -38,11 +37,9 @@ export default (): void => {
     });
 
     it('should fail when given password is invalid', async (): Promise<void> => {
-      const testUser = new User();
-      testUser.id = nanoid(12);
-      testUser.password = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
-      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'compareSync').onCall(0).returns(false);
 
       try {
@@ -57,18 +54,12 @@ export default (): void => {
     it('should register new user to the database', async (): Promise<void> => {
       const testPassword = nanoid(12);
       const testSalt = nanoid(12);
-      const testUser = new User();
-      testUser.id = nanoid(12);
-      testUser.password = nanoid(12);
-      testUser.username = nanoid(12);
-      testUser.email = nanoid(12);
-      testUser.name = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
       sandbox.stub(bcryptjs, 'genSaltSync').onCall(0).returns(testSalt);
       sandbox.stub(bcryptjs, 'hashSync').onCall(0).returns(testUser.password);
-      sandbox.stub(UserModel.prototype, 'create').onCall(0).returns(testUser);
-      sandbox.stub(UserModel.prototype, 'save').onCall(0).resolves([testUser.id]);
-      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      sandbox.stub(Model.prototype, 'save').onCall(0).resolves([testUser.id]);
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
 
       const { user } = await userService.registerUser(testUser.username, testUser.email, testPassword, testUser.name);
 
@@ -80,10 +71,9 @@ export default (): void => {
     it('should authenticate user', async (): Promise<void> => {
       const testPassword = nanoid(12);
       const testAccessToken = nanoid(12);
-      const testUser = new User();
-      testUser.username = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
-      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(UserService.prototype, 'validatePassword').onCall(0).resolves(true);
       sandbox
         .stub(jsonwebtoken, 'sign')
@@ -99,7 +89,7 @@ export default (): void => {
       const testUsername = nanoid(12);
       const testPassword = nanoid(12);
 
-      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).rejects(httpError(404));
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).rejects(httpError(404));
 
       try {
         await userService.authenticateUser(testUsername, testPassword);
@@ -113,7 +103,7 @@ export default (): void => {
       const testUsername = nanoid(12);
       const testPassword = nanoid(12);
 
-      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).rejects(new Error());
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).rejects(new Error());
 
       try {
         await userService.authenticateUser(testUsername, testPassword);
@@ -124,11 +114,9 @@ export default (): void => {
 
     it('should fail user authentication when password does not match', async (): Promise<void> => {
       const testPassword = nanoid(12);
-      const testUser = new User();
-      testUser.password = nanoid(12);
-      testUser.username = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
-      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(UserService.prototype, 'validatePassword').onCall(0).rejects({ status: 403 });
 
       try {
@@ -142,10 +130,9 @@ export default (): void => {
 
   describe('fetchUserById', (): void => {
     it('should return user fetched from the database given user id', async (): Promise<void> => {
-      const testUser = new User();
-      testUser.id = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
-      sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
 
       const { user } = await userService.fetchUserById(testUser.id);
 
@@ -155,11 +142,11 @@ export default (): void => {
 
   describe('fetchUsers', (): void => {
     it('should return users list fetched from the database', async (): Promise<void> => {
-      const testUser = new User();
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const testUsers = [testUser];
 
       sandbox
-        .stub(UserModel.prototype, 'fetch')
+        .stub(Model.prototype, 'fetch')
         .onCall(0)
         .resolves({
           count: async (): Promise<number> => testUsers.length,
@@ -175,12 +162,10 @@ export default (): void => {
 
   describe('updateUserById', (): void => {
     it('should update user in the database given user id', async (): Promise<void> => {
-      const testUser = new User();
-      testUser.id = nanoid(12);
-      testUser.username = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
-      const fetchOneStub = sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
-      const updateStub = sandbox.stub(UserModel.prototype, 'update').onCall(0).resolves();
+      const fetchOneStub = sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      const updateStub = sandbox.stub(Model.prototype, 'update').onCall(0).resolves();
 
       await userService.updateUserById(testUser.id, { username: testUser.username });
 
@@ -190,14 +175,12 @@ export default (): void => {
 
     it('should update hash user password when password is being updated', async (): Promise<void> => {
       const testSalt = nanoid(12);
-      const testUser = new User();
-      testUser.id = nanoid(12);
-      testUser.password = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
-      const fetchOneStub = sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      const fetchOneStub = sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
       sandbox.stub(bcryptjs, 'genSaltSync').onCall(0).returns(testSalt);
       sandbox.stub(bcryptjs, 'hashSync').onCall(0).returns(testUser.password);
-      const updateStub = sandbox.stub(UserModel.prototype, 'update').onCall(0).resolves();
+      const updateStub = sandbox.stub(Model.prototype, 'update').onCall(0).resolves();
 
       await userService.updateUserById(testUser.id, { password: testUser.password });
 
@@ -208,11 +191,10 @@ export default (): void => {
 
   describe('deleteUserById', (): void => {
     it('should delete a user from the database given user id', async (): Promise<void> => {
-      const testUser = new User();
-      testUser.id = nanoid(12);
+      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
 
-      const fetchOneStub = sandbox.stub(UserModel.prototype, 'fetchOne').onCall(0).resolves(testUser);
-      const deleteStub = sandbox.stub(UserModel.prototype, 'delete').onCall(0).resolves();
+      const fetchOneStub = sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testUser);
+      const deleteStub = sandbox.stub(Model.prototype, 'delete').onCall(0).resolves();
 
       await userService.deleteUserById(testUser.id);
 

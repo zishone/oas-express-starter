@@ -87,12 +87,12 @@ Should be available on route `/apidocs` when NODE_ENV is set to `development`.
 | Name                      | Description                                                                                                                                                                   |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **db/migrations**         | Contains database migrations.                                                                                                                                                 |
-| **src/configs**            | Contains configuration files and the config builder from environment variables.                                                                                               |
+| **src/configs**           | Contains configuration files and the config builder from environment variables.                                                                                               |
 | **src/constants**         | Contains constant definitions.                                                                                                                                                |
 | **src/controllers**       | Contains controllers to handle various http requests.                                                                                                                         |
+| **src/entities**          | Contains database entity schema definitions.                                                                                                                                  |
 | **src/helpers**           | Contains resuable helper classes.                                                                                                                                             |
 | **src/middlewares**       | Contains middlewares.                                                                                                                                                         |
-| **src/models**            | Contains models for the schema definitions and database access per entity.                                                                                                    |
 | **src/openapi**           | Contains OpenAPI 3.0 specification in JSON format.                                                                                                                            |
 | **src/services**          | Contains services, this is where ther business logic lives.                                                                                                                   |
 | **src/types**             | Contains .d.ts files not found on DefinitelyTyped. Covered more in this section.                                                                                              |

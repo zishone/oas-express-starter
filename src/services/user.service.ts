@@ -1,8 +1,8 @@
-import { Database, FetchOptions, Filter } from '../helpers';
-import { ERROR_CODES, ROLES } from '../constants';
-import { User, UserModel } from '../models';
+import { COLLECTIONS, ERROR_CODES, ROLES } from '../constants';
+import { Database, FetchOptions, Filter, Model } from '../helpers';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import { Logger } from '@zishone/logan';
+import { User } from '../entities';
 import { compareSync } from 'bcryptjs';
 import { config } from '../configs';
 import httpError from 'http-errors';
@@ -10,11 +10,11 @@ import { sign } from 'jsonwebtoken';
 
 export class UserService {
   private logger: Logger;
-  private userModel: UserModel;
+  private userModel: Model<User>;
 
   constructor(logger: Logger, database: Database) {
     this.logger = logger;
-    this.userModel = new UserModel(logger, database);
+    this.userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
   }
 
   public async validatePassword(id: string, password: string): Promise<boolean> {
@@ -31,7 +31,7 @@ export class UserService {
     this.logger.debugFunctionCall('UserService.registerUser', arguments);
     const salt = genSaltSync(12);
     const saltedPassword = hashSync(password, salt);
-    const newUser = this.userModel.create(ROLES.USER, username, email, saltedPassword, name);
+    const newUser = new User(ROLES.USER, username, email, saltedPassword, name);
     const [id] = await this.userModel.save(newUser);
     const user = await this.userModel.fetchOne({ id }, { projection: { password: 0 } });
     return { user };

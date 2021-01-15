@@ -1,19 +1,20 @@
-import { Database, FetchOptions, Filter } from '../helpers';
-import { Note, NoteModel } from '../models';
+import { Database, FetchOptions, Filter, Model } from '../helpers';
+import { COLLECTIONS } from '../constants';
 import { Logger } from '@zishone/logan';
+import { Note } from '../entities';
 
 export class NoteService {
   private logger: Logger;
-  private noteModel: NoteModel;
+  private noteModel: Model<Note>;
 
   constructor(logger: Logger, database: Database) {
     this.logger = logger;
-    this.noteModel = new NoteModel(logger, database);
+    this.noteModel = new Model<Note>(logger, database, COLLECTIONS.NOTES);
   }
 
   public async createNote(userId: string, title: string, body: string): Promise<{ note: Note }> {
     this.logger.debugFunctionCall('NoteService.createNote', arguments);
-    const newNote = this.noteModel.create(userId, title, body);
+    const newNote = new Note(userId, title, body);
     const [id] = await this.noteModel.save(newNote);
     const note = await this.noteModel.fetchOne({ id });
     return { note };
