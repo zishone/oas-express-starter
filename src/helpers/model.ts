@@ -18,7 +18,7 @@ import { nanoid } from 'nanoid';
 import { validateOrReject } from 'class-validator';
 
 export class Model<T extends Entity> {
-  protected logger: Logger;
+  private logger: Logger;
   private database: Database;
   private collectionName: string;
 
