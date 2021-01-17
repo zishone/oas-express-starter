@@ -1,11 +1,10 @@
+import { database, logger } from '../helpers';
 import { COLLECTIONS } from '../constants';
-import { Database } from '../helpers';
-import { Logger } from '@zishone/logan';
 import { config } from '../configs';
 import { join } from 'path';
 import migration from 'migrate-mongo';
 
-export const migrate = async (logger: Logger, database: Database): Promise<void> => {
+export const migrate = async (): Promise<void> => {
   migration.config.set({
     migrationsDir: join('db', 'migrations'),
     changelogCollectionName: COLLECTIONS.MIGRATIONS,

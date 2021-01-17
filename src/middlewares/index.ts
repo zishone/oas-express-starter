@@ -1,4 +1,3 @@
-export * from './database.middleware';
 export * from './error.middleware';
 export * from './passport.middleware';
 export * from './request-id.middleware';

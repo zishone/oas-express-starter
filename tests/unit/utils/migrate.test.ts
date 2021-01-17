@@ -1,3 +1,5 @@
+import { Database } from '../../../src/helpers';
+import { Logger } from '@zishone/logan';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { it } from 'mocha';
@@ -12,16 +14,14 @@ export default (): void => {
   });
 
   it('should migrate database', async (): Promise<void> => {
-    const debugSpy = sandbox.spy();
-    const logger = { debug: debugSpy };
-    const getDbSpy = sandbox.spy();
-    const database = { getConnection: getDbSpy };
+    const getConnectionStub = sandbox.stub(Database.prototype, 'getConnection').resolves();
+    const upStub = sandbox.stub(migration, 'up').resolves();
+    const debugStub = sandbox.stub(Logger.prototype, 'debug');
 
-    sandbox.stub(migration, 'up').onCall(0).resolves();
+    await migrate();
 
-    await migrate(logger as any, database as any);
-
-    expect(debugSpy.calledOnce).to.be.equal(true);
-    expect(getDbSpy.calledOnce).to.be.equal(true);
+    expect(getConnectionStub.calledOnce).to.be.equal(true);
+    expect(upStub.calledOnce).to.be.equal(true);
+    expect(debugStub.calledOnce).to.be.equal(true);
   });
 };

@@ -1,26 +1,20 @@
 import { Application, Request, json, urlencoded } from 'express';
-import { Logger, log } from '@zishone/logan';
 import { Server, createServer } from 'http';
-import { databaseMiddleware, errorMiddleware, passportMiddleware, requestIdMiddleware } from './middlewares';
-import { Database } from './helpers';
+import { errorMiddleware, passportMiddleware, requestIdMiddleware } from './middlewares';
 import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
 import { jsend } from '@zishone/jasenda';
+import { log } from '@zishone/logan';
+import { logger } from './helpers';
 import { mquery } from '@zishone/monique';
 import passport from 'passport';
 import { spec } from './openapi';
 
 export class App {
-  private app: Application;
-  private logger: Logger;
-  private database: Database;
   private server: Server;
 
-  constructor(app: Application, logger: Logger, database: Database) {
-    this.app = app;
-    this.logger = logger;
-    this.database = database;
+  constructor(private app: Application) {
     this.server = createServer(this.app);
   }
 
@@ -32,8 +26,7 @@ export class App {
 
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
-    this.app.use(databaseMiddleware(this.database));
-    this.app.use(log(this.logger));
+    this.app.use(log(logger));
     this.app.use(jsend());
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
@@ -52,7 +45,7 @@ export class App {
       securityHandlers: {
         loginAuth: async (req: Request): Promise<boolean> => {
           return await new Promise((resolve, reject): void => {
-            passportMiddleware(this.logger, this.database)(req, req.res, (error: any): void => {
+            passportMiddleware()(req, req.res, (error: any): void => {
               if (error) {
                 reject(error);
               } else {

@@ -1,21 +1,13 @@
 import { serve, setup } from 'swagger-ui-express';
 import { App } from './app';
-import { Database } from './helpers';
 import { ENVIRONMENTS } from './constants';
-import { Logger } from '@zishone/logan';
 import { config } from './configs';
 import express from 'express';
+import { logger } from './helpers';
 import { migrate } from './utils';
 import { spec } from './openapi';
 
 const app = express();
-const logger = new Logger({
-  defaultMeta: {
-    service: config.APP_NAME,
-    version: config.APP_VERSION,
-  },
-});
-const database = new Database(logger, config.DB_URI, config.DB_NAME);
 
 app.on(
   'ready',
@@ -26,14 +18,14 @@ app.on(
           app.use('/apidocs', serve, setup(spec));
           logger.enableDebug();
           logger.debug('Environment config', { config });
-          await migrate(logger, database);
+          await migrate();
           break;
         case ENVIRONMENTS.STAGING:
         case ENVIRONMENTS.PRODUCTION:
           logger.enableInfo();
           logger.enableInfoFile();
           logger.enableErrorFile();
-          await migrate(logger, database);
+          await migrate();
           break;
       }
       server.listen({ port: config.APP_PORT }, (): void => {
@@ -46,6 +38,6 @@ app.on(
     }
   },
 );
-new App(app, logger, database).configure();
+new App(app).configure();
 
-export { app, logger, database };
+export { app };

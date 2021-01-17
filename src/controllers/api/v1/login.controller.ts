@@ -6,7 +6,7 @@ import { UserService } from '../../../services';
  */
 export const postLogin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.database);
+    const userService = new UserService();
 
     const { login, password } = req.body;
 

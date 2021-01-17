@@ -1,5 +1,7 @@
 import { IsOptional, IsString } from 'class-validator';
+import { COLLECTIONS } from '../constants';
 import { Entity } from '.';
+import { Model } from '../helpers';
 
 export class User extends Entity {
   @IsOptional()
@@ -31,3 +33,5 @@ export class User extends Entity {
     this.role = role;
   }
 }
+
+export const userModel = new Model<User>(COLLECTIONS.USERS);

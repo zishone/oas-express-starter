@@ -1,10 +1,9 @@
-import { COLLECTIONS, ROLES } from '../../../../../src/constants';
-import { app, database, logger } from '../../../../../src/server';
+import { User, userModel } from '../../../../../src/models';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { Model } from '../../../../../src/helpers';
-import { User } from '../../../../../src/entities';
+import { ROLES } from '../../../../../src/constants';
 import { UserService } from '../../../../../src/services';
+import { app } from '../../../../../src/server';
 import chaiHttp from 'chai-http';
 import { config } from '../../../../../src/configs';
 import { createSandbox } from 'sinon';
@@ -23,7 +22,6 @@ export const users = (): void => {
 
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -39,7 +37,6 @@ export const users = (): void => {
     });
 
     it('should respond 200 WHEN sorted asc', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -55,7 +52,6 @@ export const users = (): void => {
     });
 
     it('should respond 200 WHEN sorted desc', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -71,7 +67,6 @@ export const users = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });

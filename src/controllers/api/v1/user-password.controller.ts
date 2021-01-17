@@ -6,7 +6,7 @@ import { UserService } from '../../../services';
  */
 export const putUserPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.database);
+    const userService = new UserService();
 
     const { id: userId } = req.user;
     const { currentPassword, newPassword } = req.body;

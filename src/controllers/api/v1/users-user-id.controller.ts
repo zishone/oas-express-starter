@@ -6,7 +6,7 @@ import { NoteService, UserService } from '../../../services';
  */
 export const getUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.database);
+    const userService = new UserService();
 
     const { userId } = req.params;
     const { options } = req.mquery;
@@ -24,7 +24,7 @@ export const getUsersById = async (req: Request, res: Response, next: NextFuncti
  */
 export const patchUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.database);
+    const userService = new UserService();
 
     const { userId } = req.params;
     const { username, email, password, name } = req.body;
@@ -47,8 +47,8 @@ export const patchUsersById = async (req: Request, res: Response, next: NextFunc
  */
 export const deleteUsersById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.database);
-    const noteService = new NoteService(req.logger, req.database);
+    const userService = new UserService();
+    const noteService = new NoteService();
 
     const { userId } = req.params;
 

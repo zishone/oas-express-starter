@@ -1,9 +1,8 @@
-import { COLLECTIONS, ROLES } from '../../../../../src/constants';
-import { app, database, logger } from '../../../../../src/server';
+import { User, userModel } from '../../../../../src/models';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { Model } from '../../../../../src/helpers';
-import { User } from '../../../../../src/entities';
+import { ROLES } from '../../../../../src/constants';
+import { app } from '../../../../../src/server';
 import chaiHttp from 'chai-http';
 import { config } from '../../../../../src/configs';
 import { nanoid } from 'nanoid';
@@ -15,7 +14,6 @@ use(chaiHttp);
 export const usersById = (): void => {
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -31,7 +29,6 @@ export const usersById = (): void => {
     });
 
     it('should respond 403 WHEN role is unauthorized', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -47,7 +44,6 @@ export const usersById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -64,7 +60,6 @@ export const usersById = (): void => {
 
   describe('PATCH', (): void => {
     it('should respond 204', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -81,7 +76,6 @@ export const usersById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -99,7 +93,6 @@ export const usersById = (): void => {
 
   describe('DELETE', (): void => {
     it('should respond 204', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -115,7 +108,6 @@ export const usersById = (): void => {
     });
 
     it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });

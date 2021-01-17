@@ -1,10 +1,9 @@
-import { COLLECTIONS, ROLES } from '../../../../../src/constants';
-import { Note, User } from '../../../../../src/entities';
-import { app, database, logger } from '../../../../../src/server';
+import { Note, User, noteModel, userModel } from '../../../../../src/models';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
-import { Model } from '../../../../../src/helpers';
 import { NoteService } from '../../../../../src/services';
+import { ROLES } from '../../../../../src/constants';
+import { app } from '../../../../../src/server';
 import chaiHttp from 'chai-http';
 import { config } from '../../../../../src/configs';
 import { createSandbox } from 'sinon';
@@ -23,7 +22,6 @@ export const userNotes = (): void => {
 
   describe('POST', (): void => {
     it('should respond 201', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -38,7 +36,6 @@ export const userNotes = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -57,11 +54,9 @@ export const userNotes = (): void => {
 
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const noteModel = new Model<Note>(logger, database, COLLECTIONS.NOTES);
       const testNote = new Note(testUserId, nanoid(12), nanoid(12));
       await noteModel.save(testNote);
 
@@ -74,7 +69,6 @@ export const userNotes = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });

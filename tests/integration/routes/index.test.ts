@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe } from 'mocha';
-import { database, logger } from '../../../src/server';
+import { database } from '../../../src/helpers';
 import { health } from './health.test';
 import { login } from './api/v1/login.test';
 import { migrate } from '../../../src/utils';
@@ -14,7 +14,7 @@ import { usersById } from './api/v1/users-user-id.test';
 describe('routes', (): void => {
   beforeEach(
     async (): Promise<void> => {
-      await migrate(logger, database);
+      await migrate();
     },
   );
 

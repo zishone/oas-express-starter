@@ -14,5 +14,5 @@ export class Entity {
   createdOn: number;
 }
 
-export * from './note.entity';
-export * from './user.entity';
+export * from './note.model';
+export * from './user.model';

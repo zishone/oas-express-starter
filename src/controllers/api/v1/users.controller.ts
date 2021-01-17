@@ -7,7 +7,7 @@ import { paginate } from '../../../utils';
  */
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.database);
+    const userService = new UserService();
 
     const { filter, options } = req.mquery;
 

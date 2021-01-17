@@ -1,7 +1,6 @@
 import 'express';
 import { AddressInfo } from 'net';
-import { Database } from '../../helpers';
-import { User } from '../../entities';
+import { User } from '../../models';
 
 declare module 'express' {
   interface Application {
@@ -10,7 +9,6 @@ declare module 'express' {
 
   interface Request {
     id: string;
-    database: Database;
     user: User;
   }
 }
