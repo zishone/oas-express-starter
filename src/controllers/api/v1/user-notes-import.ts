@@ -20,10 +20,11 @@ export const postUserNotesImportV1 = async (req: Request, res: Response, next: N
       csvStream.on('error', reject);
     });
     const { note } = await noteService.createNote(userId, title, body);
-    unlinkSync(req.file.path);
 
     res.jsend.success({ note }, 201);
   } catch (error) {
     next(error);
+  } finally {
+    unlinkSync(req.file.path);
   }
 };
