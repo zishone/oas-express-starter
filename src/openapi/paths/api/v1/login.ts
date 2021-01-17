@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const login: OpenAPIV3.PathItemObject = {
+export const loginV1: OpenAPIV3.PathItemObject = {
   post: {
     tags: ['Login'],
-    operationId: 'postLogin',
+    operationId: 'postLoginV1',
     description: 'Authenticates a user',
     requestBody: {
       content: {

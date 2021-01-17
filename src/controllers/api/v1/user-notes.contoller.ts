@@ -5,9 +5,9 @@ import { paginate } from '../../../utils';
 /**
  * POST /api/v1/user/notes
  */
-export const postUserNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const postUserNotesV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.database);
+    const noteService = new NoteService();
 
     const { id: userId } = req.user;
     const { title, body } = req.body;
@@ -23,9 +23,9 @@ export const postUserNotes = async (req: Request, res: Response, next: NextFunct
 /**
  * GET /api/v1/user/notes
  */
-export const getUserNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUserNotesV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.database);
+    const noteService = new NoteService();
 
     const { filter, options } = req.mquery;
     const { id: userId } = req.user;

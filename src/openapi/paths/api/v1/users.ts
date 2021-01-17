@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const users: OpenAPIV3.PathItemObject = {
+export const usersV1: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['Users'],
-    operationId: 'getUsers',
+    operationId: 'getUsersV1',
     description: 'Gets users',
     security: [{ loginAuth: [] }],
     parameters: [

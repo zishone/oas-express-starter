@@ -4,9 +4,9 @@ import { UserService } from '../../../services';
 /**
  * POST /api/v1/register
  */
-export const postRegister = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const postRegisterV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userService = new UserService(req.logger, req.database);
+    const userService = new UserService();
 
     const { username, email, password, name } = req.body;
 

@@ -11,23 +11,17 @@ import {
   UpdateManyOptions as UpdateOptions,
 } from 'mongodb';
 import { ERROR_CODES } from '../constants';
-import { Logger } from '@zishone/logan';
+import { config } from '../configs';
 import httpError from 'http-errors';
+import { logger } from '.';
 
 export class Database {
-  private logger: Logger;
-  private dbUri: string;
-  private dbName: string;
-  private client!: MongoClient;
+  private client: MongoClient;
 
-  constructor(logger: Logger, dbUri: string, dbName: string) {
-    this.logger = logger;
-    this.dbUri = dbUri;
-    this.dbName = dbName;
-  }
+  constructor(private dbUri: string, private dbName: string) {}
 
   public async getConnection(): Promise<Db> {
-    this.logger.debugFunctionCall('Database.getConnection', arguments);
+    logger.debugFunctionCall('Database.getConnection', arguments);
     try {
       if (!this.client) {
         throw new Error();
@@ -43,10 +37,10 @@ export class Database {
   }
 
   public error(error: any) {
-    this.logger.debugFunctionCall('Database.error', arguments);
+    logger.debugFunctionCall('Database.error', arguments);
     switch (error.code) {
       case 11000:
-        throw httpError(403, 'Entity already exists', {
+        throw httpError(403, 'Data already exists', {
           errorCode: ERROR_CODES.DUPLICATE,
           details: error,
         });
@@ -61,4 +55,5 @@ export class Database {
   }
 }
 
+export const database = new Database(config.DB_URI, config.DB_NAME);
 export { CommonOptions, CountOptions, Cursor, FetchOptions, Filter, SaveOptions, Update, UpdateOptions };

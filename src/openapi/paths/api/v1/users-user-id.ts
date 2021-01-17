@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const usersById: OpenAPIV3.PathItemObject = {
+export const usersUserIdV1: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['Users'],
-    operationId: 'getUsersById',
+    operationId: 'getUsersUserIdV1',
     description: "Gets a user's info",
     security: [{ loginAuth: [] }],
     parameters: [{ $ref: '#/components/parameters/userId' }, { $ref: '#/components/parameters/fields' }],
@@ -34,7 +34,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
   },
   patch: {
     tags: ['Users'],
-    operationId: 'patchUsersById',
+    operationId: 'patchUsersUserIdV1',
     description: "Updates a user's info",
     security: [{ loginAuth: [] }],
     parameters: [{ $ref: '#/components/parameters/userId' }],
@@ -76,7 +76,7 @@ export const usersById: OpenAPIV3.PathItemObject = {
   },
   delete: {
     tags: ['Users'],
-    operationId: 'deleteUsersById',
+    operationId: 'deleteUsersUserIdV1',
     description: 'Deletes a user',
     security: [{ loginAuth: [] }],
     parameters: [{ $ref: '#/components/parameters/userId' }],

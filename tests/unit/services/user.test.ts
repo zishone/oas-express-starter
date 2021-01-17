@@ -1,7 +1,8 @@
 import { ERROR_CODES, ROLES } from '../../../src/constants';
 import { describe, it } from 'mocha';
+import { Logger } from '@zishone/logan';
 import { Model } from '../../../src/helpers';
-import { User } from '../../../src/entities';
+import { User } from '../../../src/models';
 import { UserService } from '../../../src/services';
 import bcryptjs from 'bcryptjs';
 import { createSandbox } from 'sinon';
@@ -15,9 +16,8 @@ export default (): void => {
   let userService: UserService;
 
   beforeEach((): void => {
-    const logger = { debugFunctionCall: (): void => null };
-    const database = { getConnection: async (): Promise<void> => null };
-    userService = new UserService(logger as any, database as any);
+    sandbox.stub(Logger.prototype, 'debugFunctionCall');
+    userService = new UserService();
   });
 
   afterEach((): void => {

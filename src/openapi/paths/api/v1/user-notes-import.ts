@@ -1,20 +1,21 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const userPasswordV1: OpenAPIV3.PathItemObject = {
-  put: {
-    tags: ['User'],
-    operationId: 'putUserPasswordV1',
-    description: "Updates authenticated user's password",
+export const userNotesImportV1: OpenAPIV3.PathItemObject = {
+  post: {
+    tags: ['User Notes'],
+    operationId: 'postUserNotesImportV1',
+    description: "Imports an authenticated user's note",
     security: [{ loginAuth: [] }],
     requestBody: {
       content: {
-        ['application/json']: {
+        ['multipart/form-data']: {
           schema: {
             type: 'object',
-            required: ['currentPassword', 'newPassword'],
             properties: {
-              currentPassword: { type: 'string' },
-              newPassword: { type: 'string' },
+              file: {
+                type: 'string',
+                format: 'binary',
+              },
             },
           },
         },
@@ -22,13 +23,19 @@ export const userPasswordV1: OpenAPIV3.PathItemObject = {
       required: true,
     },
     responses: {
-      ['204']: {
+      ['201']: {
         description: 'Success',
         content: {
           ['application/json']: {
             schema: {
               type: 'object',
-              properties: { status: { $ref: '#/components/schemas/success' } },
+              properties: {
+                status: { $ref: '#/components/schemas/success' },
+                data: {
+                  type: 'object',
+                  properties: { note: { $ref: '#/components/schemas/Note' } },
+                },
+              },
             },
           },
         },

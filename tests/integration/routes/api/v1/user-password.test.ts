@@ -1,10 +1,9 @@
-import { COLLECTIONS, ROLES } from '../../../../../src/constants';
-import { app, database, logger } from '../../../../../src/server';
+import { User, userModel } from '../../../../../src/models';
 import { describe, it } from 'mocha';
 import { expect, request } from 'chai';
 import { genSaltSync, hashSync } from 'bcryptjs';
-import { Model } from '../../../../../src/helpers';
-import { User } from '../../../../../src/entities';
+import { ROLES } from '../../../../../src/constants';
+import { app } from '../../../../../src/server';
 import chaiHttp from 'chai-http';
 import { config } from '../../../../../src/configs';
 import { nanoid } from 'nanoid';
@@ -19,7 +18,6 @@ export const userPassword = (): void => {
       const testPassword = nanoid(12);
       const testNewPassword = nanoid(12);
       const testSalt = genSaltSync(12);
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), hashSync(testPassword, testSalt), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -38,7 +36,6 @@ export const userPassword = (): void => {
     it('should respond 403 WHEN password is invalid', async (): Promise<void> => {
       const testInvalidPassword = nanoid(12);
       const testNewPassword = nanoid(12);
-      const userModel = new Model<User>(logger, database, COLLECTIONS.USERS);
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testUserAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });

@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
+import { Logger } from '@zishone/logan';
 import { Model } from '../../../src/helpers';
-import { Note } from '../../../src/entities';
+import { Note } from '../../../src/models';
 import { NoteService } from '../../../src/services';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
@@ -11,9 +12,8 @@ export default (): void => {
   let noteService: NoteService;
 
   beforeEach((): void => {
-    const logger = { debugFunctionCall: (): void => null };
-    const database = { getConnection: async (): Promise<void> => null };
-    noteService = new NoteService(logger as any, database as any);
+    sandbox.stub(Logger.prototype, 'debugFunctionCall');
+    noteService = new NoteService();
   });
 
   afterEach((): void => {

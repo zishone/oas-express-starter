@@ -4,9 +4,9 @@ import { NoteService } from '../../../services';
 /**
  * GET /api/v1/user/notes/{noteId}
  */
-export const getUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUserNotesNoteIdV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.database);
+    const noteService = new NoteService();
 
     const { noteId } = req.params;
     const { options } = req.mquery;
@@ -22,9 +22,9 @@ export const getUserNotesById = async (req: Request, res: Response, next: NextFu
 /**
  * PATCH /api/v1/user/notes/{noteId}
  */
-export const patchUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const patchUserNotesNoteIdV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.database);
+    const noteService = new NoteService();
 
     const { noteId } = req.params;
     const { title, body } = req.body;
@@ -43,9 +43,9 @@ export const patchUserNotesById = async (req: Request, res: Response, next: Next
 /**
  * DELETE /api/v1/user/notes/{noteId}
  */
-export const deleteUserNotesById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteUserNotesNoteIdV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const noteService = new NoteService(req.logger, req.database);
+    const noteService = new NoteService();
 
     const { noteId } = req.params;
 

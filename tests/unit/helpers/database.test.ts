@@ -1,20 +1,11 @@
 import { SinonSpy, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
-import { Database } from '../../../src/helpers';
 import { MongoClient } from 'mongodb';
+import { database } from '../../../src/helpers';
 import { expect } from 'chai';
-import { nanoid } from 'nanoid';
 
 export default (): void => {
   const sandbox = createSandbox();
-  let database: Database;
-
-  beforeEach((): void => {
-    const logger = { debugFunctionCall: (): void => null };
-    const testDb = nanoid(12);
-    const testUri = nanoid(12);
-    database = new Database(logger as any, testUri, testDb);
-  });
 
   afterEach((): void => {
     sandbox.restore();
