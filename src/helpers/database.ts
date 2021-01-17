@@ -16,14 +16,9 @@ import httpError from 'http-errors';
 import { logger } from '.';
 
 export class Database {
-  private dbUri: string;
-  private dbName: string;
   private client: MongoClient;
 
-  constructor(dbUri: string, dbName: string) {
-    this.dbUri = dbUri;
-    this.dbName = dbName;
-  }
+  constructor(private dbUri: string, private dbName: string) {}
 
   public async getConnection(): Promise<Db> {
     logger.debugFunctionCall('Database.getConnection', arguments);
