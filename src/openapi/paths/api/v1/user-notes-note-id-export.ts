@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const userNotesByIdExport: OpenAPIV3.PathItemObject = {
+export const userNotesNoteIdExportV1: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['User Notes'],
-    operationId: 'getUserNotesByIdExport',
+    operationId: 'getUserNotesNoteIdExportV1',
     description: "Exports authenticated user's note as csv",
     security: [{ loginAuth: [] }],
     parameters: [{ $ref: '#/components/parameters/noteId' }, { $ref: '#/components/parameters/fields' }],

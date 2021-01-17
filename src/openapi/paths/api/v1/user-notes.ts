@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const userNotes: OpenAPIV3.PathItemObject = {
+export const userNotesV1: OpenAPIV3.PathItemObject = {
   post: {
     tags: ['User Notes'],
-    operationId: 'postUserNotes',
+    operationId: 'postUserNotesV1',
     description: "Creates an authenticated user's note",
     security: [{ loginAuth: [] }],
     requestBody: {
@@ -51,7 +51,7 @@ export const userNotes: OpenAPIV3.PathItemObject = {
   },
   get: {
     tags: ['User Notes'],
-    operationId: 'getUserNotes',
+    operationId: 'getUserNotesV1',
     description: "Gets authenticated user's notes",
     security: [{ loginAuth: [] }],
     parameters: [

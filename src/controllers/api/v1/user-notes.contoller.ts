@@ -5,7 +5,7 @@ import { paginate } from '../../../utils';
 /**
  * POST /api/v1/user/notes
  */
-export const postUserNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const postUserNotesV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const noteService = new NoteService();
 
@@ -23,7 +23,7 @@ export const postUserNotes = async (req: Request, res: Response, next: NextFunct
 /**
  * GET /api/v1/user/notes
  */
-export const getUserNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUserNotesV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const noteService = new NoteService();
 

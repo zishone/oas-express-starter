@@ -5,7 +5,7 @@ import { paginate } from '../../../utils';
 /**
  * GET /api/v1/users
  */
-export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUsersV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService();
 

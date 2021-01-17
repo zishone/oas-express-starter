@@ -7,7 +7,7 @@ import { parseStream } from 'fast-csv';
 /**
  * POST /api/v1/user/notes/import
  */
-export const postUserNotesImport = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const postUserNotesImportV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const noteService = new NoteService();
 

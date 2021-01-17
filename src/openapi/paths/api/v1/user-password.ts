@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const userPassword: OpenAPIV3.PathItemObject = {
+export const userPasswordV1: OpenAPIV3.PathItemObject = {
   put: {
     tags: ['User'],
-    operationId: 'putUserPassword',
+    operationId: 'putUserPasswordV1',
     description: "Updates authenticated user's password",
     security: [{ loginAuth: [] }],
     requestBody: {

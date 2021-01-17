@@ -4,7 +4,7 @@ import { NoteService, UserService } from '../../../services';
 /**
  * GET /api/v1/user
  */
-export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUserV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService();
 
@@ -22,7 +22,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 /**
  * PATCH /api/v1/user
  */
-export const patchUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const patchUserV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService();
 
@@ -44,7 +44,7 @@ export const patchUser = async (req: Request, res: Response, next: NextFunction)
 /**
  * DELETE /api/v1/user
  */
-export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteUserV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService();
     const noteService = new NoteService();

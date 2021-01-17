@@ -4,7 +4,7 @@ import { UserService } from '../../../services';
 /**
  * PUT /api/v1/user/password
  */
-export const putUserPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const putUserPasswordV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService();
 

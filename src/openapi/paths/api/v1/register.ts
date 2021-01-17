@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const register: OpenAPIV3.PathItemObject = {
+export const registerV1: OpenAPIV3.PathItemObject = {
   post: {
     tags: ['Register'],
-    operationId: 'postRegister',
+    operationId: 'postRegisterV1',
     description: 'Registers a new user',
     requestBody: {
       content: {

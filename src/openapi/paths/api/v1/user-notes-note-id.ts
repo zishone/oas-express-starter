@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const userNotesById: OpenAPIV3.PathItemObject = {
+export const userNotesNoteIdV1: OpenAPIV3.PathItemObject = {
   get: {
     tags: ['User Notes'],
-    operationId: 'getUserNotesById',
+    operationId: 'getUserNotesNoteIdV1',
     description: "Gets authenticated user's note",
     security: [{ loginAuth: [] }],
     parameters: [{ $ref: '#/components/parameters/noteId' }, { $ref: '#/components/parameters/fields' }],
@@ -34,7 +34,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
   },
   patch: {
     tags: ['User Notes'],
-    operationId: 'patchUserNotesById',
+    operationId: 'patchUserNotesNoteIdV1',
     description: "Updates authenticated user's note",
     security: [{ loginAuth: [] }],
     parameters: [{ $ref: '#/components/parameters/noteId' }],
@@ -74,7 +74,7 @@ export const userNotesById: OpenAPIV3.PathItemObject = {
   },
   delete: {
     tags: ['User Notes'],
-    operationId: 'deleteUserNotesById',
+    operationId: 'deleteUserNotesNoteIdV1',
     description: "Deletes authenticated user's note",
     security: [{ loginAuth: [] }],
     parameters: [{ $ref: '#/components/parameters/noteId' }],

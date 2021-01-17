@@ -5,7 +5,7 @@ import { writeToBuffer } from 'fast-csv';
 /**
  * GET /api/v1/user/notes/{nodeId}/export
  */
-export const getUserNotesByIdExport = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUserNotesNoteIdExportV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const noteService = new NoteService();
 

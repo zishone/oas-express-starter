@@ -4,7 +4,7 @@ import { UserService } from '../../../services';
 /**
  * POST /api/v1/login
  */
-export const postLogin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const postLoginV1 = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userService = new UserService();
 
