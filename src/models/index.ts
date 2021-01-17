@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class Entity {
+export class Data {
   @IsOptional()
   @IsString()
   id: string;

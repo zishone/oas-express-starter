@@ -28,7 +28,7 @@ export const userNotesById = (): void => {
       expect(response.status).to.be.equal(200);
     });
 
-    it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
+    it('should respond 404 WHEN note does not exist', async (): Promise<void> => {
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -60,7 +60,7 @@ export const userNotesById = (): void => {
       expect(response.status).to.be.equal(204);
     });
 
-    it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
+    it('should respond 404 WHEN note does not exist', async (): Promise<void> => {
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
@@ -92,7 +92,7 @@ export const userNotesById = (): void => {
       expect(response.status).to.be.equal(204);
     });
 
-    it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
+    it('should respond 404 WHEN note does not exist', async (): Promise<void> => {
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
       const [testUserId] = await userModel.save(testUser);
       const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });

@@ -1,4 +1,3 @@
-import { MetadataStorage, getFromContainer } from 'class-validator';
 import { OpenAPIV3 } from 'openapi-types';
 import { error } from './error';
 import { fail } from './fail';
@@ -16,5 +15,5 @@ export const schemas: { [schemaName: string]: OpenAPIV3.ReferenceObject | OpenAP
 
   pagination,
 
-  ...validationMetadatasToSchemas((getFromContainer(MetadataStorage) as any).validationMetadatas),
+  ...validationMetadatasToSchemas(),
 };

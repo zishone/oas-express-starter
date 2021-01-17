@@ -1,9 +1,9 @@
 import { IsOptional, IsString } from 'class-validator';
 import { COLLECTIONS } from '../constants';
-import { Entity } from '.';
+import { Data } from '.';
 import { Model } from '../helpers';
 
-export class User extends Entity {
+export class User extends Data {
   @IsOptional()
   @IsString()
   username: string;

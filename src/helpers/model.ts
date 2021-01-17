@@ -10,14 +10,14 @@ import {
   database,
   logger,
 } from '.';
+import { Data } from '../models';
 import { ERROR_CODES } from '../constants';
-import { Entity } from '../models';
 import { dotnotate } from '@zishone/dotnotate';
 import httpError from 'http-errors';
 import { nanoid } from 'nanoid';
 import { validateOrReject } from 'class-validator';
 
-export class Model<T extends Entity> {
+export class Model<T extends Data> {
   constructor(private collectionName: string) {}
 
   private async validate(data: Partial<T> | Partial<T>[]): Promise<Partial<T>[]> {
@@ -31,7 +31,7 @@ export class Model<T extends Entity> {
         return [data];
       }
     } catch (error) {
-      throw httpError(400, 'Entity invalid', {
+      throw httpError(400, 'Data invalid', {
         errorCode: ERROR_CODES.INVALID,
         details: error,
       });
@@ -73,7 +73,7 @@ export class Model<T extends Entity> {
       };
       const data = await connection.collection(this.collectionName).findOne(filter, options);
       if (!data) {
-        throw httpError(404, 'Entity not found', { errorCode: ERROR_CODES.NOT_FOUND });
+        throw httpError(404, 'Data not found', { errorCode: ERROR_CODES.NOT_FOUND });
       }
       return data;
     } catch (error) {

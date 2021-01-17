@@ -40,7 +40,7 @@ export class Database {
     logger.debugFunctionCall('Database.error', arguments);
     switch (error.code) {
       case 11000:
-        throw httpError(403, 'Entity already exists', {
+        throw httpError(403, 'Data already exists', {
           errorCode: ERROR_CODES.DUPLICATE,
           details: error,
         });
