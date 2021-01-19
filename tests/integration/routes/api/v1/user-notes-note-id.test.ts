@@ -11,7 +11,7 @@ import { use } from 'chai';
 
 use(chaiHttp);
 
-export const userNotesById = (): void => {
+export const userNotesNoteId = (): void => {
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
       const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
