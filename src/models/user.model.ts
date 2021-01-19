@@ -1,7 +1,6 @@
+import { Data, Model } from '../helpers';
 import { IsOptional, IsString } from 'class-validator';
 import { COLLECTIONS } from '../constants';
-import { Data } from '.';
-import { Model } from '../helpers';
 
 export class User extends Data {
   @IsOptional()
