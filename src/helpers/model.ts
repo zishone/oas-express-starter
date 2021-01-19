@@ -10,12 +10,25 @@ import {
   database,
   logger,
 } from '.';
-import { Data } from '../models';
+import { IsNumber, IsOptional, IsString, validateOrReject } from 'class-validator';
 import { ERROR_CODES } from '../constants';
 import { dotnotate } from '@zishone/dotnotate';
 import httpError from 'http-errors';
 import { nanoid } from 'nanoid';
-import { validateOrReject } from 'class-validator';
+
+export class Data {
+  @IsOptional()
+  @IsString()
+  id: string;
+
+  @IsOptional()
+  @IsNumber()
+  modifiedOn: number;
+
+  @IsOptional()
+  @IsNumber()
+  createdOn: number;
+}
 
 export class Model<T extends Data> {
   constructor(private collectionName: string) {}
