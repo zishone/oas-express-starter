@@ -3,7 +3,6 @@
   "version": "0.1.0-development",
   "description": "A starter template for an OpenAPI 3.0 compliant Express.js server.",
   "main": "dist/server.js",
-  "types": "dist/types/index.d.ts",
   "scripts": {
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
