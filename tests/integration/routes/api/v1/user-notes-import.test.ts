@@ -30,7 +30,7 @@ export const userNotesImport = (): void => {
       const response = await request(app)
         .post('/api/v1/user/notes/import')
         .set('Authorization', `Bearer ${testAccessToken}`)
-        .attach('file', join(process.cwd(), 'tests', 'integration', 'support', 'note.csv'), 'note.csv');
+        .attach('file', join(process.cwd(), 'tests', 'support', 'note.csv'), 'note.csv');
 
       expect(response.status).to.be.equal(201);
     });
@@ -45,7 +45,7 @@ export const userNotesImport = (): void => {
       const response = await request(app)
         .post('/api/v1/user/notes/import')
         .set('Authorization', `Bearer ${testAccessToken}`)
-        .attach('file', join(process.cwd(), 'tests', 'integration', 'support', 'note.csv'), 'note.csv');
+        .attach('file', join(process.cwd(), 'tests', 'support', 'note.csv'), 'note.csv');
 
       expect(response.status).to.be.equal(500);
     });
