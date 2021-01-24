@@ -48,6 +48,12 @@ CONFIG_LOGIN_TTL=2592000            # Time to live of login in seconds
 Should be available on route `/apidocs` when NODE_ENV is set to `development`.
 
 ## NPM Scripts
+* `npm run` **`migrate:up`**
+  * To migrate database up using migrations in `./db/migrations`.
+* `npm run` **`migrate:down`**
+  * To migrate database one step down.
+* `npm run` **`migrate:create`**
+  * To create new migration in `./db/migrations`.
 * `npm run` **`lint`**
   * To check for lint issues.
 * `npm run` **`lint:fix`**

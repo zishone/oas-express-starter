@@ -44,5 +44,7 @@
     "prefer-rest-params": ["off"],
     "object-property-newline": ["error"]
   },
-  "ignorePatterns": ["db/migrations"]
+  "env": {
+    "node": true
+  }
 }
