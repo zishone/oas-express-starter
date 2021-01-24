@@ -4,9 +4,9 @@
   "description": "A starter template for an OpenAPI 3.0 compliant Express.js server.",
   "main": "dist/server.js",
   "scripts": {
-    "migrate:up": "migrate-mongo up -f '.migraterc.js'",
-    "migrate:down": "migrate-mongo down -f '.migraterc.js'",
-    "migrate:create": "migrate-mongo create -f '.migraterc.js'",
+    "migrate:up": "migrate-mongo up -f './db/migrationrc.js'",
+    "migrate:down": "migrate-mongo down -f './db/migrationrc.js'",
+    "migrate:create": "migrate-mongo create -f './db/migrationrc.js'",
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha --file tests/unit/index.ts tests/unit/**/*.test.ts",

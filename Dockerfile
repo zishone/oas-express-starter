@@ -13,7 +13,6 @@ COPY ./tsconfig.json ./
 RUN npm run build
 
 COPY ./.env.defaults ./
-COPY ./.migraterc.js ./
 COPY ./db/ ./db/
 
 CMD npm run start 
