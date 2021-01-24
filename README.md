@@ -52,7 +52,7 @@ Should be available on route `/apidocs` when NODE_ENV is set to `development`.
   * To migrate database up using migrations in `./db/migrations`.
 * `npm run` **`migrate:down`**
   * To migrate database one step down.
-* `npm run` **`migrate:create`**
+* `npm run` **`migrate:create`** **`<description>`**
   * To create new migration in `./db/migrations`.
 * `npm run` **`lint`**
   * To check for lint issues.
