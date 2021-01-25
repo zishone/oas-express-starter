@@ -4,6 +4,7 @@ import { SinonStub, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
 import { ERROR_CODES } from '../../../src/constants';
 import { Logger } from '@zishone/logan';
+import { appConfig } from '../../../src/configs';
 import { expect } from 'chai';
 import httpError from 'http-errors';
 import { nanoid } from 'nanoid';
@@ -18,7 +19,7 @@ export default (): void => {
     getConnectionStub = sandbox.stub(Database.prototype, 'getConnection');
     errorStub = sandbox.stub(Database.prototype, 'error');
     sandbox.stub(Logger.prototype, 'debugFunctionCall');
-    model = new Model<any>(nanoid(12));
+    model = new Model<any>(nanoid());
   });
 
   afterEach((): void => {
@@ -92,7 +93,7 @@ export default (): void => {
 
   describe('fetchOne', (): void => {
     it('should return an entry from the database', async (): Promise<void> => {
-      const testData = { id: nanoid(12) };
+      const testData = { id: nanoid(appConfig.DATA_ID_LENGTH) };
 
       getConnectionStub.resolves({
         collection: (): { [key: string]: Function } => ({
@@ -141,7 +142,7 @@ export default (): void => {
 
   describe('save', (): void => {
     it('should save an entry in the database', async (): Promise<void> => {
-      const testData = { id: nanoid(12) };
+      const testData = { id: nanoid(appConfig.DATA_ID_LENGTH) };
 
       sandbox.stub(cv, 'validateOrReject').onCall(0).resolves();
       getConnectionStub.resolves({
@@ -156,7 +157,7 @@ export default (): void => {
     });
 
     it('should save multiple entries in the database', async (): Promise<void> => {
-      const testData = [{ id: nanoid(12) }];
+      const testData = [{ id: nanoid(appConfig.DATA_ID_LENGTH) }];
 
       sandbox.stub(cv, 'validateOrReject').resolves();
       getConnectionStub.resolves({
@@ -171,7 +172,7 @@ export default (): void => {
     });
 
     it('should fail to save an entry when database error happens', async (): Promise<void> => {
-      const testData = { id: nanoid(12) };
+      const testData = { id: nanoid(appConfig.DATA_ID_LENGTH) };
 
       sandbox.stub(cv, 'validateOrReject').onCall(0).resolves();
       getConnectionStub.resolves({
@@ -190,29 +191,8 @@ export default (): void => {
       }
     });
 
-    it('should fail to save an entry when data has duplicate', async (): Promise<void> => {
-      const testData = { id: nanoid(12) };
-
-      sandbox.stub(cv, 'validateOrReject').onCall(0).resolves();
-      getConnectionStub.resolves({
-        collection: (): { [key: string]: Function } => ({
-          insertMany: async (): Promise<any> => {
-            throw { code: 11000 };
-          },
-        }),
-      } as any);
-      errorStub.throws(httpError(403, { errorCode: ERROR_CODES.DUPLICATE }));
-
-      try {
-        await model.save(testData);
-      } catch (error) {
-        expect(error.status).to.be.equal(403);
-        expect(error.errorCode).to.be.equal(ERROR_CODES.DUPLICATE);
-      }
-    });
-
     it('should fail to save an entry when data validation fails', async (): Promise<void> => {
-      const testData = { id: nanoid(12) };
+      const testData = { id: nanoid(appConfig.DATA_ID_LENGTH) };
 
       sandbox.stub(cv, 'validateOrReject').onCall(0).rejects(new Error());
 
@@ -275,7 +255,7 @@ export default (): void => {
       getConnectionStub.resolves({
         collection: (): { [key: string]: Function } => ({
           updateMany: async (): Promise<any> => {
-            throw { code: 16840 };
+            throw new Error();
           },
         }),
       } as any);
@@ -285,30 +265,6 @@ export default (): void => {
         await model.update(testFilter, testUpdate);
       } catch (error) {
         expect(error).to.exist;
-      }
-    });
-
-    it('should fail to update entries when update will result in a duplicate', async (): Promise<void> => {
-      const testFilter = {};
-      const testUpdate = {
-        $set: {},
-        $unset: {},
-      };
-
-      getConnectionStub.resolves({
-        collection: (): { [key: string]: Function } => ({
-          updateMany: async (): Promise<any> => {
-            throw { code: 11000 };
-          },
-        }),
-      } as any);
-      errorStub.throws(httpError(403, { errorCode: ERROR_CODES.DUPLICATE }));
-
-      try {
-        await model.update(testFilter, testUpdate);
-      } catch (error) {
-        expect(error.status).to.be.equal(403);
-        expect(error.errorCode).to.be.equal(ERROR_CODES.DUPLICATE);
       }
     });
   });
