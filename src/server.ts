@@ -1,7 +1,7 @@
 import { serve, setup } from 'swagger-ui-express';
 import { App } from './app';
 import { ENVIRONMENTS } from './constants';
-import { config } from './configs';
+import { envConfig } from './configs';
 import express from 'express';
 import { logger } from './helpers';
 import { migrate } from './utils';
@@ -13,11 +13,11 @@ app.on(
   'ready',
   async (server: express.Application): Promise<void> => {
     try {
-      switch (config.ENV) {
+      switch (envConfig.ENV) {
         case ENVIRONMENTS.DEVELOPMENT:
           app.use('/apidocs', serve, setup(spec));
           logger.enableDebug();
-          logger.debug('Environment config', { config });
+          logger.debug('Environment config', { envConfig });
           await migrate();
           break;
         case ENVIRONMENTS.STAGING:
@@ -28,9 +28,9 @@ app.on(
           await migrate();
           break;
       }
-      server.listen({ port: config.APP_PORT }, (): void => {
-        config.APP_PORT = server.address().port;
-        logger.info('Server listening', { port: config.APP_PORT });
+      server.listen({ port: envConfig.APP_PORT }, (): void => {
+        envConfig.APP_PORT = server.address().port;
+        logger.info('Server listening', { port: envConfig.APP_PORT });
       });
     } catch (error) {
       logger.error('Server startup failed', { error });

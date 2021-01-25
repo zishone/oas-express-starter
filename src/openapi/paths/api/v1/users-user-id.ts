@@ -44,10 +44,10 @@ export const usersUserIdV1: OpenAPIV3.PathItemObject = {
           schema: {
             type: 'object',
             properties: {
-              username: { type: 'string' },
-              email: { type: 'string' },
-              name: { type: 'string' },
-              password: { type: 'string' },
+              username: { $ref: '#/components/schemas/User/properties/username' },
+              email: { $ref: '#/components/schemas/User/properties/email' },
+              name: { $ref: '#/components/schemas/User/properties/name' },
+              password: { $ref: '#/components/schemas/User/properties/password' },
             },
             minProperties: 1,
           },

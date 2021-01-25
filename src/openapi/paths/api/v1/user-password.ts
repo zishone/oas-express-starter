@@ -13,8 +13,8 @@ export const userPasswordV1: OpenAPIV3.PathItemObject = {
             type: 'object',
             required: ['currentPassword', 'newPassword'],
             properties: {
-              currentPassword: { type: 'string' },
-              newPassword: { type: 'string' },
+              currentPassword: { $ref: '#/components/schemas/User/properties/password' },
+              newPassword: { $ref: '#/components/schemas/User/properties/password' },
             },
           },
         },

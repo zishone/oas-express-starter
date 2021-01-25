@@ -1,0 +1,6 @@
+export const appConfig = {
+  REQUEST_ID_LENGTH: 12,
+  DATA_ID_LENGTH: 12,
+  SALT_ROUNDS: 12,
+  PASSWORD_MIN_LENGTH: 8,
+};

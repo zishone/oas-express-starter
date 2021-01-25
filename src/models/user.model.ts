@@ -1,6 +1,7 @@
 import { COLLECTIONS, ROLES } from '../constants';
 import { Data, Model } from '../helpers';
 import { IsEmail, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import { appConfig } from '../configs';
 
 export class User extends Data {
   @IsOptional()
@@ -14,7 +15,7 @@ export class User extends Data {
 
   @IsOptional()
   @IsString()
-  @MinLength(8)
+  @MinLength(appConfig.PASSWORD_MIN_LENGTH)
   password: string;
 
   @IsOptional()

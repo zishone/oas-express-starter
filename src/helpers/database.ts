@@ -11,7 +11,7 @@ import {
   UpdateManyOptions as UpdateOptions,
 } from 'mongodb';
 import { ERROR_CODES } from '../constants';
-import { config } from '../configs';
+import { envConfig } from '../configs';
 import httpError from 'http-errors';
 import { logger } from '.';
 
@@ -55,5 +55,5 @@ export class Database {
   }
 }
 
-export const database = new Database(config.DB_URI, config.DB_NAME);
+export const database = new Database(envConfig.DB_URI, envConfig.DB_NAME);
 export { CommonOptions, CountOptions, Cursor, FetchOptions, Filter, SaveOptions, Update, UpdateOptions };

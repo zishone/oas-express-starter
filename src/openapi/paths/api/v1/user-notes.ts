@@ -13,11 +13,8 @@ export const userNotesV1: OpenAPIV3.PathItemObject = {
             type: 'object',
             required: ['body'],
             properties: {
-              title: {
-                type: 'string',
-                default: 'Untitled Note',
-              },
-              body: { type: 'string' },
+              title: { $ref: '#/components/schemas/Note/properties/title' },
+              body: { $ref: '#/components/schemas/Note/properties/body' },
             },
           },
         },
