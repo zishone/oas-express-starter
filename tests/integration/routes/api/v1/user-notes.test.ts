@@ -5,8 +5,8 @@ import { NoteService } from '../../../../../src/services';
 import { ROLES } from '../../../../../src/constants';
 import { app } from '../../../../../src/server';
 import chaiHttp from 'chai-http';
-import { config } from '../../../../../src/configs';
 import { createSandbox } from 'sinon';
+import { envConfig } from '../../../../../src/configs';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';
 import { use } from 'chai';
@@ -22,10 +22,10 @@ export const userNotes = (): void => {
 
   describe('POST', (): void => {
     it('should respond 201', async (): Promise<void> => {
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testUserId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testNote = new Note(testUserId, nanoid(12), nanoid(12));
+      const testAccessToken = sign({ id: testUserId }, envConfig.LOGIN_SECRET, { expiresIn: envConfig.LOGIN_TTL });
+      const testNote = new Note(testUserId, nanoid(), nanoid());
 
       const response = await request(app)
         .post('/api/v1/user/notes')
@@ -36,10 +36,10 @@ export const userNotes = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testUserId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testNote = new Note(testUserId, nanoid(12), nanoid(12));
+      const testAccessToken = sign({ id: testUserId }, envConfig.LOGIN_SECRET, { expiresIn: envConfig.LOGIN_TTL });
+      const testNote = new Note(testUserId, nanoid(), nanoid());
 
       sandbox.stub(NoteService.prototype, 'createNote').onCall(0).rejects();
 
@@ -54,10 +54,10 @@ export const userNotes = (): void => {
 
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testUserId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testNote = new Note(testUserId, nanoid(12), nanoid(12));
+      const testAccessToken = sign({ id: testUserId }, envConfig.LOGIN_SECRET, { expiresIn: envConfig.LOGIN_TTL });
+      const testNote = new Note(testUserId, nanoid(), nanoid());
       await noteModel.save(testNote);
 
       const response = await request(app)
@@ -69,9 +69,9 @@ export const userNotes = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testUserId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAccessToken = sign({ id: testUserId }, envConfig.LOGIN_SECRET, { expiresIn: envConfig.LOGIN_TTL });
 
       sandbox.stub(NoteService.prototype, 'fetchNotes').onCall(0).rejects();
 

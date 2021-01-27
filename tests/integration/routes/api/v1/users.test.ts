@@ -5,8 +5,8 @@ import { ROLES } from '../../../../../src/constants';
 import { UserService } from '../../../../../src/services';
 import { app } from '../../../../../src/server';
 import chaiHttp from 'chai-http';
-import { config } from '../../../../../src/configs';
 import { createSandbox } from 'sinon';
+import { envConfig } from '../../../../../src/configs';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';
 import { use } from 'chai';
@@ -22,10 +22,12 @@ export const users = (): void => {
 
   describe('GET', (): void => {
     it('should respond 200', async (): Promise<void> => {
-      const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testAdmin = new User(ROLES.ADMIN, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testAdminAccessToken = sign({ id: testAdminId }, envConfig.LOGIN_SECRET, {
+        expiresIn: envConfig.LOGIN_TTL,
+      });
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       await userModel.save(testUser);
 
       const response = await request(app)
@@ -37,10 +39,12 @@ export const users = (): void => {
     });
 
     it('should respond 200 WHEN sorted asc', async (): Promise<void> => {
-      const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testAdmin = new User(ROLES.ADMIN, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testAdminAccessToken = sign({ id: testAdminId }, envConfig.LOGIN_SECRET, {
+        expiresIn: envConfig.LOGIN_TTL,
+      });
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       await userModel.save(testUser);
 
       const response = await request(app)
@@ -52,10 +56,12 @@ export const users = (): void => {
     });
 
     it('should respond 200 WHEN sorted desc', async (): Promise<void> => {
-      const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testAdmin = new User(ROLES.ADMIN, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testAdminAccessToken = sign({ id: testAdminId }, envConfig.LOGIN_SECRET, {
+        expiresIn: envConfig.LOGIN_TTL,
+      });
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       await userModel.save(testUser);
 
       const response = await request(app)
@@ -67,9 +73,11 @@ export const users = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const testAdmin = new User(ROLES.ADMIN, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testAdmin = new User(ROLES.ADMIN, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testAdminId] = await userModel.save(testAdmin);
-      const testAdminAccessToken = sign({ id: testAdminId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAdminAccessToken = sign({ id: testAdminId }, envConfig.LOGIN_SECRET, {
+        expiresIn: envConfig.LOGIN_TTL,
+      });
 
       sandbox.stub(UserService.prototype, 'fetchUsers').onCall(0).rejects();
 

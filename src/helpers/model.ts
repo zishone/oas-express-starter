@@ -12,6 +12,7 @@ import {
 } from '.';
 import { IsNumber, IsOptional, IsString, validateOrReject } from 'class-validator';
 import { ERROR_CODES } from '../constants';
+import { appConfig } from '../configs';
 import { dotnotate } from '@zishone/dotnotate';
 import httpError from 'http-errors';
 import { nanoid } from 'nanoid';
@@ -103,7 +104,7 @@ export class Model<T extends Data> {
       await connection.collection(this.collectionName).insertMany(
         dataArray.map(
           (d: T): T => {
-            const id = nanoid(12);
+            const id = nanoid(appConfig.DATA_ID_LENGTH);
             ids.push(id);
             return {
               ...d,

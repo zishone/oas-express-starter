@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import { it } from 'mocha';
 import { migrate } from '../../../src/utils';
 import migration from 'migrate-mongo';
+import { nanoid } from 'nanoid';
 
 export default (): void => {
   const sandbox = createSandbox();
@@ -14,7 +15,9 @@ export default (): void => {
   });
 
   it('should migrate database', async (): Promise<void> => {
-    const getConnectionStub = sandbox.stub(Database.prototype, 'getConnection').resolves();
+    const getConnectionStub = sandbox
+      .stub(Database.prototype, 'getConnection')
+      .resolves({ databaseName: nanoid() } as any);
     const upStub = sandbox.stub(migration, 'up').resolves();
     const debugStub = sandbox.stub(Logger.prototype, 'debug');
 

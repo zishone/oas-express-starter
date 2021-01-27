@@ -22,7 +22,7 @@ export default (): void => {
 
   describe('createNote', (): void => {
     it('should create new note entry in database', async (): Promise<void> => {
-      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
+      const testNote = new Note(nanoid(), nanoid(), nanoid());
 
       sandbox.stub(Model.prototype, 'save').onCall(0).resolves([testNote.id]);
       sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testNote);
@@ -35,7 +35,7 @@ export default (): void => {
 
   describe('fetchNotes', (): void => {
     it('should return notes list fetched from the database', async (): Promise<void> => {
-      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
+      const testNote = new Note(nanoid(), nanoid(), nanoid());
       const testNotes = [testNote];
 
       sandbox
@@ -55,7 +55,7 @@ export default (): void => {
 
   describe('fetchNoteById', (): void => {
     it('should return a note fetched from the database given note id', async (): Promise<void> => {
-      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
+      const testNote = new Note(nanoid(), nanoid(), nanoid());
 
       sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testNote);
 
@@ -67,7 +67,7 @@ export default (): void => {
 
   describe('updateNoteById', (): void => {
     it('should update a note in the database given note id', async (): Promise<void> => {
-      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
+      const testNote = new Note(nanoid(), nanoid(), nanoid());
 
       const fetchOneStub = sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testNote);
       const updateStub = sandbox.stub(Model.prototype, 'update').onCall(0).resolves();
@@ -81,7 +81,7 @@ export default (): void => {
 
   describe('deleteNoteById', (): void => {
     it('should delete a note from the database given note id', async (): Promise<void> => {
-      const testNote = new Note(nanoid(12), nanoid(12), nanoid(12));
+      const testNote = new Note(nanoid(), nanoid(), nanoid());
 
       const fetchOneStub = sandbox.stub(Model.prototype, 'fetchOne').onCall(0).resolves(testNote);
       const deleteStub = sandbox.stub(Model.prototype, 'delete').onCall(0).resolves();

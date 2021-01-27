@@ -1,9 +1,9 @@
 import { Logger } from '@zishone/logan';
-import { config } from '../configs';
+import { pkgConfig } from '../configs';
 
 export const logger = new Logger({
   defaultMeta: {
-    service: config.APP_NAME,
-    version: config.APP_VERSION,
+    service: pkgConfig.APP_NAME,
+    version: pkgConfig.APP_VERSION,
   },
 });

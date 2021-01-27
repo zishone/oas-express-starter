@@ -44,8 +44,8 @@ export const userNotesNoteIdV1: OpenAPIV3.PathItemObject = {
           schema: {
             type: 'object',
             properties: {
-              title: { type: 'string' },
-              body: { type: 'string' },
+              title: { $ref: '#/components/schemas/Note/properties/title' },
+              body: { $ref: '#/components/schemas/Note/properties/body' },
             },
             minProperties: 1,
           },

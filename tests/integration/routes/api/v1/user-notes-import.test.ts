@@ -5,8 +5,8 @@ import { NoteService } from '../../../../../src/services';
 import { ROLES } from '../../../../../src/constants';
 import { app } from '../../../../../src/server';
 import chaiHttp from 'chai-http';
-import { config } from '../../../../../src/configs';
 import { createSandbox } from 'sinon';
+import { envConfig } from '../../../../../src/configs';
 import { join } from 'path';
 import { nanoid } from 'nanoid';
 import { sign } from 'jsonwebtoken';
@@ -23,9 +23,9 @@ export const userNotesImport = (): void => {
 
   describe('POST', (): void => {
     it('should respond 201', async (): Promise<void> => {
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testUserId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAccessToken = sign({ id: testUserId }, envConfig.LOGIN_SECRET, { expiresIn: envConfig.LOGIN_TTL });
 
       const response = await request(app)
         .post('/api/v1/user/notes/import')
@@ -36,9 +36,9 @@ export const userNotesImport = (): void => {
     });
 
     it('should respond 500 WHEN unknown error occurs', async (): Promise<void> => {
-      const testUser = new User(ROLES.USER, nanoid(12), nanoid(12), nanoid(12), nanoid(12));
+      const testUser = new User(ROLES.USER, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testUserId] = await userModel.save(testUser);
-      const testAccessToken = sign({ id: testUserId }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const testAccessToken = sign({ id: testUserId }, envConfig.LOGIN_SECRET, { expiresIn: envConfig.LOGIN_TTL });
 
       sandbox.stub(NoteService.prototype, 'createNote').onCall(0).rejects();
 

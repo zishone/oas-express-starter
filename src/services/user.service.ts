@@ -1,9 +1,9 @@
 import { ERROR_CODES, ROLES } from '../constants';
 import { FetchOptions, Filter, logger } from '../helpers';
 import { User, userModel } from '../models';
+import { appConfig, envConfig } from '../configs';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import { compareSync } from 'bcryptjs';
-import { config } from '../configs';
 import httpError from 'http-errors';
 import { sign } from 'jsonwebtoken';
 
@@ -20,7 +20,7 @@ export class UserService {
 
   public async registerUser(username: string, email: string, password: string, name: string): Promise<{ user: User }> {
     logger.debugFunctionCall('UserService.registerUser', arguments);
-    const salt = genSaltSync(12);
+    const salt = genSaltSync(appConfig.SALT_ROUNDS);
     const saltedPassword = hashSync(password, salt);
     const newUser = new User(ROLES.USER, username, email, saltedPassword, name);
     const [id] = await userModel.save(newUser);
@@ -36,7 +36,7 @@ export class UserService {
         { projection: { id: 1 } },
       );
       await this.validatePassword(id, password);
-      const accessToken = sign({ id }, config.LOGIN_SECRET, { expiresIn: config.LOGIN_TTL });
+      const accessToken = sign({ id }, envConfig.LOGIN_SECRET, { expiresIn: envConfig.LOGIN_TTL });
       return { accessToken };
     } catch (error) {
       if (error.status === 404 || error.status === 403) {
@@ -77,7 +77,7 @@ export class UserService {
     logger.debugFunctionCall('UserService.updateUserById', arguments);
     await userModel.fetchOne({ id });
     if (user.password) {
-      const salt = genSaltSync(12);
+      const salt = genSaltSync(appConfig.SALT_ROUNDS);
       user.password = hashSync(user.password, salt);
     }
     await userModel.update({ id }, { $set: user });

@@ -12,8 +12,13 @@ export const loginV1: OpenAPIV3.PathItemObject = {
             type: 'object',
             required: ['login', 'password'],
             properties: {
-              login: { type: 'string' },
-              password: { type: 'string' },
+              login: {
+                oneOf: [
+                  { $ref: '#/components/schemas/User/properties/username' },
+                  { $ref: '#/components/schemas/User/properties/email' },
+                ],
+              },
+              password: { $ref: '#/components/schemas/User/properties/password' },
             },
           },
         },

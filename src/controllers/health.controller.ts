@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { config } from '../configs';
 import { database } from '../helpers';
+import { pkgConfig } from '../configs';
 
 /**
  * GET /health
@@ -10,8 +10,8 @@ export const getHealth = async (req: Request, res: Response, next: NextFunction)
     await database.getConnection();
 
     res.jsend.success({
-      name: config.APP_NAME,
-      version: config.APP_VERSION,
+      name: pkgConfig.APP_NAME,
+      version: pkgConfig.APP_VERSION,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

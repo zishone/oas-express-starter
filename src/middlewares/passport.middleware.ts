@@ -2,14 +2,14 @@ import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { User, userModel } from '../models';
 import { ERROR_CODES } from '../constants';
-import { config } from '../configs';
+import { envConfig } from '../configs';
 import httpError from 'http-errors';
 import passport from 'passport';
 
 export const passportMiddleware = (): RequestHandler => {
   const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: config.LOGIN_SECRET,
+    secretOrKey: envConfig.LOGIN_SECRET,
   };
   const strategy = new Strategy(
     options,

@@ -1,6 +1,7 @@
+import { COLLECTIONS, ROLES } from '../constants';
 import { Data, Model } from '../helpers';
-import { IsOptional, IsString } from 'class-validator';
-import { COLLECTIONS } from '../constants';
+import { IsEmail, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import { appConfig } from '../configs';
 
 export class User extends Data {
   @IsOptional()
@@ -9,10 +10,12 @@ export class User extends Data {
 
   @IsOptional()
   @IsString()
+  @IsEmail()
   email: string;
 
   @IsOptional()
   @IsString()
+  @MinLength(appConfig.PASSWORD_MIN_LENGTH)
   password: string;
 
   @IsOptional()
@@ -21,6 +24,7 @@ export class User extends Data {
 
   @IsOptional()
   @IsString()
+  @IsEnum(Object.values(ROLES))
   role: string;
 
   constructor(role: string, username: string, email: string, saltedPassword: string, name: string) {
