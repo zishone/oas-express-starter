@@ -1,4 +1,4 @@
-.PHONY: build up run test test-integration 
+.PHONY: build up down run test test-integration 
 
 $(shell cp -n .env.defaults .env)
 include .env
@@ -9,8 +9,11 @@ export APP_PORT=${CONFIG_APP_PORT}
 build:
 	docker-compose build
 
-up: build
+up:
 	docker-compose up
+
+down:
+	docker-compose down
 
 run:
 	docker-compose -f docker-compose.test.yml run \
