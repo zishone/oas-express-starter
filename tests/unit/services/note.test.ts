@@ -1,6 +1,5 @@
+import { Logger, Model } from '../../../src/helpers';
 import { describe, it } from 'mocha';
-import { Logger } from '@zishone/logan';
-import { Model } from '../../../src/helpers';
 import { Note } from '../../../src/models';
 import { NoteService } from '../../../src/services';
 import { createSandbox } from 'sinon';

@@ -1,9 +1,8 @@
 import * as cv from 'class-validator';
-import { Cursor, Database, Model } from '../../../src/helpers';
+import { Cursor, Database, Logger, Model } from '../../../src/helpers';
 import { SinonStub, createSandbox } from 'sinon';
 import { describe, it } from 'mocha';
 import { ERROR_CODES } from '../../../src/constants';
-import { Logger } from '@zishone/logan';
 import { appConfig } from '../../../src/configs';
 import { expect } from 'chai';
 import httpError from 'http-errors';

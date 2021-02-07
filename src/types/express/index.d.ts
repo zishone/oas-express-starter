@@ -10,5 +10,6 @@ declare module 'express' {
   interface Request {
     id: string;
     user: User;
+    error: any;
   }
 }
