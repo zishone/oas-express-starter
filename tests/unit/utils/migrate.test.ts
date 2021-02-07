@@ -1,5 +1,4 @@
-import { Database } from '../../../src/helpers';
-import { Logger } from '@zishone/logan';
+import { Database, Logger } from '../../../src/helpers';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { it } from 'mocha';

@@ -3,7 +3,8 @@ import { ERROR_CODES } from '../constants';
 
 export const errorMiddleware = (): ErrorRequestHandler => {
   return (error: any, req: Request, res: Response, _next: NextFunction): void => {
-    req.addLogError(error);
+    error.details = Array.isArray(error.details) ? error.details : [error.details];
+    req.error = JSON.stringify(error);
     if (error.errors || error.type === 'entity.parse.failed' || error.type === 'mquery.parse.failed') {
       res.jsend.fail({
         errorCode: ERROR_CODES.INVALID,
@@ -17,7 +18,7 @@ export const errorMiddleware = (): ErrorRequestHandler => {
         {
           errorCode: error.errorCode,
           message: error.message,
-          details: Array.isArray(error.details) ? error.details : [error.details],
+          details: error.details,
         },
         error.status,
       );
@@ -25,7 +26,7 @@ export const errorMiddleware = (): ErrorRequestHandler => {
     }
     res.jsend.error(error.message, error.status, error.code, {
       errorCode: ERROR_CODES.UNKNOWN_ERROR,
-      details: [error],
+      details: error.details,
     });
   };
 };

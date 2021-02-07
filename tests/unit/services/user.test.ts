@@ -1,7 +1,6 @@
 import { ERROR_CODES, ROLES } from '../../../src/constants';
+import { Logger, Model } from '../../../src/helpers';
 import { describe, it } from 'mocha';
-import { Logger } from '@zishone/logan';
-import { Model } from '../../../src/helpers';
 import { User } from '../../../src/models';
 import { UserService } from '../../../src/services';
 import bcryptjs from 'bcryptjs';

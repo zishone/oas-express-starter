@@ -5,8 +5,9 @@ import { controllers } from './controllers';
 import cookieParser from 'cookie-parser';
 import { initialize } from 'express-openapi';
 import { jsend } from '@zishone/jasenda';
-import { log } from '@zishone/logan';
+import { logConfig } from './configs';
 import { logger } from './helpers';
+import morgan from 'morgan';
 import { mquery } from '@zishone/monique';
 import passport from 'passport';
 import { spec } from './openapi';
@@ -26,7 +27,7 @@ export class App {
 
   private async composeMiddlewares(): Promise<void> {
     this.app.use(requestIdMiddleware());
-    this.app.use(log(logger));
+    this.app.use(morgan(logConfig.MORGAN_FORMAT, { stream: logger }));
     this.app.use(jsend());
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
