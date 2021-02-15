@@ -1,7 +1,7 @@
+import { envConfig, pkgConfig } from '../configs';
 import { LOG_LEVELS } from '../constants';
 import { createWriteStream } from 'fs';
 import { dotnotate } from '@zishone/dotnotate';
-import { pkgConfig } from '../configs';
 import winston from 'winston';
 
 export class Logger {
@@ -12,6 +12,8 @@ export class Logger {
       defaultMeta: {
         service: pkgConfig.APP_NAME,
         version: pkgConfig.APP_VERSION,
+        env: envConfig.ENV,
+        hostname: envConfig.HOSTNAME,
       },
     });
     this.logger.add(new winston.transports.Stream({ stream: createWriteStream('/dev/null') }));
