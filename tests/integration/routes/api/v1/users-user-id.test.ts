@@ -47,7 +47,7 @@ export const usersUserId = (): void => {
       expect(response.status).to.be.equal(403);
     });
 
-    it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
+    it('should respond 404 WHEN user does not exist', async (): Promise<void> => {
       const testAdmin = new User(ROLES.ADMIN, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, envConfig.LOGIN_SECRET, {
@@ -83,7 +83,7 @@ export const usersUserId = (): void => {
       expect(response.status).to.be.equal(204);
     });
 
-    it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
+    it('should respond 404 WHEN user does not exist', async (): Promise<void> => {
       const testAdmin = new User(ROLES.ADMIN, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, envConfig.LOGIN_SECRET, {
@@ -119,7 +119,7 @@ export const usersUserId = (): void => {
       expect(response.status).to.be.equal(204);
     });
 
-    it('should respond 404 WHEN not does not exist', async (): Promise<void> => {
+    it('should respond 404 WHEN user does not exist', async (): Promise<void> => {
       const testAdmin = new User(ROLES.ADMIN, nanoid(), `${nanoid()}@example.com`, nanoid(), nanoid());
       const [testAdminId] = await userModel.save(testAdmin);
       const testAdminAccessToken = sign({ id: testAdminId }, envConfig.LOGIN_SECRET, {
