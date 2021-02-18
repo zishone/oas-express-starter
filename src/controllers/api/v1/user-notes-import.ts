@@ -13,6 +13,8 @@ export const postUserNotesImportV1 = async (req: Request, res: Response, next: N
 
     const { id: userId } = req.user;
 
+    req.info['user.id'] = userId;
+
     const fileStream = createReadStream(req.file.path);
     const csvStream = parseStream(fileStream, { headers: true });
     const { title, body }: Note = await new Promise((resolve, reject) => {
@@ -20,6 +22,8 @@ export const postUserNotesImportV1 = async (req: Request, res: Response, next: N
       csvStream.on('error', reject);
     });
     const { note } = await noteService.createNote(userId, title, body);
+
+    req.info['note.id'] = note.id;
 
     res.jsend.success({ note }, 201);
   } catch (error) {

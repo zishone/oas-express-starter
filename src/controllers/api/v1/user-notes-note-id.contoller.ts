@@ -11,6 +11,8 @@ export const getUserNotesNoteIdV1 = async (req: Request, res: Response, next: Ne
     const { noteId } = req.params;
     const { options } = req.mquery;
 
+    req.info['note.id'] = noteId;
+
     const { note } = await noteService.fetchNoteById(noteId, options);
 
     res.jsend.success({ note });
@@ -28,6 +30,8 @@ export const patchUserNotesNoteIdV1 = async (req: Request, res: Response, next: 
 
     const { noteId } = req.params;
     const { title, body } = req.body;
+
+    req.info['note.id'] = noteId;
 
     await noteService.updateNoteById(noteId, {
       title,
@@ -48,6 +52,8 @@ export const deleteUserNotesNoteIdV1 = async (req: Request, res: Response, next:
     const noteService = new NoteService();
 
     const { noteId } = req.params;
+
+    req.info['note.id'] = noteId;
 
     await noteService.deleteNoteById(noteId);
 

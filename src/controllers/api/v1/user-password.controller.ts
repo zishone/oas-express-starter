@@ -11,6 +11,8 @@ export const putUserPasswordV1 = async (req: Request, res: Response, next: NextF
     const { id: userId } = req.user;
     const { currentPassword, newPassword } = req.body;
 
+    req.info['user.id'] = userId;
+
     await userService.validatePassword(userId, currentPassword);
     await userService.updateUserById(userId, { password: newPassword });
 

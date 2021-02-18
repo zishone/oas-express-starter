@@ -107,6 +107,7 @@ export default (): void => {
       const testLog = `
         [
           {},
+          {},
           {}
         ]
       `;
@@ -119,6 +120,7 @@ export default (): void => {
     it('should log given log on level error', async (): Promise<void> => {
       const testLog = `
         [
+          {},
           {},
           { "message": "error" }
         ]

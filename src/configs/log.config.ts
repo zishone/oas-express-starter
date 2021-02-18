@@ -1,14 +1,3 @@
-import { Request } from 'express';
-import morgan from 'morgan';
-
-morgan.token('id', (req: Request): string => {
-  return req.id;
-});
-
-morgan.token('error', (req: Request): string => {
-  return req.error || '{}';
-});
-
 export const logConfig = {
   MORGAN_FORMAT: `
     [
@@ -26,6 +15,7 @@ export const logConfig = {
         "response.content.length": :res[content-length],
         "response.time": :response-time
       },
+      :info,
       :error
     ]
   `,

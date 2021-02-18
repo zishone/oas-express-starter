@@ -11,6 +11,8 @@ export const getUsersUserIdV1 = async (req: Request, res: Response, next: NextFu
     const { userId } = req.params;
     const { options } = req.mquery;
 
+    req.info['user.id'] = userId;
+
     const { user } = await userService.fetchUserById(userId, options);
 
     res.jsend.success({ user });
@@ -28,6 +30,8 @@ export const patchUsersUserIdV1 = async (req: Request, res: Response, next: Next
 
     const { userId } = req.params;
     const { username, email, password, name } = req.body;
+
+    req.info['user.id'] = userId;
 
     await userService.updateUserById(userId, {
       username,
@@ -51,6 +55,8 @@ export const deleteUsersUserIdV1 = async (req: Request, res: Response, next: Nex
     const noteService = new NoteService();
 
     const { userId } = req.params;
+
+    req.info['user.id'] = userId;
 
     await userService.deleteUserById(userId);
     await noteService.deleteNotes({ userId });

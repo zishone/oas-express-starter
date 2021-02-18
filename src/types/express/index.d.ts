@@ -10,6 +10,7 @@ declare module 'express' {
   interface Request {
     id: string;
     user: User;
+    info: { [key: string]: any };
     error: any;
   }
 }
