@@ -12,6 +12,8 @@ export const getUserNotesNoteIdExportV1 = async (req: Request, res: Response, ne
     const { noteId } = req.params;
     const { options } = req.mquery;
 
+    req.info['note.id'] = noteId;
+
     const { note } = await noteService.fetchNoteById(noteId, options);
 
     const buffer = await writeToBuffer([note], { headers: true });

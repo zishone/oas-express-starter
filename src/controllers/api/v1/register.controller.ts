@@ -12,6 +12,8 @@ export const postRegisterV1 = async (req: Request, res: Response, next: NextFunc
 
     const { user } = await userService.registerUser(username, email, password, name);
 
+    req.info['user.id'] = user.id;
+
     res.jsend.success({ user }, 201);
   } catch (error) {
     next(error);

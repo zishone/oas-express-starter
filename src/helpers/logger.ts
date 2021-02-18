@@ -85,14 +85,18 @@ export class Logger {
    */
   public write(log: string): void {
     try {
-      const [args, error] = JSON.parse(log);
+      const [args, info, error] = JSON.parse(log);
       if (Object.keys(error).length > 0) {
         this.error('Request failed', {
           ...args,
+          ...info,
           error,
         });
       } else {
-        this.info('Request finished', args);
+        this.info('Request finished', {
+          ...args,
+          ...info,
+        });
       }
     } catch (error) {
       this.error('Log failed', error);

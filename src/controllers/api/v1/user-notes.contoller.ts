@@ -12,7 +12,11 @@ export const postUserNotesV1 = async (req: Request, res: Response, next: NextFun
     const { id: userId } = req.user;
     const { title, body } = req.body;
 
+    req.info['user.id'] = userId;
+
     const { note } = await noteService.createNote(userId, title, body);
+
+    req.info['note.id'] = note.id;
 
     res.jsend.success({ note }, 201);
   } catch (error) {
@@ -29,6 +33,8 @@ export const getUserNotesV1 = async (req: Request, res: Response, next: NextFunc
 
     const { filter, options } = req.mquery;
     const { id: userId } = req.user;
+
+    req.info['user.id'] = userId;
 
     const { noteCount, notes } = await noteService.fetchNotes(
       {
