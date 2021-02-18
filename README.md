@@ -42,7 +42,7 @@ CONFIG_LOGIN_TTL=2592000            # Time to live of login in seconds
 - `staging` - for staging
 - `unit` - for running unit tests (This is automatically set)
 - `integration` - for running integration tests (This is automatically set)
-- `develop` - for development
+- `development` - for development
 
 ## Swagger UI
 Should be available on route `/apidocs` when NODE_ENV is set to `development`.
