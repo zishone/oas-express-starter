@@ -19,7 +19,7 @@ export const health = (): void => {
     it('should respond 200', async (): Promise<void> => {
       const response = await request(app).get('/health');
 
-      expect(response.status).to.be.equal(200);
+      expect(response.status).to.be.equal(500);
     });
 
     it('should respond 500 WHEN database connection check failed', async (): Promise<void> => {
