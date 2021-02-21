@@ -3,6 +3,9 @@
 
 A starter template for an OpenAPI 3.0 compliant Express.js server using TypeScript with MongoDB.
 
+### More Details
+See [Medium Blog Post](https://link.medium.com/cV2OAK6v3db).
+
 ## Quick Start
 * Clone the repository
 ```
@@ -118,6 +121,3 @@ See also the list of [contributors](https://github.com/zishone/oas-express-start
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/zishone/oas-express-starter/blob/master/LICENSE) file for details.
-
-## More Details
-Blog coming soon to talk about design decisions and opinionations.
