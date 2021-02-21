@@ -111,6 +111,7 @@ Should be available on route `/apidocs` when NODE_ENV is set to `development`.
 | **src**/app.ts            | Configurations for you express app.                                                                                                                                           |
 | **src**/server.ts         | Entry point to your express app.                                                                                                                                              |
 | **tests/integration**     | Contains integration tests.                                                                                                                                                   |
+| **tests/support**         | Contains support files for the tests.                                                                                                                                         |
 | **tests/unit**            | Contains unit tests.                                                                                                                                                          |
 | .env.defaults             | Contains default configuration values, if either .env doesn't exist, or .env only contains partial cofigurations, this will be where the default values will be loaded from.  |
 
