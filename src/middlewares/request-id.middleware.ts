@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 
 export const requestIdMiddleware = (): RequestHandler => {
   return (req: Request, _res: Response, next: NextFunction): void => {
-    req.id = nanoid(appConfig.DATA_ID_LENGTH);
+    req.id = nanoid(appConfig.REQUEST_ID_LENGTH);
     next();
   };
 };
