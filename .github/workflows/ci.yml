@@ -7,59 +7,42 @@ on:
     branches: [ master ]
 
 jobs:
-  lint:
+  checks:
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run lint
+      - name: NPM Install
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Unit Test
+        run: npm run test
 
-  build:
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x]
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  coverage:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run build
-
-  test:
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x]
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run test
-
-  test-integration:
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x]
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run build
-      - run: make test-integration
+          node-version: 12.x
+      - name: NPM Install
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Unit Test
+        run: npm run test:coverage
+      - name: Publish Unit Test Coverage
+        run: "[[ ! -z '${CODECOV_TOKEN}' ]] && npx codecov -f ./.data/tests/unit/coverage/lcov.info"
+      - name: Integration Test
+        run: make test-integration
+      - name: Publish Integration Test Coverage
+        run: "[[ ! -z '${CODECOV_TOKEN}' ]] && npx codecov -f ./.data/tests/integration/coverage/lcov.info"
