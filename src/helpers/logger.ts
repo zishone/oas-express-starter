@@ -1,6 +1,5 @@
 import { envConfig, pkgConfig } from '../configs';
 import { LOG_LEVELS } from '../constants';
-import { createWriteStream } from 'fs';
 import { dotnotate } from '@zishone/dotnotate';
 import winston from 'winston';
 
@@ -16,7 +15,7 @@ export class Logger {
         hostname: envConfig.HOSTNAME,
       },
     });
-    this.logger.add(new winston.transports.Stream({ stream: createWriteStream('/dev/null') }));
+    this.logger.add(new winston.transports.Console({ silent: true }));
   }
 
   public enableInfo(): void {
