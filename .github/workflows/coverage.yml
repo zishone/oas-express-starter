@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  test-coverage:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,7 +18,7 @@ jobs:
       - run: npm run test:coverage
       - run: "[[ ! -z '${CODECOV_TOKEN}' ]] && npx codecov -f ./.data/tests/unit/coverage/lcov.info"
 
-  test-integration-coverage:
+  test-integration:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
