@@ -8,10 +8,11 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -21,10 +22,11 @@ jobs:
       - run: npm run lint
 
   build:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -34,10 +36,11 @@ jobs:
       - run: npm run build
 
   test:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -48,10 +51,11 @@ jobs:
       - run: "[[ ! -z '${CODECOV_TOKEN}' ]] && npx codecov -f ./.data/tests/unit/coverage/lcov.info"
 
   test-integration:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
