@@ -11,9 +11,9 @@ export const logConfig = {
         "request.http.version": ":http-version",
         "request.referrer": ":referrer",
         "request.user.agent": ":user-agent",
-        "response.status": :status,
-        "response.content.length": :res[content-length],
-        "response.time": :response-time
+        "response.status": ":status",
+        "response.content.length": ":res[content-length]",
+        "response.time": ":response-time"
       },
       :info,
       :error

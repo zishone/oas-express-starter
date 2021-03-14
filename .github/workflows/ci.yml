@@ -39,7 +39,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Unit Test
-        run: npm run test:coverage
+        run: make test
       - name: Publish Unit Test Coverage
         run: "[[ ! -z '${CODECOV_TOKEN}' ]] && npx codecov -f ./.data/tests/unit/coverage/lcov.info"
       - name: Integration Test
