@@ -12,6 +12,12 @@ See [Medium Blog Post](https://link.medium.com/cV2OAK6v3db).
 git clone --depth=1 https://github.com/zishone/oas-express-starter.git <project_name>
 ```
 
+* Configure dotenv
+```shell
+cp .env.defaults .env
+# Modify .env
+```
+
 * Install dependencies
 ```shell
 npm ci
